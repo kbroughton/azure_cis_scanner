@@ -26,3 +26,5 @@ Filtered data will be in files named by the finding and have the following forma
 	  ('us-west-2', 'server02', 'db024')
 	  ]
 }
+
+Need manual penetration testing?  Praetorian has expertise in the Cloud, IOT, NetSec and more.
