@@ -1,0 +1,29 @@
+
+<!doctype html>
+<html>
+<head>
+<title>{{msg|default('Service')}}</title>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='base.css')}}">
+</head>
+<body>
+  {{nav.top.render(id='top-navbar')}}
+  <h1>{{msg|default('Service')}}</h1>
+
+      <table>
+            <tr>
+                <td>{{ subsection_number }}</td> 
+                <td>{{ subsection_name }}</td> 
+            </tr>
+
+    {% for subsection_number, subsection_name in findings_table %}
+            <tr>
+              <td>{{ subsection_number }}</td>
+              <td>{{ subsection_name }}</td> 
+            </tr>
+    {% endfor %}
+
+
+    </table>
+
+</body>
+</html>

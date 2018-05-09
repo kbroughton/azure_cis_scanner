@@ -1,0 +1,12 @@
+
+<!doctype html>
+<html>
+<head>
+<title>{{msg|default('example page')}}</title>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='base.css')}}">
+</head>
+<body>
+  {{nav.top.render(id='top-navbar')}}
+  <h1>{{msg|default('Welcome')}}</h1>
+</body>
+</html>
