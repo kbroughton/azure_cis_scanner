@@ -12,6 +12,8 @@ import random
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.dates import DateFormatter
+import matplotlib.pyplot as plt
+
 
 from settings import STATIC, APP_ROOT
 
@@ -75,14 +77,21 @@ def simple():
 
     fig=Figure()
     ax=fig.add_subplot(111)
+    ax.set_xlabel('date')
+    ax.set_ylabel('findings count')
+    ax.set_title('Total Security Findings vs Time (days)')
+    ax.axes.set_ylim([0,45])
+    ax.autoscale(enable=False, axis='y', tight=False)
+
     x=[]
-    y=[]
+    y=[40, 38, 30, 30, 30, 22, 20, 20, 18, 16]
+    #plt.ylim(max(y), 0)
     now=datetime.datetime.now()
     delta=datetime.timedelta(days=1)
     for i in range(10):
         x.append(now)
         now+=delta
-        y.append(random.randint(0, 1000))
+    
     ax.plot_date(x, y, '-')
     ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
     fig.autofmt_xdate()
