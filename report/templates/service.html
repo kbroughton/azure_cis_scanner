@@ -11,15 +11,22 @@
 
       <table>
             <tr>
-                <td>{{ subsection_number }}</td> 
-                <td>{{ subsection_name }}</td> 
+                <td>Number</td> 
+                <td>Subsection Name</td>
+                <td>Items Checked</td>
+                <td>Items Flagged</td>
+                <td>Date</td>
             </tr>
-
-    {% for subsection_number, subsection_name in findings_table %}
+    {% for subsection_number, subsection_name, finding_name in findings_table %}
+      {% if finding_name in stats[service] %}
             <tr>
               <td><a href="{{'/services/' + service + '/' + subsection_name }}">{{ subsection_number }}</a></td>
               <td>{{ subsection_name }}</td> 
+              <td>{{ stats[service][finding_name]['items_checked'] | default("0") }}</td>
+              <td>{{ stats[service][finding_name]['items_flagged'] | default("0") }}</td>
+              <td>{{ stats[service][finding_name]['date'] | default("No data") }}</td>
             </tr>
+        {% endif %}
     {% endfor %}
 
 

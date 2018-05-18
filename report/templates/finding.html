@@ -7,11 +7,14 @@
 </head>
 <body>
   {{nav.top.render(id='top-navbar')}}
+  <break>
+   <h1>{{ title }}</h1>
 
 <div class=page>
-    <h2>{{ title }}</h2>
     {{ table|safe }}
+    {{ error_str }}
 </div>
+ <img src="/graphs/{{ service.replace(' ', '%20') }}/{{ finding.replace(' ', '%20') }}.png", alt="{{ finding }}">
 
 </body>
 </html>

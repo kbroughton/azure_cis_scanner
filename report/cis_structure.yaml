@@ -106,58 +106,58 @@ TOC:
       finding_name: ''
     - subsection_number: 2.2 
       subsection_name: 'Automatic provisioning of monitoring agent is set to On'
-      finding_name: ''
+      finding_name: 'automatic_provisioning_of_monitoring_agent_is_set_to_on'
     - subsection_number: 2.3 
       subsection_name: 'System updates is set to On'
-      finding_name: ''
+      finding_name: 'system_updates_is_set_to_on'
     - subsection_number: 2.4 
       subsection_name: 'Security Configurations is set to On'
-      finding_name: ''
+      finding_name: 'security_configurations_is_set_to_on'
     - subsection_number: 2.5 
       subsection_name: 'Endpoint protection is set to On'
-      finding_name: ''
+      finding_name: 'endpoint_protection_is_set_to_on'
     - subsection_number: 2.6 
       subsection_name: 'Disk encryption is set to On'
-      finding_name: ''
+      finding_name: 'disk_encryption_is_set_to_on'
     - subsection_number: 2.7 
       subsection_name: 'Network security groups is set to On'
-      finding_name: ''
+      finding_name: 'network_security_groups_is_set_to_on'
     - subsection_number: 2.8 
       subsection_name: 'Web application firewall is set to On'
-      finding_name: ''
+      finding_name: 'web_application_firewall_is_set_to_on'
     - subsection_number: 2.9 
       subsection_name: 'Next generation firewall is set to On'
-      finding_name: ''
+      finding_name: 'next_generation_firewall_is_set_to_on'
     - subsection_number: 2.10
       subsection_name: 'Vulnerability assessment is set to On'
-      finding_name: ''
+      finding_name: 'vulnerability_assessment_is_set_to_on'
     - subsection_number: 2.11
       subsection_name: 'Storage Encryption is set to On'
-      finding_name: ''
+      finding_name: 'storage_encryption_is_set_to_on'
     - subsection_number: 2.12
       subsection_name: 'JIT Network Access is set to On'
-      finding_name: ''
+      finding_name: 'just_in_time_access_is_set_to_on'
     - subsection_number: 2.13
       subsection_name: 'Adaptive Application Controls is set to On'
-      finding_name: ''
+      finding_name: 'adaptive_application_controls_is_set_to_on'
     - subsection_number: 2.14
       subsection_name: 'SQL auditing & Threat detection is set to On'
-      finding_name: ''
+      finding_name: 'sql_auditing_and_threat_detection_is_set_to_on'
     - subsection_number: 2.15
       subsection_name: 'SQL Encryption is set to On'
-      finding_name: ''
+      finding_name: 'sql_encryption_is_set_to_on'
     - subsection_number: 2.16
       subsection_name: 'Security contact emails is set'
-      finding_name: ''
+      finding_name: 'security_contact_emails_is_set'
     - subsection_number: 2.17
       subsection_name: 'security contact Phone number is set'
-      finding_name: ''
+      finding_name: 'security_contact_phone_number_is_set'
     - subsection_number: 2.18
       subsection_name: 'Send me emails about alerts is set to On'
-      finding_name: ''
+      finding_name: 'send_email_alerts_about_alerts_is_set_to_on'
     - subsection_number: 2.19
       subsection_name: 'Send email also to subscription owners is set to On'
-      finding_name: ''
+      finding_name: 'send_email_also_to_subscription_owners_is_set_to_on'
   "Storage Accounts":
     - subsection_number: 3.1
       subsection_name: 'Secure transfer required is set to Enabled'
