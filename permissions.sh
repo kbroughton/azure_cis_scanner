@@ -1,6 +1,13 @@
 #!/bin/bash
 
+###############################################################
+# Create role and assign to testers
+###############################################################
 
+az role definition create --role-definition minimal_tester_role.json
+
+# should be able to associate, but doesn't seem possible with custom role?
+# az role association create
 
 ################################################################
 # GENERATE SECURE STORAGE ACCESS SIGNATURES - temp credentials
