@@ -4,10 +4,13 @@
 # Create role and assign to testers
 ###############################################################
 
-az role definition create --role-definition minimal_tester_role.json
+az role definition create --role-definition minimal_tester_role.json 
 
+# Get 
 # should be able to associate, but doesn't seem possible with custom role?
-# az role association create
+# Get principal names with 
+# az ad user list
+# az role association create --role AzureSecurityScanner --assignee <user_principals>
 
 ################################################################
 # GENERATE SECURE STORAGE ACCESS SIGNATURES - temp credentials

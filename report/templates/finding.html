@@ -8,13 +8,17 @@
 <body>
   {{nav.top.render(id='top-navbar')}}
   <break>
-   <h1>{{ title }}</h1>
+   <h1>Control: {{ title }}</h1>
 
 <div class=page>
+   <h1>Failing Items</h1>
     {{ table|safe }}
     {{ error_str }}
 </div>
+ {% if items_checked > 0 %}
  <img src="/graphs/{{ service.replace(' ', '%20') }}/{{ finding.replace(' ', '%20') }}.png", alt="{{ finding }}">
+ {% endif %}
 
 </body>
+
 </html>

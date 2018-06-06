@@ -1,0 +1,12 @@
+{ 
+    "Name": "Activity Log",
+    "Description": "Modify Activity Log Policies",
+    "Actions": [
+        "Microsoft.Authorization/policyAssignments/write",
+        "Microsoft.Authorization/policyAssignments/read",
+        "Microsoft.Authorization/policyDefinitions/write",
+        "Microsoft.Authorization/policyDefinitions/read",
+        "Microsoft.insights/activityLogAlerts/write"
+    ],
+    "AssignableScopes": ["/subscriptions/{{ subscription_id }}"]
+}

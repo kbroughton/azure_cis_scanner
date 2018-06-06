@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, make_response, render_template_string
+from flask import Flask, render_template, redirect, url_for, session, make_response, render_template_string
 from flask_nav import Nav
 from flask_nav.elements import *
 import os
@@ -17,24 +17,54 @@ import matplotlib.pyplot as plt
 
 
 from settings import *
+from render_utils import *
 
 with open(os.path.expanduser(APP_ROOT + '/cis_structure.yaml'), 'r') as f:
     cis_structure = yaml.load(f)
 
-#nav = Nav()
-
 app = Flask(__name__)
 nav = Nav(app)
+app.secret_key = 'super secret key'
+app.config['SESSION_TYPE'] = 'filesystem'
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def index_base():
+    return redirect("/{}".format(active_subscription_dir), code=302)
+
+@app.route('/_subscription_dir')
+def _subscription_dir():
+    selected_active_subscription_dir = request.args.get('selected', session['active_subscription_dir'])
+    print('selected_active_subscription_dir', selected_active_subscription_dir)
+    selected_active_subscription_dir = request.args.get('state', session['active_subscription_dir'])
+    print('selected_active_subscription_dir2', selected_active_subscription_dir)
+
+    print('subscription_dir route', subscription_dir)
+
+    session['active_subscription_dir'] = subscription_dir
+    return jsonify({'selected': subscription_dir})
+
+@app.route('/<active_subscription_dir>')
+def index(active_subscription_dir, methods=['POST','GET']):
+    selected_active_subscription_dir = request.args.get('selected', session['active_subscription_dir'])
+    session['active_subscription_dir'] = selected_active_subscription_dir
+    state = {'selected', selected_active_subscription_dir}
+    print('selected_active_subscription_dir', selected_active_subscription_dir)
+    if selected_active_subscription_dir != active_subscription_dir:
+        print('redirecting', selected_active_subscription_dir)
+        return redirect('/'+selected_active_subscription_dir)
+    else:
+        subscription_dirs = [(subscription_dir_from_account(account), subscription_dir_from_account(account)) for account in accounts]
+        print('subscription_dirs', subscription_dirs)
+        return render_template('index.html', 
+            active_subscription_dir=active_subscription_dir, 
+            state=state,
+            subscription_dirs=subscription_dirs)
 
 @app.route('/services/<service>')
 def service(service):
-    findings_table = [(x['subsection_number'], x['subsection_name'], x['finding_name']) for x in cis_structure['TOC'][service]]
+    findings_table = [(x['subsection_number'], x['subsection_name'], get_finding_name(x['finding_name'], x['subsection_name'])) for x in cis_structure['TOC'][service]]
     stats = get_latest_stats()
-    return render_template('service.html', service=title_except(service), findings_table=findings_table, stats=stats)
+    return render_template('service.html', service=service, title=title_except(service), findings_table=findings_table, stats=stats)
 
 @app.route('/services/<service>/<finding>')
 def finding(service, finding):
@@ -42,77 +72,44 @@ def finding(service, finding):
     service_data = get_filtered_data_by_name(service)
     error_str = ''
     if not service_data:
-        error_str = 'No section named {} found'.format(service)
-    finding_name = '_'.join(map(str.lower, finding.split(' ')))
+        error_str = 'No section named "{}" found\n'.format(service)
+    finding_name = get_finding_name(finding_entry['finding_name'], finding_entry['subsection_name'])
     finding_data = service_data.get(finding_name, None)
     if not finding_data:
-        error_str = 'No finding named {}'.format(finding)
-    if (not finding_data.get("metadata", None)) or \
-       (not finding_data.get("metadata").get("columns", None)) or \
-       (not finding_data.get("items", None)):
-        error_str = 'Finding data for {} missing metadata, columns or items'.format(finding)
+        error_str += 'No finding named "{}" in {}\n'.format(finding, service_data.keys())
+    elif (not finding_data.get("metadata", None)):
+        error_str += 'No metadata for "{}"\n'.format(finding)
+    elif not finding_data.get("metadata").get("columns", None):
+        error_str += 'No columns in metadata for "{}"\n'.format(finding)
+    elif not finding_data.get("items", None):
+        error_str += 'No items list for "{}"\n'.format(finding)
 
     if error_str:
         return render_template('finding.html', service=service, finding=finding,
-            finding_entry=finding_entry, table='', title=title_except(finding), error_str=error_str)
+            finding_entry=finding_entry, table='', title=title_except(finding), error_str=error_str, items_checked=0)
     else:
+        items_checked=finding_data['stats']['items_checked']
         data = pd.DataFrame(finding_data['items'], columns=finding_data['metadata']['columns'])
         return render_template('finding.html', service=service, finding=finding,
-            finding_entry=finding_entry, table=data.to_html(), title=title_except(finding))
+            finding_entry=finding_entry, table=data.to_html(), title=title_except(finding), items_checked=items_checked)
 
-def title_except(string):
-    articles = ['a', 'an', 'of', 'the', 'is', 'not', 'for', 'if']
-    word_list = re.split(' ', string)       # re.split behaves as expected
-    final = [word_list[0].capitalize()]
-    for word in word_list[1:]:
-        final.append(word if word in articles else word.capitalize())
-    return " ".join(final)
+@app.route("/subscription_dir/<subscription_dir>")
+def set_subscription_dir(subscription_dir):
+    active_subscription_dir = subscription_dir
+    return redirect("/{}".format(active_subscription_dir), code=302)
 
-def get_finding_index(findings_list, finding):
-    for finding_entry in findings_list:
-        if finding_entry['subsection_name'] == finding:
-            return finding_entry
-    raise ValueError("finding {} not found in {}".format(finding, findings_list))
+
+def subscription_dir_from_account(account):
+    return account['name'].split(' ')[0] + '-' + account['id'].split('-')[0]
 
 # Todo: use wrappers to generate the nav bars.  Too tricky for now.  Generated with print statements.
-def build_navbar(cis_structure):
-    navbar = [('Home', 'index')]
-    kwarg_list = [ dict(service=section) for section in cis_structure['section_ordering'] ]
-    arg_list = [ (section, 'section') for section in cis_structure['section_ordering'] ]
-    navbar = list(map(sappable_f, zip(arg_list, kwarg_list)))
-    print(navbar)
-    return navbar
-
-@app.route("/static/graphs/<service>/<finding>.png")
-def graph(service, finding):
-
-    stats = get_stats()
-    fig=Figure()
-    ax=fig.add_subplot(111)
-    ax.set_xlabel('date')
-    ax.set_ylabel('findings count')
-    ax.set_title('Total Security Findings vs Time (days)')
-    ax.axes.set_ylim([0,45])
-    ax.autoscale(enable=False, axis='y', tight=False)
-
-    x=[]
-    y=[40, 38, 30, 30, 30, 22, 20, 20, 18, 16]
-    #plt.ylim(max(y), 0)
-    now=datetime.datetime.now()
-    delta=datetime.timedelta(days=1)
-    for i in range(10):
-        x.append(now)
-        now+=delta
-    
-    ax.plot_date(x, y, '-')
-    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
-    fig.autofmt_xdate()
-    canvas=FigureCanvas(fig)
-    png_output = io.BytesIO()
-    canvas.print_png(png_output)
-    response=make_response(png_output.getvalue())
-    response.headers['Content-Type'] = 'image/png'
-    return response
+# def build_navbar(cis_structure):
+#     navbar = [('Home', 'index')]
+#     kwarg_list = [ dict(service=section) for section in cis_structure['section_ordering'] ]
+#     arg_list = [ (section, 'section') for section in cis_structure['section_ordering'] ]
+#     navbar = list(map(mappable_f, zip(arg_list, kwarg_list)))
+#     print(navbar)
+#     return navbar
 
 @app.route("/graphs/<service>/<finding>.png")
 def plot_finding(service, finding):
@@ -125,9 +122,6 @@ def plot_finding(service, finding):
     y = np.array(y)
     x = finding_df.index
     
-    #x = np.array([str(xx.month) + '-' + ( str(xx.day) if len(str(xx.day))==2 else '0' + str(xx.day) ) for xx in x])
-    print(x)
-    #x = x.day
     mask = np.isfinite(y)
 
     fig, ax = plt.subplots()
@@ -195,7 +189,7 @@ def datetime_to_dir_date(dt):
     return dt.strftime("%Y-%m-%d")
 
 def min_max_dates():
-    dates = list(map(dir_date_to_datetime, get_dirs()))
+    dates = list(map(dir_date_to_datetime, get_dirs(scans_root)))
     return min(dates), max(dates)
 
 
@@ -210,10 +204,13 @@ nav.register_element(
         View('Logging and Monitoring', 'service', service='Logging and Monitoring'),
         View('Networking', 'service', service='Networking'),
         View('Virtual Machines', 'service', service='Virtual Machines'),
-        View('Other Security Considerations', 'service', service='Other Security Considerations')
+        View('Other Security Considerations', 'service', service='Other Security Considerations'),
+        Text(active_subscription_dir)
+        #Subgroup(active_subscription_dir, *[Link(account['name']) for account in accounts], [])
         )
     )
 
+# Might need something like https://testdriven.io/developing-a-single-page-app-with-flask-and-vuejs for menu drop-down multi-subscription.
 
 # def create_app(configfile=None):
 #     app = Flask(__name__)
