@@ -162,31 +162,8 @@ Modify the permissions.sh with positional variables $1=start_date, $2=end_date, 
 bash-4.3# /workdir/permissions.sh
 ```
 
-The script creates a AzureSecurityScanner role definition.  The Owner now associates that role to the users.
-
-Copy the generated (resource_group, account, SAS keys) tuples and send them securely to the pen-tester.
-
-### Running the azure_cis_scanner
-
-Follow the steps for the Owner above except for running the permissions script.
-
-As a user with the AzureSecurityScanner role and the sas keys stored to ./sas_keys.txt
-and modifications made to scanner_conf.yaml for your environment:
-
-```
-bash-4.3# cd /workdir
-bash-4.3# python cis_azure_scanner.py scan
-```
-
-The scanner creates scans/Y-m-d/ folders for each day that the scan is run, clobbering old results if run multiple times in a day.
-This allows progress to be tracked over time.
-
-To view the results
-```
-bash-4.3# python cis_azure_scanner.py report
-```
-
-This will run a simple flask app which you can view at localhost:5000
+The script creates a AzureSecurityScanner role definition.  The Owner now associates that role to the 
+users and can copy the generated (resource_group, account, SAS keys) tuples and send them securely to the pen-tester.
 
 ## Constraints
 An attempt was made to convert to json everywhere, but the current raw/filtered data used key tuples - eg (resource_group, server, database) -
