@@ -1,4 +1,5 @@
 # azure_cis_scanner
+
 Security Compliance Scanning tool for CIS Azure Benchmark 1.0
 
 The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2.
@@ -42,6 +43,7 @@ Filtered data will be in files named by the finding and have the following forma
 ```
 
 ## Getting Started
+
 Best practice is to work inside a docker container to avoid any issues that would arise from a multi-tenant environment.
 If running from the native command-line, take care that multi-subscription calls like permissions.sh only see the right target
 subscriptions in the `~/.azure/ directory`.  
@@ -55,10 +57,22 @@ again inside the container to restrict ourselves to the correct creds only.
 
 
 ### Configure
+
+Get the repo (until it is public)
+```
+$ git clone git@github.com:praetorian-inc/azure_cis_scanner.git && cd azure_cis_scanner
+```
+
+Get the repo (public)
 ```
 $ git clone https://github.com/praetorian-inc/azure_cis_scanner.git && cd azure_cis_scanner
 ``` 
-Edit the azure_cis_scanner/.env file which controls the environment variables in docker-compose.yml as needed.
+
+Copy azure_cis_scanner/.env-sample to .env.  This is a special filename that controls docker-compose and is in .gitignore.
+```
+azure_cis_scanner$ cp .env-sample .env
+```
+Edit the azure_cis_scanner/.env file as needed.
 If you are going to be developing, open docker-compose.yml and uncomment the lines marked with # DEVELOPMENT MODE
 
 ### Run the container and exec into it
@@ -77,11 +91,26 @@ This allows you to stop and start the container without having to re login for t
 ```
 bash-4.4$ az login
 bash-4.4$ az account list
-bash-4.4$ az set account --subscription <choice from above>
+bash-4.4$ az account set --subscription <choice from above>
 ```
 
 Edit report/settings.py for your active_subscription_dir.  This can be anything, but convention is the friendly name and the first 8 chars 
 from the correct `id` in `account list` above. Since it is mounted into the container, it will change inside and outside the container.
+
+### Sample deploy (optional)
+If you have no resource or just want to test the scanner on fresh resources, try some of the automated deployment resources.
+Currently, sample-deploy/terraform-azure is working the best.
+For each folder, cd into it and run
+```
+terraform init
+terraform apply
+```
+You will likely have to re-login as terraform has short timeouts on tokens.
+REMEMBER TO DESTROY YOUR RESOURCES WHEN FINISHED
+```
+terraform destroy
+```
+It is best practice to create automated billing alerts via the UI to avoid unpleasant surprises.
 
 ### Run the scanner
 Change to the scanner directory inside the container and run the scanner using a run_jnb command which 
@@ -93,10 +122,13 @@ with appropriate arguments for subscription_id and base_dir.
 bash-4.4$ cd /praetorian-tools/azure_cis_scanner/scanner
 scanner$ run_jnb -a '{"subscription_id": "510f92e0-xxxx-yyyy-zzzz-095d37e6a299", "base_dir": "/engagements/cis_test"}' -v azure_cis_scanner.ipynb -t 500
 ```
-
+If the terminal prompt gets messed up, try modifying the above in an editor and pasting in its entirety into the shell.
 There is currently no progress report, but if you open sublime you can watch the files as they are created in base_dir.
 If the files are not created as expected, search for clues in the _run_jnb output or, better, go to the jupyter notebook in your browser
 and step through the cells until an error occurs.
+
+Note that running the scanner a second time on the same day will clobber the old result.  A new folder is created when the scanner is 
+run on a new day.
 
 ### Browse the report
 At this point your base_dir should have been populated with files as shown below
@@ -111,7 +143,11 @@ bash-4.4 report$ python3 app.py
 ```
 Browse to 127.0.0.1:5000 to view the report.
 
+Currently, graphs will not display until there are two days of data.
+
 ## Requesting credentials with the correct RBACs to run the scanner
+If you need to run the scanner on someone else's Azure environment, you should ask for the minimum possible
+permissions.
 
 ### Owner Generates Minimal Permissions Role Definition and Temporary Keys
 
@@ -158,6 +194,7 @@ The script creates a AzureSecurityScanner role definition.  The Owner now associ
 users and can copy the generated (resource_group, account, SAS keys) tuples and send them securely to the pen-tester.
 
 ## Constraints
+
 An attempt was made to convert to json everywhere, but the current raw/filtered data used key tuples - eg (resource_group, server, database) -
 which only supported in yaml.  An attempt to use safe_yaml was made, but the tuples caused errors.  The intention is to have `raw` data pulled
 as infrequently as possible from the cloud API, stored as close as possible to the delivered format.  
@@ -172,9 +209,10 @@ We may switch from tuple to nested dict in the future.
 * Remove manual steps by generating minimal_tester_role.json with correct subscriptions/resource_group paths.
 * The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
 * Replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
-
+* Add git hooks to automatically remove cell output of azure_cis_scanner.ipynb to avoid checking in sensitive info
 
 ## Digging Deeper
+
 A Scanner is a good first tool for securing a cloud environment to ensure best practices and secure configuration settings are employed.
 However, this scanner does not assess the health of your IAM policies and roles or network security groups beyond some basic known-bad settings.  Azure is constantly evolving and part of the challenge of a SecOps team is keeping up with best practices in an environment where new tools are released on a monthly basis.
 
