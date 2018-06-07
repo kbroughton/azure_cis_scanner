@@ -99,7 +99,11 @@ from the correct `id` in `account list` above. Since it is mounted into the cont
 
 ### Sample deploy (optional)
 If you have no resource or just want to test the scanner on fresh resources, try some of the automated deployment resources.
-Currently, sample-deploy/terraform-azure is working the best.
+Currently, sample-deploy/terraform-azure is working the best.  First we need to add terraform to the container.
+```
+apk add terraform
+```
+
 For each folder, cd into it and run
 ```
 terraform init

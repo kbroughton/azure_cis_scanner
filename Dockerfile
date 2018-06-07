@@ -38,6 +38,7 @@ from jupyter-scipy-azurecli-alpine:working
 
 COPY ./ /praetorian-tools/cis_azure_scanner/
 
+RUN apk add terraform
 # jupyter notebook runs with python3
 RUN pip3 install -r /praetorian-tools/cis_azure_scanner/requirements.txt
 
