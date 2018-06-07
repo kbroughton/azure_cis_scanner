@@ -33,9 +33,7 @@ def index_base():
 
 @app.route('/_subscription_dir')
 def _subscription_dir():
-    selected_active_subscription_dir = request.args.get('selected', session['active_subscription_dir'])
-    print('selected_active_subscription_dir', selected_active_subscription_dir)
-    selected_active_subscription_dir = request.args.get('state', session['active_subscription_dir'])
+    selected_active_subscription_dir = request.args.get('state', session.get('active_subscription_dir', None))
     print('selected_active_subscription_dir2', selected_active_subscription_dir)
 
     print('subscription_dir route', subscription_dir)
@@ -45,7 +43,7 @@ def _subscription_dir():
 
 @app.route('/<active_subscription_dir>')
 def index(active_subscription_dir, methods=['POST','GET']):
-    selected_active_subscription_dir = request.args.get('selected', session['active_subscription_dir'])
+    selected_active_subscription_dir = request.args.get('selected', session.get('active_subscription_dir', active_subscription_dir))
     session['active_subscription_dir'] = selected_active_subscription_dir
     state = {'selected', selected_active_subscription_dir}
     print('selected_active_subscription_dir', selected_active_subscription_dir)
@@ -234,5 +232,5 @@ nav.register_element(
 #     return app
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 

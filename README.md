@@ -23,7 +23,7 @@ SQL Services                         Other Miscellaneous Items
 ```
 
 Filtered data will be in files named by the finding and have the following format
-
+```
 {
  "threat_detection_should_be_turned_on": {
 	"metadata": { "columns": ['region', 'server', database' ],
@@ -38,12 +38,88 @@ Filtered data will be in files named by the finding and have the following forma
 	}
   "another_finding_in_this_section": ...
 }
+```
 
 ## Getting Started
 Best practice is to work inside a docker container to avoid any issues that would arise from a multi-tenant environment.
 If running from the native command-line, take care that multi-subscription calls like permissions.sh only see the right target
 subscriptions in the `~/.azure/ directory`.  
 
+The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
+We will replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
+
+We assume you have already created an azure account or have been granted credentials with privileges sufficient to run the scanner.
+We will login once outside of the container (merges creds with anything in ~/.azure) to get the correct subscription id, and then
+again inside the container to restrict ourselves to the correct creds only.
+
+### Get credentials
+
+```
+$ az login
+```
+Then get the subscription id using
+```
+$ az account list
+$ az account set --subscription <subscription desired from output above>
+```
+
+### Configure
+```
+$ git clone https://github.com/praetorian-inc/azure_cis_scanner.git && cd azure_cis_scanner
+```
+Edit report/settings.py for your active_subscription_dir.  This can be anything, but convention is the friendly name and the first 8 chars 
+from `account list` above.  
+Edit the azure_cis_scanner/.env file which controls the environment variables in docker-compose.yml as needed.
+If you are going to be developing, open docker-compose.yml and uncomment the lines marked with # DEVELOPMENT MODE
+
+### Run the container and exec into it
+```
+azure_cis_scanner$ docker-compose up
+```
+In another terminal get the container id and exec into it
+```
+azure_cis_scanner$ docker ps
+azure_cis_scanner$ docker exec -it <container-id> /bin/bash
+```
+
+### Login inside the container
+The docker-compose creates (on first run) a .azure folder to hold the creds and maps it to /root/.azure.
+This allows you to stop and start the container without having to re login for the lifetime of your tokens.
+```
+bash-4.4$ az login
+bash-4.4$ az account list
+bash-4.4$ az set account --subscription <choice from above>
+```
+
+### Run the scanner
+Change to the scanner directory inside the container and run the scanner using a run_jnb command which 
+sets variables in the jupyter notebook and runs it. Alternatively, on your first run, you can use the url 
+output from `docker-compose up` to login to the notebook and step through the calls.  Edit the line below
+with appropriate arguments for subscription_id and base_dir.
+
+```
+bash-4.4$ cd /praetorian-tools/azure_cis_scanner/scanner
+scanner$ run_jnb -a '{"subscription_id": "510f92e0-xxxx-yyyy-zzzz-095d37e6a299", "base_dir": "/engagements/cis_test"}' -v azure_cis_scanner.ipynb -t 500
+```
+
+There is currently no progress report, but if you open sublime you can watch the files as they are created in base_dir.
+If the files are not created as expected, search for clues in the _run_jnb output or, better, go to the jupyter notebook in your browser
+and step through the cells until an error occurs.
+
+### Browse the report
+At this point your base_dir should have been populated with files as shown below
+
+![alt text](https://raw.githubusercontent.com/praetorian-inc/azure_cis_scanner/master/images/to/azure_cis_graph.png)
+
+Inside the container we now run a flask app to server generated html pages with the reports.
+
+```
+bash-4.4 scanner$ cd ../report
+bash-4.4 report$ python3 app.py
+```
+Browse to 127.0.0.1:5000 to view the report.
+
+## Requesting credentials with the correct RBACs to run the scanner
 
 ### Owner Generates Minimal Permissions Role Definition and Temporary Keys
 
@@ -119,11 +195,15 @@ as infrequently as possible from the cloud api, stored as close as possible to t
 We may switch from tuple to nested dict in the future.
 
 ## Roadmap
-Further development of automation for deployment of an insecure test environment.
-Remediation scripts to automatically resolve many simple "switch on" issues.
-Use the python sdk instead of bash.
-Wrap the flask project with praetorian-flask for security.  Only run on a local network until this is complete.
-Remove manual steps by generating minimal_tester_role.json with correct subscriptions/resource_group paths.
+
+*Further development of automation for deployment of an insecure test environment.
+*Add to remediation scripts in the `remediations` folder to automatically resolve many simple "switch on" issues.
+*Use the python sdk instead of bash.
+*Wrap the flask project with praetorian-flask for security.  Only run on a local network until this is complete.
+*Remove manual steps by generating minimal_tester_role.json with correct subscriptions/resource_group paths.
+*The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
+*We will replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
+
 
 ## Digging Deeper
 A Scanner is a good first tool for securing a cloud environment to ensure best practices and secure configuration settings are employed.

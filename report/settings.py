@@ -2,8 +2,8 @@ import os
 import yaml
 import functools
 
-cis_scanner_root = '~/praetorian-tools/azure_cis_scanner/'
-scans_base = os.path.expanduser('~/engagements/cis_test/scans')
+cis_scanner_root = '/praetorian-tools/azure_cis_scanner/'
+scans_base = os.path.expanduser('/engagements/cis_test/scans')
 
 @functools.lru_cache(1, typed=False)
 def get_dirs(directory):
@@ -11,9 +11,8 @@ def get_dirs(directory):
 
 # figure out better way to get base dir or let user select in UI
 active_subscription_dir = get_dirs(scans_base)[0]
-#active_subscription_dir = 'Prod-67420100'
-#active_subscription_dir = 'Development-6ff7f744'
-active_subscription = "510f92e0-3fcf-4b8f-8a23-095d37e6a299"
+
+#active_subscription_dir = "510f92e0-xxxx-yyyy-zzzz-095d37e6a299"
 
 accounts = {}
 with open(os.path.join(scans_base, 'accounts.json'), 'r') as f:

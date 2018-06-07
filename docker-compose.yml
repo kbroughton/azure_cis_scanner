@@ -1,0 +1,13 @@
+version: "3"
+services:
+  azure-cis-scanner:
+    image: azure-cis-scanner-apline:working
+    volumes:
+      - ./scanner:/notebooks/scanner
+      - ${ENGAGEMENTS_DIR}:/engagements
+      - ./:/praetorian-tools/cis_azure_scanner
+      - ./azure:/root/.azure
+    ports:
+      - 8890:8888
+      - 5001:5000
+    entrypoint: ["jupyter", "notebook", "--port=8888", "--ip=0.0.0.0", "--allow-root"]
