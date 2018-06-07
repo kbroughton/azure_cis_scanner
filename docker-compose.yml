@@ -5,9 +5,10 @@ services:
     volumes:
       - ./scanner:/notebooks/scanner
       - ${ENGAGEMENTS_DIR}:/engagements
-      - ./:/praetorian-tools/cis_azure_scanner
-      - ./azure:/root/.azure
+     # - ./:/praetorian-tools/cis_azure_scanner  # DEVELOPMENT MODE
+      - ./azure:/root/.azure 
+      - report/settings.py:/praetorian-tools/cis_azure_scanner/report/settings.py  # override with your subscription info
     ports:
-      - 8890:8888
-      - 5001:5000
+      - 8888:8888
+      - 5000:5000
     entrypoint: ["jupyter", "notebook", "--port=8888", "--ip=0.0.0.0", "--allow-root"]

@@ -3,12 +3,13 @@ Security Compliance Scanning tool for CIS Azure Benchmark 1.0
 
 The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2.
 
+This project is not yet production ready and should only be run from a local machine not exposed to untrusted networks.
 
 ## The scanner can generate reports that mirror the CIS sections.
 ![azure cis scanner homet](images/cis_test_vm_section.png?raw=true "Section Summary for VMs")
 
 ## This scanner also allows tracking progress over time
-![azure cis scanner graph](images/cis_test_secure_transfer_graph.png?raw=true "Finding Detail for `Secure Transfer not Enabled`")
+![Azure Storage: Secure Transfer not Enabled](images/cis_test_secure_transfer_graph.png?raw=true "Finding Detail for `Secure Transfer not Enabled`")
 
 
 Raw data will have the format as returned by the Azure Api in json format.
@@ -52,23 +53,11 @@ We assume you have already created an azure account or have been granted credent
 We will login once outside of the container (merges creds with anything in ~/.azure) to get the correct subscription id, and then
 again inside the container to restrict ourselves to the correct creds only.
 
-### Get credentials
-
-```
-$ az login
-```
-Then get the subscription id using
-```
-$ az account list
-$ az account set --subscription <subscription desired from output above>
-```
 
 ### Configure
 ```
 $ git clone https://github.com/praetorian-inc/azure_cis_scanner.git && cd azure_cis_scanner
-```
-Edit report/settings.py for your active_subscription_dir.  This can be anything, but convention is the friendly name and the first 8 chars 
-from the correct `id` in `account list` above.  
+``` 
 Edit the azure_cis_scanner/.env file which controls the environment variables in docker-compose.yml as needed.
 If you are going to be developing, open docker-compose.yml and uncomment the lines marked with # DEVELOPMENT MODE
 
@@ -90,6 +79,9 @@ bash-4.4$ az login
 bash-4.4$ az account list
 bash-4.4$ az set account --subscription <choice from above>
 ```
+
+Edit report/settings.py for your active_subscription_dir.  This can be anything, but convention is the friendly name and the first 8 chars 
+from the correct `id` in `account list` above. Since it is mounted into the container, it will change inside and outside the container.
 
 ### Run the scanner
 Change to the scanner directory inside the container and run the scanner using a run_jnb command which 
