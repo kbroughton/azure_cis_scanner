@@ -4,10 +4,10 @@ Security Compliance Scanning tool for CIS Azure Benchmark 1.0
 The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2.
 
 
-The scanner can generate reports that mirror the CIS sections.
+## The scanner can generate reports that mirror the CIS sections.
 ![azure cis scanner homet](images/cis_test_vm_section.png?raw=true "Section Summary for VMs")
 
-This scanner also allows tracking progress over time
+## This scanner also allows tracking progress over time
 ![azure cis scanner graph](images/cis_test_secure_transfer_graph.png?raw=true "Finding Detail for `Secure Transfer not Enabled`")
 
 
@@ -68,7 +68,7 @@ $ az account set --subscription <subscription desired from output above>
 $ git clone https://github.com/praetorian-inc/azure_cis_scanner.git && cd azure_cis_scanner
 ```
 Edit report/settings.py for your active_subscription_dir.  This can be anything, but convention is the friendly name and the first 8 chars 
-from `account list` above.  
+from the correct `id` in `account list` above.  
 Edit the azure_cis_scanner/.env file which controls the environment variables in docker-compose.yml as needed.
 If you are going to be developing, open docker-compose.yml and uncomment the lines marked with # DEVELOPMENT MODE
 
@@ -109,7 +109,7 @@ and step through the cells until an error occurs.
 ### Browse the report
 At this point your base_dir should have been populated with files as shown below
 
-![raw and filtered generated files](images/azure_cis_graph.png?raw=true "Scanner Generated Files")
+![raw and filtered generated files](images/cis_test_azure_scanner_files.png?raw=true "Scanner Generated Files")
 
 Inside the container we now run a flask app to server generated html pages with the reports.
 
@@ -189,20 +189,20 @@ bash-4.3# python cis_azure_scanner.py report
 This will run a simple flask app which you can view at localhost:5000
 
 ## Constraints
-An attempt was made to convert to json everywhere, but the current raw/filtered data used key tuples (eg (resource_group, server, database))
+An attempt was made to convert to json everywhere, but the current raw/filtered data used key tuples - eg (resource_group, server, database) -
 which only supported in yaml.  An attempt to use safe_yaml was made, but the tuples caused errors.  The intention is to have `raw` data pulled
-as infrequently as possible from the cloud api, stored as close as possible to the delivered format.  
+as infrequently as possible from the cloud API, stored as close as possible to the delivered format.  
 We may switch from tuple to nested dict in the future.
 
 ## Roadmap
 
-*Further development of automation for deployment of an insecure test environment.
-*Add to remediation scripts in the `remediations` folder to automatically resolve many simple "switch on" issues.
-*Use the python sdk instead of bash.
-*Wrap the flask project with praetorian-flask for security.  Only run on a local network until this is complete.
-*Remove manual steps by generating minimal_tester_role.json with correct subscriptions/resource_group paths.
-*The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
-*We will replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
+* Further development of automation for deployment of an insecure test environment.
+* Add to remediation scripts in the `remediations` folder to automatically resolve many simple "switch on" issues.
+* Use the python sdk instead of bash.
+* Wrap the flask project with praetorian-flask for security.  Only run on a local network until this is complete.
+* Remove manual steps by generating minimal_tester_role.json with correct subscriptions/resource_group paths.
+* The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
+* Replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
 
 
 ## Digging Deeper
