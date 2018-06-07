@@ -145,7 +145,7 @@ Inside the container we now run a flask app to server generated html pages with 
 bash-4.4 scanner$ cd ../report
 bash-4.4 report$ python3 app.py
 ```
-Browse to 127.0.0.1:5000 to view the report.
+Browse to 127.0.0.1:5000 to view the report.  The subscription switching via the UI does not work yet.
 
 Currently, graphs will not display until there are two days of data.
 
