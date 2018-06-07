@@ -2,12 +2,12 @@ import os
 import yaml
 import functools
 
-cis_scanner_root = '/praetorian-tools/azure_cis_scanner/'
-scans_base = os.path.expanduser('/engagements/cis_test/scans')
+cis_scanner_root = '~/praetorian-tools/azure_cis_scanner/'
+scans_base = os.path.expanduser('~/engagements/cis_test/scans')
 
 @functools.lru_cache(1, typed=False)
 def get_dirs(directory):
-    return [x for x in os.listdir(directory) if os.path.isdir(directory)]
+    return [x for x in os.listdir(directory) if os.path.isdir(directory) and not x.endswith('.DS_Store')]
 
 # figure out better way to get base dir or let user select in UI
 active_subscription_dir = get_dirs(scans_base)[0]

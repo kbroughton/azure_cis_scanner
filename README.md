@@ -5,10 +5,10 @@ The purpose of this scanner is to assist organizations in locking down their Azu
 
 
 The scanner can generate reports that mirror the CIS sections.
-![alt text](https://raw.githubusercontent.com/praetorian-inc/azure_cis_scanner/master/images/azure_cis_splash.png)
+![azure cis scanner homet](images/cis_test_vm_section.png?raw=true "Section Summary for VMs")
 
 This scanner also allows tracking progress over time
-![alt text](https://raw.githubusercontent.com/praetorian-inc/azure_cis_scanner/master/images/to/azure_cis_graph.png)
+![azure cis scanner graph](images/cis_test_secure_transfer_graph.png?raw=true "Finding Detail for `Secure Transfer not Enabled`")
 
 
 Raw data will have the format as returned by the Azure Api in json format.
@@ -109,7 +109,7 @@ and step through the cells until an error occurs.
 ### Browse the report
 At this point your base_dir should have been populated with files as shown below
 
-![alt text](https://raw.githubusercontent.com/praetorian-inc/azure_cis_scanner/master/images/to/azure_cis_graph.png)
+![raw and filtered generated files](images/azure_cis_graph.png?raw=true "Scanner Generated Files")
 
 Inside the container we now run a flask app to server generated html pages with the reports.
 
@@ -152,7 +152,7 @@ We are now inside the container at the bash-4.3# prompt.  Time to log in.
 ```
 bash-4.3# az login
 ```
-Complete the web UI login.
+Complete sign-in via the web UI login.
 
 Modify minimal_tester_role.json with the correct subscription(s)
 
