@@ -1,13 +1,13 @@
 version: "3"
 services:
   azure-cis-scanner:
-    image: azure-cis-scanner-apline:working
+    image: kbroughton/azure-cis-scanner-apline:0.2
     volumes:
-      - ./scanner:/notebooks/scanner
+      - ./scanner/azure_cis_scanner.ipynb:/notebooks/azure_cis_scanner.ipynb
       - ${ENGAGEMENTS_DIR}:/engagements
      # - ./:/praetorian-tools/cis_azure_scanner  # DEVELOPMENT MODE
-      - ./azure:/root/.azure 
-      - report/settings.py:/praetorian-tools/cis_azure_scanner/report/settings.py  # override with your subscription info
+      - ./.azure:/root/.azure 
+      - ./report/settings.py:/praetorian-tools/cis_azure_scanner/report/settings.py  # override with your subscription info
     ports:
       - 8888:8888
       - 5000:5000

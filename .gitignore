@@ -2,3 +2,4 @@ scans
 _run_jnb
 .ipynb_checkpoints
 .env
+.azure
