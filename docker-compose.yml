@@ -3,12 +3,12 @@ services:
   azure-cis-scanner:
     image: kbroughton/azure-cis-scanner-apline:0.2
     volumes:
-      - ./scanner/azure_cis_scanner.ipynb:/notebooks/azure_cis_scanner.ipynb
+      - ${HOST_AZURE_SCANNER_PATH}/scanner/azure_cis_scanner.ipynb:/notebooks/azure_cis_scanner.ipynb
       - ${ENGAGEMENTS_DIR}:/engagements
      # - ./:/praetorian-tools/cis_azure_scanner  # DEVELOPMENT MODE
-      - ./.azure:/root/.azure 
-      - ./report/settings.py:/praetorian-tools/cis_azure_scanner/report/settings.py  # override with your subscription info
+      - ${HOST_AZURE_SCANNER_PATH}/.azure:/root/.azure 
+      - ${HOST_AZURE_SCANNER_PATH}/report/settings.py:/praetorian-tools/cis_azure_scanner/report/settings.py  # override with your subscription info
     ports:
-      - 8888:8888
-      - 5000:5000
+      - ${JUPYTER_PORT}:8888
+      - ${FLASK_PORT}:5000
     entrypoint: ["jupyter", "notebook", "--port=8888", "--ip=0.0.0.0", "--allow-root"]
