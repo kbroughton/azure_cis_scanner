@@ -1,0 +1,7 @@
+include LICENSE
+include README.md
+include requirements.txt
+recursive-include report/cis_structure.yaml *
+recursive-include report/static *
+recursive-include report/templates *
+recursive-include scanner/ *

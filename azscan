@@ -1,0 +1,3 @@
+import package.module
+
+package.azure_cis_scanner.main()
