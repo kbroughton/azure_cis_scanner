@@ -2,60 +2,71 @@ from azure_cis_scanner import utils
 import argparse
 import os
 import subprocess
+import traceback
 import time
 from importlib.util import spec_from_file_location, module_from_spec
 from os.path import splitext, basename
 
-def loadModule(moduleName, **kwargs):
-    name = splitext(basename(moduleName))[0]
-    print(name)
-    spec = spec_from_file_location(name, moduleName)
+from azure.common.client_factory import get_client_from_cli_profile, get_client_from_auth_file
+from azure.mgmt.compute import ComputeManagementClient
+from azure.mgmt.resource import ResourceManagementClient, SubscriptionClient
+
+def load_module(module_name, **kwargs):
+    name = splitext(basename(module_name))[0]
+    spec = spec_from_file_location(name, module_name)
     module = module_from_spec(spec)
     module.config = kwargs
     spec.loader.exec_module(module)
     return module
 
-def dprint(thing):
+def dprint(*thing):
     print(str(thing))
     print(thing)
 
 
-def ddprint(thing):
+def ddprint(*thing):
     dprint(thing)
     print(type(thing))
     print(dir(thing))
 
 MODULES_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules')
 
-def _get_modules():
-    #return [x for x in os.listdir(MODULES_PATH) if x.endswith('.py')]
-    return ['security_center.py']
-
+def _get_modules(modules):
+    if modules:
+        return modules
+    else:
+        return [x for x in os.listdir(MODULES_PATH) if x.endswith('.py')]
+    
 def _get_data(config):
     raw_data_dir, filtered_data_dir = config['raw_data_dir'], config['filtered_data_dir']
-    modules = _get_modules()
+    modules = _get_modules(config['modules'])
     for module in modules:
         print('Getting data for {}'.format(module.strip('.py')))
         module_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules', module)
         try:
-            mod = loadModule(module_path, **dict(raw_data_dir=raw_data_dir, filtered_data_dir=filtered_data_dir))
+            mod = load_module(module_path, **dict(raw_data_dir=raw_data_dir, filtered_data_dir=filtered_data_dir))
             mod.get_data()
         except Exception as e:
             print("Exception was thrown! Unable to run get_data() for {}".format(module))
+            print("Module path {}".format(module_path))
             print(e)
+            print(traceback.format_exc())
 
 def _test_controls(config):
     raw_data_dir, filtered_data_dir = config['raw_data_dir'], config['filtered_data_dir']
-    modules = _get_modules()
+    modules = _get_modules(config['modules'])
     for module in modules:
         print('Testing controls for {}'.format(module.strip('.py')))
         module_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules', module)
         try:
-            mod = loadModule(module_path, **dict(raw_data_dir=raw_data_dir, filtered_data_dir=filtered_data_dir))
+            mod = load_module(module_path, **dict(raw_data_dir=raw_data_dir, filtered_data_dir=filtered_data_dir))
+            print("here")
             mod.test_controls()
         except Exception as e:
             print("Exception was thrown! Unable to run test_controls() for {}".format(module))
+            print("Module path {}".format(module_path))
             print(e)
+            print(traceback.format_exc())
 
 
 
@@ -70,6 +81,7 @@ def main():
     parser = mainparser.parse_args()
 
     print("Checking to see if there is an Azure account associated with this session.")
+
     account_list = utils.call("az account list")
 
     scans_dir = parser.scans_dir
@@ -103,28 +115,22 @@ def main():
     subscription_dirname = subscription_name.split(' ')[0] + '-' + subscription_id.split('-')[0]
     scan_data_dir, raw_data_dir, filtered_data_dir = utils.set_data_paths(subscription_dirname, scans_dir)
 
-    config = dict(raw_data_dir=raw_data_dir, filtered_data_dir=filtered_data_dir, )
+    modules = parser.modules
+    if modules:
+        modules = modules.split(',')
+    config = dict(raw_data_dir=raw_data_dir, filtered_data_dir=filtered_data_dir, modules=modules )
 
     stages = parser.stages.split(',')
 
     if 'data' in stages:
         _get_data(config)
     if 'test' in stages:
+        print('test', config)
         _test_controls(config)
     if 'report' in stages:
         report_path = os.path.join( os.path.dirname(__file__), '../', 'report')
         subprocess.Popen("flask app.py", cwd=report_path)
-    #mainparser.add_argument('--graphfile-path', default='default', help='graphfile path for visualizing')
-    # subparsers = mainparser.add_subparsers(
-    # 	title='subcommands',
-    # 	description='The different functionalities of this tool.',
-    # 	dest='picked_cmd',
-    # 	help='Select one to execute.'
-    # )
-    # graphparser = subparsers.add_parser('graph',
-    # 	help='For pulling information from an AWS account.',
-    # 	description='Uses the botocore library to query the AWS API and compose a graph of principal relationships. By default, running this command will create a graph.'
-    # )
+
 
 def az_login():
     from azure.common.client_factory import get_client_from_cli_profile
@@ -133,22 +139,8 @@ def az_login():
     from msrestazure.azure_active_directory import MSIAuthentication
 
     client = get_client_from_cli_profile(SubscriptionClient)
-    #print(dir(client.config))
     accounts = [ x.as_dict() for x in list(client.subscriptions.list())]
     print(accounts)
-
-        #dprint(list(map(dict, list(client.subscriptions.list()))))
-    #dprint(client.subscriptions.get()['display_name'])
-
-    # credentials = MSIAuthentication()
-    # # Create a Subscription Client
-    # subscription_client = SubscriptionClient(credentials)
-    # subscription = next(subscription_client.subscriptions.list())
-    # subscription_id = subscription.subscription_id
-    # print(subscription_id)
-    # # Create a Resource Management client
-    # resource_client = ResourceManagementClient(credentials, subscription_id)
-
 
 
 if __name__ == "__main__":

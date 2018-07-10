@@ -1,8 +1,24 @@
 import os
 import yaml
 
+from azure.common.client_factory import get_client_from_cli_profile, get_client_from_auth_file
+from azure.mgmt.compute import ComputeManagementClient
+from azure.mgmt.resource import ResourceManagementClient, SubscriptionClient
+from msrestazure.azure_active_directory import MSIAuthentication
+
 filtered_virtual_machines_path = os.path.join(filtered_data_dir, 'virtual_machines_filtered.json')
 virtual_machines_path = os.path.join(raw_data_dir, 'virtual_machines.json')
+
+def get_vms(client, subscription_id):
+    instances = []
+    resource_groups = get_resource_groups(client, subscription_id)
+    compute = ComputeManagementClient(client.config.credentials, subscription_id)
+    print(resource_groups)
+    for resource_group in [x['name'] for x in resource_groups]:
+        vms = compute.virtual_machines.list(resource_group)
+        print(vms)
+        instances.extend(vms.advance_page())
+    return [x.as_dict() for x in instances]
 
 def get_virtual_machines(virtual_machines_path):
     """

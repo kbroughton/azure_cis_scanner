@@ -7,6 +7,8 @@ import re
 import functools
 import json
 import requests
+import traceback
+
 
 token_expiry = None
 access_token = None
@@ -49,10 +51,13 @@ def call(command, retrieving_access_token=False):
         command = command.split()           # subprocess needs an array of arguments
     try :
         print('running: ', command)
-        return subprocess.check_output(command, shell=False, stderr=None).decode('utf-8')
+        result = subprocess.check_output(command, shell=False, stderr=subprocess.STDOUT).decode('utf-8')
+        print("results", result)
+        return result
     except Exception as e:
         print("An exception occurred while processing command " + str(command) + " Halting execution!")
         print(e)
+        print(traceback.format.exc())
         sys.exit()
 
 

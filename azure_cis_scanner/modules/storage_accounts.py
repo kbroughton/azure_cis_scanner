@@ -1,3 +1,6 @@
+import os
+import yaml
+
 activity_logs_path = os.path.join(raw_data_dir, 'activity_logs.json')
 storage_accounts_path = os.path.join(raw_data_dir, 'storage_accounts.json')
 
@@ -5,8 +8,8 @@ def get_storage_accounts(storage_accounts_path):
     """
     Query Azure api for storage accounts info and save to disk
     """
-    storage_accounts = !az storage account list
-    storage_accounts = yaml.safe_load(storage_accounts.nlstr)
+    storage_accounts_cmd = "az storage account list"
+    storage_accounts = jsonify(call(storage_accounts_cmd))
         
     with open(storage_accounts_path, 'w') as f:
         json.dump(storage_accounts, f, indent=4, sort_keys=True)
@@ -29,8 +32,11 @@ def get_activity_logs(activity_logs_path, resource_groups):
     start_time = get_start_time(activity_logs_starttime_timedelta)
     for resource_group in resource_groups:
         resource_group = resource_group['name']
-        activity_log = !az monitor activity-log list --resource-group {resource_group} --start-time {start_time}
-        activity_log = yaml.safe_load(activity_log.nlstr)
+        #activity_log = !az monitor activity-log list --resource-group {resource_group} --start-time {start_time}
+        #activity_log = yaml.safe_load(activity_log.nlstr)
+        activity_log_cmd = "az monitor activity-log list --resource-group {resource_group} --start-time {start_time}".format(
+            resource_group=resource_group, start_time=start_time)
+        activity_log = jsonify(call(activity_log_cmd))
         activity_logs[resource_group] = activity_log
     with open(activity_logs_path, 'w') as f:
         json.dump(activity_logs, f, indent=4, sort_keys=True)
@@ -149,11 +155,17 @@ def public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accoun
         account_name = account["name"]
         resource_group = account["resourceGroup"]
         # get a key that works.  likely this will be a specific key not key[0]
-        keys = !az storage account keys list --account-name {account_name} --resource-group {resource_group}
-        keys = yaml.safe_load(keys.nlstr)
+        #keys = !az storage account keys list --account-name {account_name} --resource-group {resource_group}
+        #keys = yaml.safe_load(keys.nlstr)
+        keys_cmd = "az storage account keys list --account-name {account_name} --resource-group {resource_group}".format(
+            account_name=account_name, resource_group=resource_group)
+        keys = jsonify(call(keys_cmd))
         key = keys[0]
-        container_list = !az storage container list --account-name {account_name} --account-key {account_key}
-        container_list = yaml.load(container_list.nlstr)
+        #container_list = !az storage container list --account-name {account_name} --account-key {account_key}
+        #container_list = yaml.load(container_list.nlstr)
+        container_list_cmd = "az storage container list --account-name {account_name} --account-key {account_key}".format(
+            account_name=account_name, account_key=account_key)
+        container_list = jsonify(call(container_list_cmd))
         for container in container_list:
             print(container)
             items_checked += 1
