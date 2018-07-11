@@ -1,13 +1,11 @@
 version: "3"
 services:
   azure-cis-scanner:
-    image: kbroughton/azure-cis-scanner-apline:0.2
+    image: ${AZURE_CIS_SCANNER_IMAGE}
     volumes:
-      - ${HOST_AZURE_SCANNER_PATH}/scanner/azure_cis_scanner.ipynb:/notebooks/azure_cis_scanner.ipynb
+      - ./:/notebooks/azure_cis_scanner             # Development
       - ${ENGAGEMENTS_DIR}:/engagements
-      - ./:/praetorian-tools/cis_azure_scanner  # DEVELOPMENT MODE
-      - ${HOST_AZURE_SCANNER_PATH}/.azure:/root/.azure 
-      - ${HOST_AZURE_SCANNER_PATH}/report/settings.py:/praetorian-tools/cis_azure_scanner/report/settings.py  # override with your subscription info
+      - ${AZURE_CONFIG_DIR}:/root/.azure 
     ports:
       - ${JUPYTER_PORT}:8888
       - ${FLASK_PORT}:5000

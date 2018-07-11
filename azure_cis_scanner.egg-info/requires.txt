@@ -5,4 +5,3 @@ flask
 flask-nav
 azure
 azure-cli-core
-azurerm

@@ -1,0 +1,3 @@
+[console_scripts]
+azscan = azure_cis_scanner.__main__:main
+

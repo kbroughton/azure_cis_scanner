@@ -4,12 +4,6 @@ import os
 import json
 from azure_cis_scanner.utils import call, jsonify
 
-import azurerm
-from azure.common.client_factory import get_client_from_cli_profile, get_client_from_auth_file
-from azure.mgmt.compute import ComputeManagementClient
-from azure.mgmt.resource import ResourceManagementClient, SubscriptionClient
-from msrestazure.azure_active_directory import MSIAuthentication
-
 security_center_filtered_path = os.path.join(config['filtered_data_dir'], 'security_center_filtered.json')
 security_center_path = os.path.join(config['raw_data_dir'], "security_center.json")
 
@@ -18,19 +12,15 @@ def get_security_center(security_center_path):
     """
     Query Azure api for storage accounts info and save to disk
     """
-    #access_token_cmd = 'az account get-access-token --query "{subscripton:subscription,accessToken:accessToken}" --out tsv'
+    access_token_cmd = 'az account get-access-token --query "{subscripton:subscription,accessToken:accessToken}" --out tsv'
     #print(output.nlstr.split())
-    #access_token = call(access_token_cmd)
-
-    
+    access_token = call(access_token_cmd.split(' '))
+    subscription_id, token = access_token.split()
     # The usual split breaks up bearer token phrase with spaces and breaks
-#     security_center_cmd = 'curl -X GET -H'.split() + ["Authorization: Bearer {token}".format(token=token)] + \
-#     ["-H","Content-Type: application/json"] + \
-#     ["https://management.azure.com/subscriptions/{subscription_id}/\
-# providers/microsoft.Security/policies?api-version=2015-06-01-preview".format(subscription_id=subscription_id)]
-
-
-    access_token = azurerm.get_access_token_from_cli()
+    security_center_cmd = 'curl -X GET -H'.split() + ["Authorization: Bearer {token}".format(token=token)] + \
+    ["-H","Content-Type: application/json"] + \
+    ["https://management.azure.com/subscriptions/{subscription_id}/\
+providers/microsoft.Security/policies?api-version=2015-06-01-preview".format(subscription_id=subscription_id)]
 
     security_center = jsonify(call(security_center_cmd))
     #security_center = yaml.load(security_center.nlstr)

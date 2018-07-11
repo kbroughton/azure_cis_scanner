@@ -42,7 +42,34 @@ Filtered data will be in files named by the finding and have the following forma
 }
 ```
 
-## Getting Started
+## Quickstart
+
+### Commandline + pip install
+
+```
+pip install azure_scanner
+```
+
+If you only have one subscription, defaults will work.  If you have multiple
+subscriptions, due to a limitation in the python-azure-sdk, you need to ensure that the default subscription is the currently active subscription `az account set --subscription aaaaa-bbbbbb-111111-444444-xxxxx`.
+
+### Github
+```
+pip3 install -r requirements.txt
+python3/controller.py azure_cis_scanner/contoller.py --modules "security_center.py,storage_accounts.py" --stages "data,tests"
+```
+
+### Docker
+If you already have an account and the default subscription is correct,
+you can just copy the docker-compose.yml file to a new folder, copy .env-sample to .env next to the docker-compose.yml and run
+
+```
+docker-compose up
+```
+
+This will mount ~/.azure into the container and use the default subscription.
+
+## Detailed Usage
 
 Best practice is to work inside a docker container to avoid any issues that would arise from a multi-tenant environment.
 If running from the native command-line, take care that multi-subscription calls like permissions.sh only see the right target
@@ -55,6 +82,20 @@ We assume you have already created an azure account or have been granted credent
 We will login once outside of the container (merges creds with anything in ~/.azure) to get the correct subscription id, and then
 again inside the container to restrict ourselves to the correct creds only.
 
+### Create service principals if using multiple subscriptions
+Following the [Azure Documentation](https://docs.microsoft.com/en-us/python/azure/python-sdk-azure-authenticate?view=azure-python) create a service principal for a given subscription:
+
+```
+az ad sp create-for-rbac --name "<service-principal-name>" --password "STRONG-SECRET-PASSWORD" > ~/.azure/<service-principal-name>.json
+
+```
+where <service-principal-name> can be anything - a good choice might be
+scanner-<first-digits-of-subscription> and STRONG-SECRET-PASSWORD is also
+chosen randomly.
+
+Now run the scanner providing the --auth-location
+```
+python3 azure_cis_scanner/controller.py --auth-location ~/.azure/<service-principal-name>.json
 
 ### Configure
 

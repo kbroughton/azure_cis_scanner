@@ -1,0 +1,35 @@
+
+<!doctype html>
+<html>
+<head>
+<title>{{msg|default(title)}}</title>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='base.css')}}">
+</head>
+<body>
+  {{nav.top.render(id='top-navbar')}}
+  <h1>{{ msg|default(title) }}</h1>
+
+      <table>
+            <tr>
+                <td>Number</td> 
+                <td>Subsection Name</td>
+                <td>Items Checked</td>
+                <td>Items Flagged</td>
+                <td>Date</td>
+            </tr>
+    {% for subsection_number, subsection_name, finding_name in findings_table %}
+      {% if finding_name in stats[service] %}
+            <tr>
+              <td><a href="{{'/services/' + service + '/' + subsection_name }}">{{ subsection_number }}</a></td>
+              <td>{{ subsection_name }}</td> 
+              <td>{{ stats[service][finding_name]['items_checked'] | default("0") }}</td>
+              <td>{{ stats[service][finding_name]['items_flagged'] | default("0") }}</td>
+              <td>{{ stats[service][finding_name]['date'] | default("No data") }}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+  
+
+    </table>
+</body>
+</html>

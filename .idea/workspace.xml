@@ -3,10 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="368c8b19-a2cb-4c64-a8be-a6c1ce06f212" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.env-sample" beforeDir="false" afterPath="$PROJECT_DIR$/.env-sample" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/azure_cis_scanner/azure_cis_scanner.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/azure_cis_scanner/azure_cis_scanner.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-dev.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scanner/azure_cis_scanner.ipynb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scanner/controller.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scanner/generate_latex_tables.py" beforeDir="false" />
@@ -39,7 +42,7 @@
       <file leaf-file-name="controller.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/azure_cis_scanner/controller.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
+            <state relative-caret-position="212">
               <caret line="113" selection-start-line="113" selection-end-line="113" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
@@ -152,10 +155,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="42" />
-    <option name="y" value="23" />
-    <option name="width" value="1600" />
-    <option name="height" value="980" />
+    <option name="x" value="58" />
+    <option name="y" value="89" />
+    <option name="width" value="1709" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -248,21 +251,21 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="42" y="23" width="1600" height="980" extended-state="0" />
+    <frame x="58" y="89" width="1709" height="1040" extended-state="0" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" sideWeight="0.333125" side_tool="true" visible="true" weight="0.39955848" />
+      <window_info anchor="bottom" id="Event Log" sideWeight="0.33294323" side_tool="true" visible="true" weight="0.3747412" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Python Console" />
       <window_info anchor="bottom" id="Terminal" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49816176" visible="true" weight="0.255" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49816176" visible="true" weight="0.23873611" />
       <window_info anchor="bottom" id="Docker" />
       <window_info anchor="right" id="Database" />
       <window_info anchor="right" id="SciView" />
       <window_info id="Structure" order="1" sideWeight="0.5018382" side_tool="true" weight="0.25154132" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.666875" visible="true" weight="0.39955848" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.66705674" visible="true" weight="0.3747412" />
       <window_info id="Favorites" sideWeight="0.5018382" side_tool="true" weight="0.24908425" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -345,7 +348,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/azure_cis_scanner/controller.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
+        <state relative-caret-position="212">
           <caret line="113" selection-start-line="113" selection-end-line="113" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />

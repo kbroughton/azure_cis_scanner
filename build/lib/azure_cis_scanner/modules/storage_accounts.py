@@ -1,8 +1,5 @@
-import os
-import yaml
-
-activity_logs_path = os.path.join(config['raw_data_dir'], 'activity_logs.json')
-storage_accounts_path = os.path.join(config['raw_data_dir'], 'storage_accounts.json')
+activity_logs_path = os.path.join(raw_data_dir, 'activity_logs.json')
+storage_accounts_path = os.path.join(raw_data_dir, 'storage_accounts.json')
 
 def get_storage_accounts(storage_accounts_path):
     """

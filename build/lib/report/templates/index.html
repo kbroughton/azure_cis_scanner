@@ -1,0 +1,70 @@
+
+<!doctype html>
+<html>
+<head>
+<title>{{msg|default('Azure CIS Scanner')}}</title>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='base.css')}}">
+</head>
+<body>
+  {{nav.top.render(id='top-navbar')}}
+  <center>
+  <h1>{{msg|default('Azure Foundations Benchmark 1.0')}}</h1>
+  <h2>{{msg|default('Center for Internet Security')}}</h2>
+  <h3>{{msg|default('a tool from Praetorian')}}</h3>
+  </center>
+
+<form action="{{ url_for('_subscription_dir')}}" method="post" class="form-inline"> 
+<div class="form-group">
+<label for="selected_active_subscription_dir">Selected Subscription Dir:</label>
+<select class="form-control" name="selected_active_subscription_dir">
+    {% for subscription_dir in subscription_dirs %}
+    <option value="{{ selected_active_subscription_dir }}">{{ subscription_dir[0] }}</option>"
+    {% endfor %}
+ </select>
+</div>
+
+<select name= account method="GET" action="/">
+    {% for subscription_dir in subscription_dirs %}
+    <option value="{{ selected_active_subscription_dir }}"{% if subscription_dir[0] == state.selected %} selected{% endif %}>{{ subscription_dir[1] }}</option>"
+    {% endfor %}
+</select>
+    selected {{ state }}    
+    current {{ active_subscription_dir }}
+<script charset="utf-8" type="text/javascript">
+    // this is called a javascript closure. it also wont run the code until the page is finished loading
+    // and it protects the scope of your variables from other code you may later add to the page
+    $(function() {
+    	console.log("javascript!"); 
+        var selected_active_subscription_dir = $('#selected_active_subscription_dir')
+
+        selected_active_subscription_dir.on('change', function() {
+            // fires when room selection changes
+            getUpdatedSettings();
+        });
+
+        function getUpdatedSettings() {
+            // data to send back to the server
+            var state = {
+                selected_active_subscription_dir: selected_active_subscription_dir.val()
+            };
+
+            // make the selections disabled while fetching new data
+
+            $.getJSON("/_subscription_dir/", state, function(response) {
+                // this send the room and the day select vals to the URL specified
+                // we will need to add a handler for this in Flask
+
+                // for the purpose of the example I am assuming the response will be
+                // a JSON object that has a dictionary of elements ("am_1" and "am_2")
+                // each of which is a list of values for the selects....
+
+                console.log(response); // good for QA!
+
+            });
+        }
+
+    });
+</script>
+
+</body>
+</html>
