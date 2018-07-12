@@ -9,7 +9,7 @@ from msrestazure.azure_active_directory import MSIAuthentication
 filtered_virtual_machines_path = os.path.join(config['filtered_data_dir'], 'virtual_machines_filtered.json')
 virtual_machines_path = os.path.join(config['raw_data_dir'], 'virtual_machines.json')
 
-def get_vms(client, subscription_id):
+def get_vms(client=config['compute_client'], subscription_id=config['subscription_id']):
     instances = []
     resource_groups = get_resource_groups(client, subscription_id)
     compute = ComputeManagementClient(client.config.credentials, subscription_id)

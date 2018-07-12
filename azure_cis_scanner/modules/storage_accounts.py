@@ -1,15 +1,21 @@
+import datetime
 import os
 import yaml
+import json
+
+from azure_cis_scanner import utils
+from azure_cis_scanner.utils import load_resource_groups
 
 activity_logs_path = os.path.join(config['raw_data_dir'], 'activity_logs.json')
 storage_accounts_path = os.path.join(config['raw_data_dir'], 'storage_accounts.json')
+resource_groups_path = os.path.join(config['raw_data_dir'], 'resource_groups.json')
 
 def get_storage_accounts(storage_accounts_path):
     """
     Query Azure api for storage accounts info and save to disk
     """
     storage_accounts_cmd = "az storage account list"
-    storage_accounts = jsonify(call(storage_accounts_cmd))
+    storage_accounts = json.loads(utils.call(storage_accounts_cmd))
         
     with open(storage_accounts_path, 'w') as f:
         json.dump(storage_accounts, f, indent=4, sort_keys=True)
@@ -36,7 +42,7 @@ def get_activity_logs(activity_logs_path, resource_groups):
         #activity_log = yaml.safe_load(activity_log.nlstr)
         activity_log_cmd = "az monitor activity-log list --resource-group {resource_group} --start-time {start_time}".format(
             resource_group=resource_group, start_time=start_time)
-        activity_log = jsonify(call(activity_log_cmd))
+        activity_log = json.loads(utils.call(activity_log_cmd))
         activity_logs[resource_group] = activity_log
     with open(activity_logs_path, 'w') as f:
         json.dump(activity_logs, f, indent=4, sort_keys=True)
@@ -159,13 +165,13 @@ def public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accoun
         #keys = yaml.safe_load(keys.nlstr)
         keys_cmd = "az storage account keys list --account-name {account_name} --resource-group {resource_group}".format(
             account_name=account_name, resource_group=resource_group)
-        keys = jsonify(call(keys_cmd))
+        keys = json.loads(utils.call(keys_cmd))
         key = keys[0]
         #container_list = !az storage container list --account-name {account_name} --account-key {account_key}
         #container_list = yaml.load(container_list.nlstr)
         container_list_cmd = "az storage container list --account-name {account_name} --account-key {account_key}".format(
             account_name=account_name, account_key=account_key)
-        container_list = jsonify(call(container_list_cmd))
+        container_list = json.loads(utils.call(container_list_cmd))
         for container in container_list:
             print(container)
             items_checked += 1
@@ -184,7 +190,7 @@ def get_data():
     """
     Generate json for the storage_accounts findings
     """
-    resource_groups = get_resource_groups(resource_groups_path)
+    resource_groups = load_resource_groups(resource_groups_path)
     print(resource_groups)
     get_activity_logs(activity_logs_path, resource_groups)
     get_storage_accounts(storage_accounts_path)

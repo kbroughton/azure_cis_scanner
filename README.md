@@ -1,6 +1,6 @@
 # azure_cis_scanner
 
-Security Compliance Scanning tool for CIS Azure Benchmark 1.0
+Security Compliance Scanning tool using CIS Azure Benchmark 1.0
 
 The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2.
 

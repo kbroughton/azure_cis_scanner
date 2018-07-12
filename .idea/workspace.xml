@@ -2,27 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="368c8b19-a2cb-4c64-a8be-a6c1ce06f212" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.env-sample" beforeDir="false" afterPath="$PROJECT_DIR$/.env-sample" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/azure_cis_scanner/azure_cis_scanner.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/azure_cis_scanner/azure_cis_scanner.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/azure_cis_scanner.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/controller.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/generate_latex_tables.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/modules/logging_and_monitoring.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/modules/networking.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/modules/other_security_considerations.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/modules/security_center.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/modules/sql_databases.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/modules/sql_servers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/modules/storage_accounts.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/modules/virtual_machines.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/render_utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanner/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/azure_cis_scanner/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/azure_cis_scanner/controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/azure_cis_scanner/modules/virtual_machines.py" beforeDir="false" afterPath="$PROJECT_DIR$/azure_cis_scanner/modules/virtual_machines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/azure_cis_scanner/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/azure_cis_scanner/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,6 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/azure_cis_scanner$utils.coverage" NAME="utils Coverage Results" MODIFIED="1531390483468" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/azure_cis_scanner" />
     <SUITE FILE_PATH="coverage/azure_cis_scanner$controller.coverage" NAME="controller Coverage Results" MODIFIED="1530507162442" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FavoritesManager">
@@ -42,11 +29,8 @@
       <file leaf-file-name="controller.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/azure_cis_scanner/controller.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="113" selection-start-line="113" selection-end-line="113" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="299">
+              <caret line="101" column="42" selection-start-line="101" selection-start-column="42" selection-end-line="101" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -78,7 +62,7 @@
         <entry file="file://$PROJECT_DIR$/azure_cis_scanner/modules/security_center.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="225">
-              <caret line="72" selection-start-line="72" selection-end-line="72" />
+              <caret line="81" selection-start-line="81" selection-end-line="81" />
               <folding>
                 <element signature="e#56#67#0" expanded="true" />
               </folding>
@@ -107,8 +91,20 @@
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/azure_cis_scanner/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="51" selection-start-line="51" selection-end-line="51" />
+            <state relative-caret-position="127">
+              <caret line="149" column="31" selection-start-line="149" selection-start-column="31" selection-end-line="149" selection-end-column="31" />
+              <folding>
+                <element signature="e#1#16#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="credentials.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/azure_cis_scanner/credentials.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="412">
+              <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
             </state>
           </provider>
         </entry>
@@ -129,7 +125,11 @@
       <find>!</find>
       <find>subscription_id</find>
       <find>nlstr</find>
+      <find>msrest</find>
+      <find>subscription_client = SubscriptionClient(credentials)</find>
       <find>scans_dir</find>
+      <find>az acc</find>
+      <find>traceba</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -139,8 +139,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/__init__.py" />
-        <option value="$PROJECT_DIR$/azure_cis_scanner/utils.py" />
         <option value="$PROJECT_DIR$/azure_cis_scanner/modules/security_center.py" />
+        <option value="$PROJECT_DIR$/azure_cis_scanner/utils.py" />
         <option value="$PROJECT_DIR$/azure_cis_scanner/controller.py" />
       </list>
     </option>
@@ -155,10 +155,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="58" />
-    <option name="y" value="89" />
-    <option name="width" value="1709" />
-    <option name="height" value="1040" />
+    <option name="x" value="115" />
+    <option name="y" value="52" />
+    <option name="width" value="1600" />
+    <option name="height" value="980" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -170,6 +170,11 @@
           <expand>
             <path>
               <item name="azure_cis_scanner" type="b2602c69:ProjectViewProjectNode" />
+              <item name="azure_cis_scanner" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="azure_cis_scanner" type="b2602c69:ProjectViewProjectNode" />
+              <item name="azure_cis_scanner" type="462c0819:PsiDirectoryNode" />
               <item name="azure_cis_scanner" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -184,6 +189,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -197,7 +203,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.controller">
+  <component name="RunManager" selected="Python.utils">
     <configuration name="controller" type="PythonConfigurationType" factoryName="Python">
       <module name="azure_cis_scanner" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -218,6 +224,25 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="true" />
     </configuration>
+    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="azure_cis_scanner" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/azure_cis_scanner" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/azure_cis_scanner/utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="azure_cis_scanner" type="Python.FlaskServer" factoryName="Flask server">
       <module name="azure_cis_scanner" />
       <option name="target" value="$PROJECT_DIR$/report/app.py" />
@@ -235,7 +260,13 @@
     <list>
       <item itemvalue="Flask server.azure_cis_scanner" />
       <item itemvalue="Python.controller" />
+      <item itemvalue="Python.utils" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.utils" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -251,21 +282,22 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="58" y="89" width="1709" height="1040" extended-state="0" />
+    <frame x="115" y="52" width="1600" height="980" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" sideWeight="0.33294323" side_tool="true" visible="true" weight="0.3747412" />
+      <window_info anchor="bottom" id="Event Log" sideWeight="0.500625" side_tool="true" visible="true" weight="0.3289183" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.499375" visible="true" weight="0.3289183" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Python Console" />
       <window_info anchor="bottom" id="Terminal" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49816176" visible="true" weight="0.23873611" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49816176" visible="true" weight="0.255" />
       <window_info anchor="bottom" id="Docker" />
       <window_info anchor="right" id="Database" />
       <window_info anchor="right" id="SciView" />
       <window_info id="Structure" order="1" sideWeight="0.5018382" side_tool="true" weight="0.25154132" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.66705674" visible="true" weight="0.3747412" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.666875" weight="0.39955848" />
       <window_info id="Favorites" sideWeight="0.5018382" side_tool="true" weight="0.24908425" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -287,11 +319,16 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/azure_cis_scanner/controller.py</url>
-          <line>113</line>
+          <line>140</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/azure_cis_scanner/utils.py</url>
+          <line>148</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="13" />
+      <option name="time" value="15" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -322,17 +359,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/azure_cis_scanner/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/azure_cis_scanner/modules/security_center.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
-          <caret line="72" selection-start-line="72" selection-end-line="72" />
+          <caret line="81" selection-start-line="81" selection-end-line="81" />
           <folding>
             <element signature="e#56#67#0" expanded="true" />
           </folding>
@@ -346,13 +376,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/azure_cis_scanner/credentials.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/azure_cis_scanner/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="127">
+          <caret line="149" column="31" selection-start-line="149" selection-start-column="31" selection-end-line="149" selection-end-column="31" />
+          <folding>
+            <element signature="e#1#16#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/azure_cis_scanner/controller.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="113" selection-start-line="113" selection-end-line="113" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="299">
+          <caret line="101" column="42" selection-start-line="101" selection-start-column="42" selection-end-line="101" selection-end-column="42" />
         </state>
       </provider>
     </entry>

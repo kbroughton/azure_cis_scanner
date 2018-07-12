@@ -1,4 +1,6 @@
 from azure_cis_scanner import utils
+from azure_cis_scanner.utils import get_resource_groups
+from azure_cis_scanner.credentials import get_azure_cli_credentials
 import argparse
 import os
 import subprocess
@@ -6,6 +8,7 @@ import traceback
 import time
 from importlib.util import spec_from_file_location, module_from_spec
 from os.path import splitext, basename
+
 
 from azure.common.client_factory import get_client_from_cli_profile, get_client_from_auth_file
 from azure.mgmt.compute import ComputeManagementClient
@@ -76,7 +79,8 @@ def main():
     # TODO, set default in __init__.py or somewhere and make it windows compatible
     mainparser.add_argument('--scans-dir', default='~/engagements/cis_test', help='base dir of where to place or load files')
     mainparser.add_argument('--stages', default='data,test,report', help='comma separated list of steps to run in data,test,render')
-    mainparser.add_argument('--modules', default=None, help='comma separated list of module names e.g. security_center')
+    mainparser.add_argument('--modules', default=None, help='comma separated list of module names e.g. security_center.py')
+    mainparser.add_argument('---skip-modules', default=[], help='comma separated list of module names to skip')
 
     parser = mainparser.parse_args()
 
@@ -97,6 +101,7 @@ def main():
             raise ValueError("supplied subscription id '{}' is invalid".format(parser.subscription_id))
     else:
         try:
+            print("getting active account")
             account = utils.get_active_account()
         except:
             print("No Azure account associated with this session. Please authenticate to continue.")
@@ -118,7 +123,23 @@ def main():
     modules = parser.modules
     if modules:
         modules = modules.split(',')
-    config = dict(raw_data_dir=raw_data_dir, filtered_data_dir=filtered_data_dir, modules=modules )
+    skip_modules = parser.skip_modules
+    if skip_modules:
+        modules = set(modules).difference(set(skip_modules))
+
+    subscription_client, compute_client, rm_client, sql_client = utils.get_clients_from_cli(subscription_id=subscription_id)
+    config = dict(raw_data_dir=raw_data_dir, 
+        filtered_data_dir=filtered_data_dir, 
+        modules=modules,
+        subscription_client=subscription_client,
+        compute_client=compute_client,
+        resource_groups_client=rm_client,
+        sql_client=sql_client
+        )
+
+    ### Get some data common to most modules
+    resource_groups_path = os.path.join(raw_data_dir, "resource_groups.json")
+    resource_groups = get_resource_groups(rm_client, subscription_id, resource_groups_path)
 
     stages = parser.stages.split(',')
 
