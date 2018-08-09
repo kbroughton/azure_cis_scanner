@@ -1,18 +1,42 @@
+import datetime
+import json
 import os
+import traceback
 import yaml
 
-keyvaults_path = os.path.join(raw_data_dir, 'keyvaults.json')
-keyvault_keys_and_secrets_metadata_path = os.path.join(raw_data_dir, 'keyvault_keys_and_secrets_metadata.json')
-locked_resources_path = os.path.join(raw_data_dir, 'locked_resources.json')
-other_security_considerations_filtered_path = os.path.join(filtered_data_dir, 'other_security_considerations_filtered.json')
+from azure.mgmt.keyvault import KeyVaultManagementClient
+from azure.keyvault import KeyVaultClient, KeyVaultAuthentication
+from azure_cis_scanner import utils
+from msrestazure.azure_active_directory import ServicePrincipalCredentials
+#from azure.common.credentials import ServicePrincipalCredentials
+
+from azure_cis_scanner.utils import get_list_from_paged_results, get_service_principal_credentials, AzScannerException
+from azure.keyvault.models.key_vault_error import KeyVaultErrorException
+
+# RESOURCES
+# https://github.com/Azure-Samples/key-vault-recovery-python/blob/master/key_vault_sample_config.py
+
+keyvaults_path = os.path.join(config['raw_data_dir'], 'keyvaults.json')
+keyvault_keys_and_secrets_metadata_path = os.path.join(config['raw_data_dir'], 'keyvault_keys_and_secrets_metadata.json')
+locked_resources_path = os.path.join(config['raw_data_dir'], 'locked_resources.json')
+other_security_considerations_filtered_path = os.path.join(config['filtered_data_dir'], 'other_security_considerations_filtered.json')
+credentials = config['cli_credentials']
+subscription_id = config['subscription_id']
+
+def get_keyvault_client():
+    return KeyVaultClient(credentials)
+
+#############
+# DATA
+#############
 
 def get_keyvaults(keyvaults_path):
     """
     @keyvaults_path: string - path to output json file
     @returns: list of virtual_machines dict
     """
-    keyvaults = !az keyvault list
-    keyvaults = yaml.load(keyvaults.nlstr)
+    kvm_client = KeyVaultManagementClient(credentials, subscription_id)
+    keyvaults = get_list_from_paged_results(kvm_client.vaults.list())
     with open(keyvaults_path, 'w') as f:
         json.dump(keyvaults, f, indent=4, sort_keys=True)
     return keyvaults
@@ -23,8 +47,7 @@ def load_keyvaults(keyvaults_path):
     return keyvaults
 
 def get_locked_resources():
-    lock_list = !az lock list
-    lock_list = yaml.load(lock_list.nlstr)
+    lock_list = json.loads(utils.call("az lock list"))
 
     with open(locked_resources_path, 'w') as f:
         json.dump(lock_list, f, indent=4, sort_keys=True)
@@ -37,16 +60,42 @@ def load_locked_resources(locked_resources_path):
 
 def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_path, keyvaults):
     metadata = {}
+    kvm_client = KeyVaultManagementClient(credentials, subscription_id)
+    kv_client = get_keyvault_client()
+    print(kv_client.config.credentials)       
     for keyvault in keyvaults:        
-        vault_name = keyvault['name']
+        subsciption_id, resource_group, vault_name = parse_vault_id(keyvault['id'])
+        vault_url = 'https://{vault_name}.vault.azure.net'.format(vault_name=vault_name)
+        print('vault_url', vault_url)
         metadata[vault_name] = {}
-        keys = !az keyvault key list --vault-name {vault_name}
-        keys = yaml.load(keys.nlstr)
-        metadata[vault_name]['keys'] = keys
-        secrets = !az keyvault secret list --vault-name {vault_name}
-        secrets = yaml.load(secrets.nlstr)
-        metadata[vault_name]['secrets'] = secrets
-    
+        try:
+            keys = utils.call("az keyvault key list --vault-name {}".format(vault_name))
+            #keys = kv_client.get_keys(vault_url)
+            metadata[vault_name]['keys'] = get_list_from_paged_results(keys)
+        except KeyVaultErrorException as e:
+            if str(e.response) == '<Response [401]>':
+                metadata[vault_name]['keys'] = "UNAUTHORIZED"
+            else:
+                print(e.with_traceback)
+                print(e.response)
+                print(kv_client.config.credentials)         
+                raise(Exception("Unexpected KeyVaultErrorException response for vault {}".format(vault_url)))
+
+        try:
+            secrets = utils.call("az keyvault secret list --vault-name {}".format(vault_name))
+            #secrets = kv_client.get_secrets(vault_url)    
+            metadata[vault_name]['secrets'] = get_list_from_paged_results(secrets)
+        except KeyVaultErrorException as e:
+            if str(e.response) == '<Response [401]>':
+                metadata[vault_name]['secrets'] = "UNAUTHORIZED"
+            else:
+                print(e.with_traceback)
+                print(e.response)
+                raise(Exception("Unexpected KeyVaultErrorException response"))
+        except AzScannerException as e:
+            print("Error calling command {}".format(e.message))
+            print(e.with_traceback)
+
     with open(keyvault_keys_and_secrets_metadata_path, 'w') as f:
         json.dump(metadata, f, indent=4, sort_keys=True)
     return metadata
@@ -60,6 +109,18 @@ def get_data():
     keyvaults = get_keyvaults(keyvaults_path)
     get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_path, keyvaults)
     get_locked_resources()
+
+def parse_vault_id(vault_id):
+    """
+    parse the returned vaults
+    vaults.list() returns {'url': '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.KeyVault/vaults/{vaultName}'}
+    """
+    _, _, subscription_id, _, resource_group, *unimportant, vault_name  = vault_id.split('/')
+    return subscription_id, resource_group, vault_name
+
+###############
+# TESTS
+###############
 
 MAX_EXPIRY_ROTATION_DAYS = 730
 # 8.1 and 8.2

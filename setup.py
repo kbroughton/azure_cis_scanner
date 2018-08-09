@@ -67,7 +67,7 @@ setup(
         'Programming Language :: Python :: 3.6'
     ],
     scripts=[
-      azscanner,
-      azscanner.bat
+      'bin/azscanner',
+      'bin/azscanner.bat'
     ]
 )

@@ -45,15 +45,16 @@ def get_azure_cli_credentials(resource=None, with_tenant=False, subscription_id=
     :rtype: tuple
     """
     profile = get_cli_profile()
-    if subscription_id:
-        profile.set_active_subscription(subscription_id)
+    print("profile", profile)
+    # if subscription_id:
+    #     profile.set_active_subscription(subscription_id)
         
-    cred, subscription_id, tenant_id = profile.get_login_credentials(resource=resource)
+    cred, subscription_id, tenant_id = profile.get_login_credentials(resource=resource, subscription_id=subscription_id)
+    #cred, subscription_id, tenant_id = profile.get_login_credentials(resource=resource)
     if with_tenant:
         return cred, subscription_id, tenant_id
     else:
         return cred, subscription_id
-
 
 try:
     from msrest.authentication import (

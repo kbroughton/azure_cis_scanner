@@ -4,6 +4,10 @@ Security Compliance Scanning tool using CIS Azure Benchmark 1.0
 
 The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2.
 
+## BETA NOTICE
+
+This private beta is intended to expose the Azure CIS Scanner to a small handful of Azure security users for focused, high-quality testing and feedback to help perfect and expand on the tool's capabilities before its official release. While this will be an open source project when it's released, we ask everyone in the beta to please not share internal tool details (such as source code) until after the public release. Please do not join the beta if you can't agree to that.
+
 This project is not yet production ready and should only be run from a local machine not exposed to untrusted networks.
 
 ## The scanner can generate reports that mirror the CIS sections.
@@ -184,11 +188,13 @@ Inside the container we now run a flask app to server generated html pages with 
 
 ```
 bash-4.4 scanner$ cd ../report
-bash-4.4 report$ python3 app.py
+bash-4.4 report$ flask app.py
 ```
 Browse to 127.0.0.1:5000 to view the report.  The subscription switching via the UI does not work yet.
 
 Currently, graphs will not display until there are two days of data.
+
+If you wish to work with the scanner in an interactive jupyter notebook, open `127.0.0.1:8888` and browse to the azure_cis_scanner.ipynb file.
 
 ## Requesting credentials with the correct RBACs to run the scanner
 If you need to run the scanner on someone else's Azure environment, you should ask for the minimum possible
@@ -256,6 +262,11 @@ We may switch from tuple to nested dict in the future.
 * Replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
 * Add git hooks to automatically remove cell output of azure_cis_scanner.ipynb to avoid checking in sensitive info
 
+## Contributing 
+az_scanner uses the python-azure-sdk.  There are a few limitations compared to the azure cli.
+Some good resources are: 
+*[Azure Samples](https://github.com/Azure-Samples?utf8=%E2%9C%93&q=python&type=&language=)
+*
 ## Digging Deeper
 
 A Scanner is a good first tool for securing a cloud environment to ensure best practices and secure configuration settings are employed.
@@ -264,4 +275,6 @@ However, this scanner does not assess the health of your IAM policies and roles 
 More advanced SecOps teams should consider leveraging automation tools, policy configurations, Azure Quick Templates, EventGrid and many other advanced features.
 
 Need manual penetration testing?  Praetorian has expertise in the Cloud, IOT, NetSec and more.
+
+![Azure Security Journey Stages](images/Azure_Security_Stages.png?raw=true "Azure Security Journey Stages")
 

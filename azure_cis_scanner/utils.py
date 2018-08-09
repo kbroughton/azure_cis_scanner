@@ -9,16 +9,97 @@ import requests
 import traceback
 import yaml
 
-from azure_cis_scanner.credentials import get_azure_cli_credentials
-#from azure.common.client_factory import get_client_from_cli_profile, get_client_from_auth_file
+# azure_cis_scanner.credentials is a modification of https://github.com/Azure/azure-sdk-for-python/blob/master/azure-common/azure/common/credentials.py
+# until https://github.com/Azure/azure-sdk-for-python/issues/2898 gets fixed
+from azure.common.client_factory import get_client_from_cli_profile, get_client_from_auth_file
 from azure.mgmt.compute import ComputeManagementClient
 from azure.mgmt.sql import SqlManagementClient
+from azure.mgmt.monitor import MonitorManagementClient
+from azure.mgmt.network import NetworkManagementClient
+from azure.mgmt.monitor.models import RuleMetricDataSource
 from azure.mgmt.resource import ResourceManagementClient, SubscriptionClient
 from azure.common.credentials import ServicePrincipalCredentials
+
+from azure_cis_scanner.credentials import get_azure_cli_credentials
 
 AZURE_CONFIG_DIR = os.path.expanduser('~/.azure')
 AZURE_PROFILE_PATH = os.path.join(AZURE_CONFIG_DIR, 'azureProfile.json')
 AZURE_CREDENTIALS_PATH = os.path.join(AZURE_CONFIG_DIR, 'credentials')
+AZURE_SERVICE_PRINCIPALS_PATH = os.path.join(AZURE_CONFIG_DIR, 'servicePrincipals.json')
+
+# https://github.com/Azure/azure-cli/blob/dev/src/command_modules/azure-cli-keyvault/azure/cli/command_modules/keyvault/_client_factory.py
+def keyvault_data_plane_factory(cli_ctx, _):
+    from azure.keyvault import KeyVaultAuthentication, KeyVaultClient
+    from azure.cli.core.profiles import ResourceType, get_api_version
+    version = str(get_api_version(cli_ctx, ResourceType.DATA_KEYVAULT))
+
+    def get_token(server, resource, scope):  # pylint: disable=unused-argument
+        import adal
+        from azure.cli.core._profile import Profile
+        try:
+            return Profile(cli_ctx=cli_ctx).get_raw_token(resource)[0]
+        except adal.AdalError as err:
+            from knack.util import CLIError
+            # pylint: disable=no-member
+            if (hasattr(err, 'error_response') and
+                    ('error_description' in err.error_response) and
+                    ('AADSTS70008:' in err.error_response['error_description'])):
+                raise CLIError(
+                    "Credentials have expired due to inactivity. Please run 'az login'")
+            raise CLIError(err)
+
+    return KeyVaultClient(KeyVaultAuthentication(get_token), api_version=version)
+
+def get_service_principal_credentials(auth_type='sdk'):
+    """
+    Get service principal credentials required by KeyVault, Storage 
+    """
+    if os.path.exists(AZURE_SERVICE_PRINCIPALS_PATH) and (os.stat(AZURE_SERVICE_PRINCIPALS_PATH).st_size != 0):
+        with open(AZURE_SERVICE_PRINCIPALS_PATH, 'r') as f:
+            creds = json.loads(f.read())
+        return creds
+    
+    if auth_type == 'sdk':
+        credentials = json.loads(call("az ad sp create-for-rbac --sdk-auth", stderr=None))
+        sp_credentials = ServicePrincipalCredentials(
+            client_id=credentials['clientId'],
+            secret=credentials['clientSecret'],
+            tenant=credentials['tenantId']
+        )
+
+    with open(AZURE_SERVICE_PRINCIPALS_PATH, 'w') as f:
+        f.write(json.dumps(credentials))
+    return sp_credentials
+
+def get_credentials_from_cli(tenant_id=None, subscription_id=None):
+    """
+    Create a credential for each of the subscriptions in azureProfile.json for a tenant
+    @param tenant_id: uuid string - if None, iterate over all tenant_ids
+    @param subscription_id: uuid string - if None iterate over all subscription_ids
+    @returns: list of (tenant_id, subscription_id, subscription_name, credentials) where credentials is an ADAL signed session 
+              bound to the tenant_id and subscription
+    """
+
+    with open(AZURE_PROFILE_PATH, 'r') as f:
+        azure_profiles = yaml.load(f)['subscriptions']
+    results = []
+    for profile in azure_profiles:
+        if tenant_id and not (tenant_id == profile['tenantId']):
+            continue
+        tenant_id = profile['tenantId']
+        if subscription_id and (subscription_id != profile['id']):
+            continue
+        subscription_id = profile['id']
+        subscription_name = profile['name']
+        service_principle_name = profile['name'] + '-' + subscription_id
+        
+        # this is a modification of https://github.com/Azure/azure-sdk-for-python/blob/master/azure-common/azure/common/credentials.py
+        # until https://github.com/Azure/azure-sdk-for-python/issues/2898 gets fixed
+        print('get_clients_from_cli', subscription_id, tenant_id)
+        credentials = get_azure_cli_credentials(resource=None, with_tenant=False, subscription_id=subscription_id)[0]
+        
+        results.append((tenant_id, subscription_id, subscription_name, credentials))
+    return results
 
 def get_clients_from_cli(subscription_id):
     credentials, subscription_id, tenant_id = get_azure_cli_credentials(resource=None, with_tenant=True, subscription_id=subscription_id)
@@ -33,6 +114,13 @@ def get_clients_from_cli(subscription_id):
     rm_client = ResourceManagementClient(credentials, subscription_id)
 
     return subscription_client, compute_client, rm_client, sql_client
+
+def get_list_from_paged_results(paged):
+    results = []
+    results.extend(paged.advance_page())
+    while paged.next_link:
+        results.extend(paged.advance_page)
+    return [x.as_dict() for x in results]
 
 def get_clients_from_service_principals(tenant_id=None, generate_credentials_ini=False, generate_auth_file=False, overwrite_ini=False):
     """
@@ -231,8 +319,8 @@ def jsonify(jsonString) :
 def stringify(jsonObject) :
     return json.dumps(jsonObject)
 
-# if __name__ == "__main__":
-#     # for subscription_client, compute_client, sql_client in get_clients in get_clients(generate_credentials_ini=True):
-#     #     print(subscription_client)
-#     subscription_client, compute_client, sql_client = get_clients_from_cli(subscription_id='510f92e0-3fcf-4b8f-8a23-095d37e6a299')
-#     print(compute_client.virtual_machines.list('cis_scanner_rg1_2018-05-24'))
+
+class AzScannerException(Exception):
+    def __init__(self,*args,**kwargs):
+        Exception.__init__(self,*args,**kwargs)
+        
