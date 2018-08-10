@@ -6,3 +6,6 @@ _run_jnb
 terraform.tfstate
 .terraform
 __pycache__/
+build
+dist
+azure_cis_scanner.egg*

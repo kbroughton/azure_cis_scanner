@@ -1,7 +1,0 @@
-requests
-pyyaml
-run_jnb
-flask
-flask-nav
-azure
-azure-cli-core
