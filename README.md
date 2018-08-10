@@ -100,6 +100,7 @@ chosen randomly.
 Now run the scanner providing the --auth-location
 ```
 python3 azure_cis_scanner/controller.py --auth-location ~/.azure/<service-principal-name>.json
+```
 
 ### Configure
 
@@ -154,7 +155,10 @@ For each folder, cd into it and run
 terraform init
 terraform apply
 ```
-You will likely have to re-login as terraform has short timeouts on tokens.
+If you receive a token expiry error with terraform, run the following:
+```
+az account get-access-token
+```
 REMEMBER TO DESTROY YOUR RESOURCES WHEN FINISHED
 ```
 terraform destroy
