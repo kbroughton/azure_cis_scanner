@@ -200,6 +200,22 @@ Currently, graphs will not display until there are two days of data.
 
 If you wish to work with the scanner in an interactive jupyter notebook, open `127.0.0.1:8888` and browse to the azure_cis_scanner.ipynb file.
 
+## Explore in jupyter notebook
+A jupyter development notebook is available in your browser at localhost:5000.
+If you plan to run the notebook please install [nbstripout](https://github.com/kynan/nbstripout) to ensure no sensitive information is accidentally committed to git.
+```
+azure_cis_scanner > pip install --upgrade nbstripout
+azure_cis_scanner> nbstripout --install
+```
+
+## Security considerations
+
+* nbstripout performs Jupyter notebook scrubbing of output cells which may contain sensitive information.  Github pre-commit webhooks perform this automatically.
+* All credentials in ~/.azure are mounted into the container when using docker-compose and thus do not get baked into the container.
+* A script to remove any files or folders likely to contain sensitive information
+  from container in case of `docker save`.
+
+
 ## Requesting credentials with the correct RBACs to run the scanner
 If you need to run the scanner on someone else's Azure environment, you should ask for the minimum possible
 permissions.
@@ -251,20 +267,20 @@ users and can copy the generated (resource_group, account, SAS keys) tuples and 
 ## Constraints
 
 An attempt was made to convert to json everywhere, but the current raw/filtered data used key tuples - eg (resource_group, server, database) -
-which only supported in yaml.  An attempt to use safe_yaml was made, but the tuples caused errors.  The intention is to have `raw` data pulled
-as infrequently as possible from the cloud API, stored as close as possible to the delivered format.  
+which are only supported in yaml.  An attempt to use safe_yaml was made, but the tuples caused errors.  The intention is to have `raw` data pulled
+as infrequently as possible from the cloud API, and stored as close as possible to the delivered format.  
 We may switch from tuple to nested dict in the future.
 
 ## Roadmap
 
-* Further development of automation for deployment of an insecure test environment.
+* ~~Further development of automation for deployment of an insecure test environment.~~
 * Add to remediation scripts in the `remediations` folder to automatically resolve many simple "switch on" issues.
 * Use the python sdk instead of bash.
 * Wrap the flask project with praetorian-flask for security.  Only run on a local network until this is complete.
 * Remove manual steps by generating minimal_tester_role.json with correct subscriptions/resource_group paths.
 * The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
 * Replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
-* Add git hooks to automatically remove cell output of azure_cis_scanner.ipynb to avoid checking in sensitive info
+* ~~Add git hooks to automatically remove cell output of azure_cis_scanner.ipynb to avoid checking in sensitive info~~
 
 ## Contributing 
 az_scanner uses the python-azure-sdk.  There are a few limitations compared to the azure cli.

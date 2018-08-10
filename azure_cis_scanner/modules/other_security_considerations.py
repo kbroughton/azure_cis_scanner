@@ -74,7 +74,7 @@ def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_pa
             metadata[vault_name]['keys'] = get_list_from_paged_results(keys)
         except KeyVaultErrorException as e:
             if str(e.response) == '<Response [401]>':
-                metadata[vault_name]['keys'] = "UNAUTHORIZED"
+                metadata[vault_name]['keys'] = "ERROR UNAUTHORIZED"
             else:
                 print(e.with_traceback)
                 print(e.response)

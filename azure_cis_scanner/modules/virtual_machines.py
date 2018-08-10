@@ -25,8 +25,7 @@ def get_virtual_machines(virtual_machines_path):
     @virtual_machines_path: string - path to output json file
     @returns: list of virtual_machines dict
     """
-    virtual_machines = !az vm list
-    virtual_machines = yaml.load(virtual_machines.nlstr)
+    virtual_machines = json.loads(utils.call("az vm list"))
     with open(virtual_machines_path, 'w') as f:
         json.dump(virtual_machines, f, indent=4, sort_keys=True)
     return virtual_machines
@@ -114,8 +113,8 @@ def only_approved_extensions_are_installed_7_4(virtual_machines):
     for vm in virtual_machines:
         name = vm['name']
         resource_group = vm['resourceGroup']
-        extensions = !az vm extension list --vm-name {name} --resource-group {resource_group}
-        extensions = yaml.load(extensions.nlstr)
+        extensions = json.loads(utils.call("az vm extension list --vm-name {name} --resource-group {resource_group}".format(name=name,
+            resource_group=resource_group)))
         for extension in extensions:
             if extension['virtualMachineExtensionType'] not in approved_extensions:
                 items_flagged_list.append((resource_group, name, extension['virtualMachineExtensionType']))
@@ -138,8 +137,8 @@ def endpoint_protection_for_all_virtual_machines_is_installed_7_6(virtual_machin
         resource_group = vm['resourceGroup']
 #         endpoint_protection = !az vm show --resource-group {resource_group} --name {name} -d
 #         endpoint_protection = yaml.load(endpoint_protection.nlstr)
-        extensions = !az vm extension list --vm-name {name} --resource-group {resource_group}
-        extensions = yaml.load(extensions.nlstr)
+        extensions = json.loads(utils.call("az vm extension list --vm-name {name} --resource-group {resource_group}".format(name=name,
+            resource_group=resource_group)))
         has_protection = False
         for extension in extensions:
             if set([extension['virtualMachineExtensionType']]).intersection(accepted_protections):

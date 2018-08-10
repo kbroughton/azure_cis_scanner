@@ -256,11 +256,12 @@ def call(command, retrieving_access_token=False, stderr=None):
         result = subprocess.check_output(command, shell=False, stderr=stderr).decode('utf-8')
         print("result", result)
         return result
-    except Exception as e:
-        print("An exception occurred while processing command " + str(command) + " Halting execution!")
+    # allow calling code to raise AzScannerException and continue
+    except AzScannerException as e:
+        print("An exception occurred while processing command " + str(command) )
         print(e)
         print(traceback.format_exc())
-        sys.exit()
+        raise(e)
 
 
 def verify_subscription_id_format(subscriptionId) :
@@ -323,4 +324,3 @@ def stringify(jsonObject) :
 class AzScannerException(Exception):
     def __init__(self,*args,**kwargs):
         Exception.__init__(self,*args,**kwargs)
-        

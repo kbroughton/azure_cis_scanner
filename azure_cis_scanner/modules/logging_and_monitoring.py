@@ -14,7 +14,7 @@ logging_and_monitoring_filtered_path = os.path.join(filtered_data_dir, 'logging_
 def get_resource_ids_for_diagnostic_settings():
     resource_ids = []
     # Other resource_ids could be gathered.  So far, only keyvault
-    keyvaults = !az keyvault list    
+    keyvaults = json.loads(utils.call("az keyvault list"))
     keyvaults = yaml.load(keyvaults.nlstr)
     for keyvault in keyvaults:
         resource_ids.append(keyvault['id'])
@@ -30,8 +30,7 @@ def load_resource_ids_for_diagnostic_settings(resource_ids_for_diagnostic_settin
 def get_resource_diagnostic_settings(resource_ids_for_diagnostic_settings):
     keyvault_settings_list = []
     for resource_id in resource_ids_for_diagnostic_settings:
-        keyvault_settings = !az monitor diagnostic-settings list --resource {resource_id}
-        keyvault_settings = yaml.load(keyvault_settings.nlstr)
+        keyvault_settings = json.loads(utils.call("az monitor diagnostic-settings list --resource {resource_id}".format(resource_id=resource_id)))
         *prefix, resource_group, _, _, _, keyvault_name = resource_id.split('/')
         if not keyvault_settings['value']:
             keyvault_settings['value'].append({'keyvault_name': keyvault_name, 'resourceGroup': resource_group})
@@ -57,8 +56,7 @@ def get_monitor_diagnostic_settings(monitor_diagnostic_settings_path, resource_i
     """
     monitor_diagnostic_settings_results = {}
     for resource_id in resource_ids:
-        monitor_diagnostic_settings = !az monitor diagnostic-settings list --resource {resource_id}
-        monitor_diagnostic_settings = yaml.load(monitor_diagnostic_settings.nlstr)
+        monitor_diagnostic_settings = json.loads(utils.call("az monitor diagnostic-settings list --resource {resource_id}".format(resource_id=resource_id)))
         monitor_diagnostic_settings_results[resource_id] = monitor_diagnostic_settings
     with open(monitor_diagnostic_settings_path, 'w') as f:
         json.dump(monitor_diagnostic_settings_results, f, indent=4, sort_keys=True)
@@ -72,8 +70,7 @@ def load_monitor_diagnostic_settings(monitor_diagnostic_settings_path):
 monitor_log_profiles_path = os.path.join(raw_data_dir, 'monitor_log_profiles.json')
 
 def get_monitor_log_profiles(monitor_log_profiles_path):
-    monitor_log_profiles = !az monitor log-profiles list
-    monitor_log_profiles = yaml.load(monitor_log_profiles.nlstr)
+    monitor_log_profiles = json.loads(utils.call("az monitor log-profiles list"))
     with open(monitor_log_profiles_path, 'w') as f:
         json.dump(monitor_log_profiles, f, indent=4, sort_keys=True)
     return monitor_log_profiles
@@ -96,7 +93,8 @@ def get_activity_logs(activity_logs_path, resource_groups):
     start_time = get_start_time(activity_logs_starttime_timedelta)
     for resource_group in resource_groups:
         resource_group = resource_group['name']
-        activity_log = !az monitor activity-log list --resource-group {resource_group} --start-time {start_time}
+        activity_log = json.loads(utils.call("az monitor activity-log list --resource-group {resource_group} --start-time {start_time}".format(
+            resource_group=resource_group, start_time=start_time)))
         activity_log = yaml.load(activity_log.nlstr)
         activity_logs[resource_group] = activity_log
     with open(activity_logs_path, 'w') as f:
@@ -111,7 +109,7 @@ def load_activity_logs(activity_logs_path):
 activity_log_alerts_path = os.path.join(raw_data_dir, 'activity_log_alerts.json')
 
 def get_activity_log_alerts(activity_log_alerts_path):
-    activity_log_alerts = !az monitor activity-log alert list
+    activity_log_alerts = json.loads(utils.call("az monitor activity-log alert list"))
     activity_log_alerts = yaml.load(activity_log_alerts.nlstr)
     with open(activity_log_alerts_path, 'w') as f:
         json.dump(activity_log_alerts, f, indent=4, sort_keys=True)
