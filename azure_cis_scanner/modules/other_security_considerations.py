@@ -69,9 +69,10 @@ def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_pa
         print('vault_url', vault_url)
         metadata[vault_name] = {}
         try:
-            keys = utils.call("az keyvault key list --vault-name {}".format(vault_name))
+            keys = json.loads(utils.call("az keyvault key list --vault-name {}".format(vault_name)))
+            metadata[vault_name]['keys'] = keys
             #keys = kv_client.get_keys(vault_url)
-            metadata[vault_name]['keys'] = get_list_from_paged_results(keys)
+            #metadata[vault_name]['keys'] = get_list_from_paged_results(keys)
         except KeyVaultErrorException as e:
             if str(e.response) == '<Response [401]>':
                 metadata[vault_name]['keys'] = "ERROR UNAUTHORIZED"
@@ -83,8 +84,9 @@ def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_pa
 
         try:
             secrets = utils.call("az keyvault secret list --vault-name {}".format(vault_name))
+            metadata[vault_name]['secrets'] = secrets
             #secrets = kv_client.get_secrets(vault_url)    
-            metadata[vault_name]['secrets'] = get_list_from_paged_results(secrets)
+            #metadata[vault_name]['secrets'] = get_list_from_paged_results(secrets)
         except KeyVaultErrorException as e:
             if str(e.response) == '<Response [401]>':
                 metadata[vault_name]['secrets'] = "UNAUTHORIZED"

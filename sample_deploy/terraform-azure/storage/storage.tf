@@ -10,9 +10,11 @@ resource "azurerm_storage_account" "scannerStorageTestSA" {
   account_tier             = "Standard"
   account_replication_type = "GRS"
 
-  tags {
-    project = "azure_scanner"
-  }
+  tags = "${module.common.tags}"
+}
+
+module "common" {
+  source = "../common"
 }
 
 # data "null_data_source" "extra_details" {

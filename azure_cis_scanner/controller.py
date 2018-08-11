@@ -37,25 +37,38 @@ def ddprint(*thing):
 
 MODULES_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules')
 
-def _get_modules(modules):
+def _get_modules(modules=None, skip_modules=None):
+    """
+    Returns specified modules, all modules or all modules - skipped modules
+    """
+    if modules and skip_modules:
+        print("WARNING: both modules and skip_modules specified, ignoring skip_modules")
+    all_modules = [x for x in os.listdir(MODULES_PATH) if x.endswith('.py')]
     if modules:
-        return modules
-    else:
-        return [x for x in os.listdir(MODULES_PATH) if x.endswith('.py')]
+        intersect_modules = set(all_modules).intersection(set(modules))
+        diff_modules = set(modules).difference(intersect_modules)
+        if diff_modules:
+            print("Warning, requested modules {} were not found.  Proceeding with {}".format(diff_modules, intersect_modules))
+        return list(intersect_modules)
+    if skip_modules:
+        return list(set(all_modules).difference(set(skip_modules)))
+    return all_modules
     
 def _get_data(config):
     raw_data_dir, filtered_data_dir, cli_credentials, subscription_id = config['raw_data_dir'], \
         config['filtered_data_dir'], config['cli_credentials'], config['subscription_id']
 
-    modules = _get_modules(config['modules'])
+    modules = _get_modules(config['modules'], config['skip_modules'])
     for module in modules:
         print('Getting data for {}'.format(module.strip('.py')))
         module_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules', module)
         try:
-            mod = load_module(module_path, **dict(raw_data_dir=raw_data_dir, 
-                                                  filtered_data_dir=filtered_data_dir, 
-                                                  cli_credentials=cli_credentials,
-                                                  subscription_id=subscription_id))
+            # mod = load_module(module_path, **dict(raw_data_dir=raw_data_dir, 
+            #                                       filtered_data_dir=filtered_data_dir, 
+            #                                       cli_credentials=cli_credentials,
+            #                                       subscription_id=subscription_id))
+            mod = load_module(module_path, **config)
+
             mod.get_data()
         except Exception as e:
             print("Exception was thrown! Unable to run get_data() for {}".format(module))
@@ -65,7 +78,7 @@ def _get_data(config):
 
 def _test_controls(config):
     raw_data_dir, filtered_data_dir = config['raw_data_dir'], config['filtered_data_dir']
-    modules = _get_modules(config['modules'])
+    modules = _get_modules(config['modules'], config['skip_modules'])
     for module in modules:
         print('Testing controls for {}'.format(module.strip('.py')))
         module_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules', module)
@@ -147,7 +160,7 @@ def main():
     mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
     # TODO, set default in __init__.py or somewhere and make it windows compatible
     mainparser.add_argument('--scans-dir', default='/engagements/cis_test', help='base dir of where to place or load files')
-    mainparser.add_argument('--stages', default='data,test,report', help='comma separated list of steps to run in data,test,render')
+    mainparser.add_argument('--stages', default='data,test,report', help='comma separated list of steps to run in data,test')
     mainparser.add_argument('--modules', default=None, help='comma separated list of module names e.g. security_center.py')
     mainparser.add_argument('--skip-modules', default=[], help='comma separated list of module names to skip')
     mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
@@ -156,7 +169,6 @@ def main():
     parser = mainparser.parse_args()
 
     loglevel = parser.loglevel
-
 
     if loglevel != 'info':
         print("Checking to see if there is an Azure account associated with this session.")
@@ -170,7 +182,9 @@ def main():
 
     for tenant_id, subscription_id, subscription_name, credentials in credentials_tuples:
 
-        _LOGGER.debug("running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
+        sp_credentials = utils.get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=parser.refresh_sp_credentials)
+        print("sp_credentials", sp_credentials, type(sp_credentials))
+        _LOGGER.debug("DEBUGGER WORKS! running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
         print("running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
         
         access_token, token_expiry = utils.get_access_token()
@@ -184,12 +198,14 @@ def main():
             modules = modules.split(',')
         skip_modules = parser.skip_modules
         if skip_modules:
-            modules = set(modules).difference(set(skip_modules))
+            skip_modules = skip_modules.split(',')
 
         config = dict(raw_data_dir=raw_data_dir, 
             filtered_data_dir=filtered_data_dir, 
             modules=modules,
+            skip_modules=skip_modules,
             cli_credentials=credentials,
+            sp_credentials=sp_credentials,
             subscription_id=subscription_id
             )
 

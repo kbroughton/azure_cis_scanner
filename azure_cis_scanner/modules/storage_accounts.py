@@ -9,6 +9,7 @@ from azure_cis_scanner.utils import load_resource_groups
 activity_logs_path = os.path.join(config['raw_data_dir'], 'activity_logs.json')
 storage_accounts_path = os.path.join(config['raw_data_dir'], 'storage_accounts.json')
 resource_groups_path = os.path.join(config['raw_data_dir'], 'resource_groups.json')
+storage_accounts_filtered_path = os.path.join(config['filtered_data_dir'], 'storage_accounts_filtered.json')
 
 def get_storage_accounts(storage_accounts_path):
     """
@@ -210,6 +211,6 @@ def test_controls():
     storage_results['storage_service_encryption_is_set_to_enabled_for_file_service'] = storage_service_encryption_is_set_to_enabled_for_file_service_3_6(storage_accounts)
     #storage_results['public_access_level_is_set_to_private_for_blob_containers'] = public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accounts)
         
-    with open(os.path.join(scan_data_dir, 'filtered', 'storage_accounts_filtered.json'), 'w') as f:
+    with open(storage_accounts_filtered_path, 'w') as f:
         json.dump(storage_results, f, indent=4, sort_keys=True)
     return storage_results

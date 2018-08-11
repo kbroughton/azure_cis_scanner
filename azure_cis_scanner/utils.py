@@ -25,7 +25,7 @@ from azure_cis_scanner.credentials import get_azure_cli_credentials
 AZURE_CONFIG_DIR = os.path.expanduser('~/.azure')
 AZURE_PROFILE_PATH = os.path.join(AZURE_CONFIG_DIR, 'azureProfile.json')
 AZURE_CREDENTIALS_PATH = os.path.join(AZURE_CONFIG_DIR, 'credentials')
-AZURE_SERVICE_PRINCIPALS_PATH = os.path.join(AZURE_CONFIG_DIR, 'servicePrincipals.json')
+AZURE_SERVICE_PRINCIPALS_PATH = os.path.join(AZURE_CONFIG_DIR, 'servicePrincipals-{subscription_id}.json')
 
 # https://github.com/Azure/azure-cli/blob/dev/src/command_modules/azure-cli-keyvault/azure/cli/command_modules/keyvault/_client_factory.py
 def keyvault_data_plane_factory(cli_ctx, _):
@@ -50,25 +50,34 @@ def keyvault_data_plane_factory(cli_ctx, _):
 
     return KeyVaultClient(KeyVaultAuthentication(get_token), api_version=version)
 
-def get_service_principal_credentials(auth_type='sdk'):
+def get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=False):
     """
     Get service principal credentials required by KeyVault, Storage 
     """
-    if os.path.exists(AZURE_SERVICE_PRINCIPALS_PATH) and (os.stat(AZURE_SERVICE_PRINCIPALS_PATH).st_size != 0):
-        with open(AZURE_SERVICE_PRINCIPALS_PATH, 'r') as f:
-            creds = json.loads(f.read())
-        return creds
+    sp_path = AZURE_SERVICE_PRINCIPALS_PATH.format(subscription_id=subscription_id)
     
     if auth_type == 'sdk':
-        credentials = json.loads(call("az ad sp create-for-rbac --sdk-auth", stderr=None))
+        if refresh_sp_credentials:
+            if os.path.exists(sp_path):
+                os.remove(sp_path)
+        if os.path.exists(sp_path):
+            with open(sp_path, 'r') as f:
+                credentials = json.load(f)
+        else:
+            credentials = json.loads(call("az ad sp create-for-rbac --sdk-auth", stderr=None))
         sp_credentials = ServicePrincipalCredentials(
             client_id=credentials['clientId'],
             secret=credentials['clientSecret'],
             tenant=credentials['tenantId']
         )
+        with open(sp_path, 'w') as f:
+            json.dump( dict(clientId=credentials['clientId'],
+                            clientSecret=credentials['clientSecret'],
+                            tenantId=credentials['tenantId']),
+                         f, indent=4, sort_keys=True)
+    
+    print("sp_credentials", sp_credentials, type(sp_credentials))
 
-    with open(AZURE_SERVICE_PRINCIPALS_PATH, 'w') as f:
-        f.write(json.dumps(credentials))
     return sp_credentials
 
 def get_credentials_from_cli(tenant_id=None, subscription_id=None):
@@ -254,7 +263,7 @@ def call(command, retrieving_access_token=False, stderr=None):
     try :
         print('running: ', command)
         result = subprocess.check_output(command, shell=False, stderr=stderr).decode('utf-8')
-        print("result", result)
+        #print("result", result)
         return result
     # allow calling code to raise AzScannerException and continue
     except AzScannerException as e:

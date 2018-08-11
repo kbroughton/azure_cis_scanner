@@ -1,17 +1,28 @@
+
+import datetime
+import json
 import os
+import traceback
 import yaml
+
+from azure.mgmt.network import NetworkManagementClient
+
+from azure_cis_scanner import utils
+from azure_cis_scanner.utils import get_list_from_paged_results, AzScannerException
+
+resource_groups_path = os.path.join(config['raw_data_dir'], "resource_groups.json")
+network_flows_path = os.path.join(config['raw_data_dir'], "network_flows.json")
+network_watcher_path = os.path.join(config['raw_data_dir'], "network_watcher.json")
+networking_filtered_path = os.path.join(config['filtered_data_dir'], 'networking_filtered.json')
+network_security_groups_path = os.path.join(config['raw_data_dir'], "network_security_groups.json")
+credentials = config['cli_credentials']
+subscription_id = config['subscription_id']
 
 ##########################
 # Get Raw Data
 ##########################
 
-network_flows_path = os.path.join(raw_data_dir, "network_flows.json")
-networking_filtered_path = os.path.join(scan_data_dir, 'filtered', 'networking_filtered.json')
-
-network_security_groups_path = os.path.join(raw_data_dir, "network_security_groups.json")
-
 def get_data():
-    get_resource_groups(resource_groups_path)
     network_security_groups = get_network_security_groups(network_security_groups_path)
     get_network_watcher(network_watcher_path)
     get_network_flows(network_flows_path, network_security_groups)
@@ -20,8 +31,7 @@ def get_network_security_groups(network_security_groups_path):
     """
     @network_path: string - path to output json file
     """
-    network_security_groups = !az network nsg list
-    network_security_groups = yaml.load(network_security_groups.nlstr)
+    network_security_groups = json.loads(utils.call("az network nsg list"))
     with open(network_security_groups_path, 'w') as f:
         json.dump(network_security_groups, f, indent=4, sort_keys=True)
     return network_security_groups
@@ -31,14 +41,12 @@ def load_network_security_groups(network_security_groups_path):
         network_security_groups = yaml.load(f)
     return network_security_groups
 
-network_watcher_path = os.path.join(raw_data_dir, "network_watcher.json")
 approved_regions = []
 def get_network_watcher(network_watcher_path):
     """
     @network_watcher_path: string - path to output json file
     """
-    network_watcher = !az network watcher list
-    network_watcher = yaml.load(network_watcher.nlstr)
+    network_watcher = json.loads(utils.call("az network watcher list"))
     with open(network_watcher_path, 'w') as f:
         json.dump(network_watcher, f, indent=4, sort_keys=True)
     return network_watcher
@@ -58,8 +66,8 @@ def get_network_flows(network_flows_path, network_security_groups):
     for nsg in network_security_groups:
         resource_group = nsg['resourceGroup']
         nsg_id = nsg['id']
-        network_flow = !az network watcher flow-log show --resource-group {resource_group} --nsg {nsg_id}
-        network_flow = yaml.load(network_flow.nlstr)
+        network_flow = json.loads(utils.call("az network watcher flow-log show --resource-group {resource_group} --nsg {nsg_id}".format(
+            resource_group=resource_group, nsg_id=nsg_id)))
         nsg_name = nsg["name"]
         network_flows.append({"resource_group": resource_group, "nsg_name": nsg_name, "network_flow": network_flow})
         
@@ -82,7 +90,7 @@ def test_controls():
     """
     network_watcher = load_network_watcher(network_watcher_path)
     network_security_groups = load_network_security_groups(network_security_groups_path)
-    resource_groups = load_resource_groups(resource_groups_path)
+    resource_groups = utils.load_resource_groups(resource_groups_path)
     network_flows = load_network_flows(network_flows_path)
     networking_results = {}
 

@@ -4,6 +4,7 @@ _run_jnb
 .env
 .azure
 terraform.tfstate
+terraform.tfstate.backup
 .terraform
 __pycache__/
 build

@@ -2,20 +2,32 @@
 
 # Generate files in raw_data_dir
 
-monitor_diagnostic_settings_path = os.path.join(raw_data_dir, 'monitor_diagnostic_settings.json')
-activity_logs_path = os.path.join(raw_data_dir, 'activity_logs.json')
-resource_groups_path = os.path.join(raw_data_dir, "resource_groups.json")
+import datetime
+import json
+import os
+import traceback
+import yaml
 
-resource_ids_for_diagnostic_settings_path = os.path.join(raw_data_dir, 'resource_ids_for_diagnostic_settings.json')
-resource_diagnostic_settings_path = os.path.join(raw_data_dir, 'resource_diagnostic_settings.json')
+from azure.mgmt.monitor import MonitorManagementClient
+from azure_cis_scanner import utils
 
-logging_and_monitoring_filtered_path = os.path.join(filtered_data_dir, 'logging_and_monitoring_filtered.json')
+from azure_cis_scanner.utils import get_list_from_paged_results, get_service_principal_credentials, AzScannerException
+
+monitor_diagnostic_settings_path = os.path.join(config['raw_data_dir'], 'monitor_diagnostic_settings.json')
+monitor_log_profiles_path = os.path.join(config['raw_data_dir'], 'monitor_log_profiles.json')
+activity_logs_path = os.path.join(config['raw_data_dir'], 'activity_logs.json')
+activity_log_alerts_path = os.path.join(config['raw_data_dir'], 'activity_log_alerts.json')
+resource_groups_path = os.path.join(config['raw_data_dir'], "resource_groups.json")
+resource_ids_for_diagnostic_settings_path = os.path.join(config['raw_data_dir'], 'resource_ids_for_diagnostic_settings.json')
+resource_diagnostic_settings_path = os.path.join(config['raw_data_dir'], 'resource_diagnostic_settings.json')
+logging_and_monitoring_filtered_path = os.path.join(config['filtered_data_dir'], 'logging_and_monitoring_filtered.json')
+credentials = config['cli_credentials']
+subscription_id = config['subscription_id']
 
 def get_resource_ids_for_diagnostic_settings():
     resource_ids = []
     # Other resource_ids could be gathered.  So far, only keyvault
     keyvaults = json.loads(utils.call("az keyvault list"))
-    keyvaults = yaml.load(keyvaults.nlstr)
     for keyvault in keyvaults:
         resource_ids.append(keyvault['id'])
     with open(resource_ids_for_diagnostic_settings_path, 'w') as f:
@@ -67,7 +79,6 @@ def load_monitor_diagnostic_settings(monitor_diagnostic_settings_path):
         monitor_diagnostic_settings = yaml.load(f)
     return monitor_diagnostic_settings
 
-monitor_log_profiles_path = os.path.join(raw_data_dir, 'monitor_log_profiles.json')
 
 def get_monitor_log_profiles(monitor_log_profiles_path):
     monitor_log_profiles = json.loads(utils.call("az monitor log-profiles list"))
@@ -95,7 +106,6 @@ def get_activity_logs(activity_logs_path, resource_groups):
         resource_group = resource_group['name']
         activity_log = json.loads(utils.call("az monitor activity-log list --resource-group {resource_group} --start-time {start_time}".format(
             resource_group=resource_group, start_time=start_time)))
-        activity_log = yaml.load(activity_log.nlstr)
         activity_logs[resource_group] = activity_log
     with open(activity_logs_path, 'w') as f:
         json.dump(activity_logs, f, indent=4, sort_keys=True)
@@ -106,11 +116,8 @@ def load_activity_logs(activity_logs_path):
         activity_log = yaml.load(f)
     return activity_log
 
-activity_log_alerts_path = os.path.join(raw_data_dir, 'activity_log_alerts.json')
-
 def get_activity_log_alerts(activity_log_alerts_path):
     activity_log_alerts = json.loads(utils.call("az monitor activity-log alert list"))
-    activity_log_alerts = yaml.load(activity_log_alerts.nlstr)
     with open(activity_log_alerts_path, 'w') as f:
         json.dump(activity_log_alerts, f, indent=4, sort_keys=True)
     return activity_log_alerts   
@@ -122,7 +129,7 @@ def load_activity_log_alerts(activity_log_alerts_path):
 
 def get_data():
     resource_ids_for_diagnostic_settings = get_resource_ids_for_diagnostic_settings()
-    resource_groups = get_resource_groups(resource_groups_path)
+    resource_groups = utils.load_resource_groups(resource_groups_path)
     get_monitor_log_profiles(monitor_log_profiles_path)
     get_monitor_diagnostic_settings(monitor_diagnostic_settings_path, resource_ids_for_diagnostic_settings)
     get_activity_log_alerts(activity_log_alerts_path)
@@ -142,7 +149,7 @@ def test_controls():
     """
     resource_ids_for_diagnostic_settings = load_resource_ids_for_diagnostic_settings(resource_ids_for_diagnostic_settings_path)
     resource_diagnostic_settings = load_resource_diagnostic_settings(resource_diagnostic_settings_path)
-    resource_groups = load_resource_groups(resource_groups_path)
+    resource_groups = utils.load_resource_groups(resource_groups_path)
     monitor_log_profiles = load_monitor_log_profiles(monitor_log_profiles_path)
     monitor_diagnostic_settings = load_monitor_diagnostic_settings(monitor_diagnostic_settings_path)
     activity_log_alerts = load_activity_log_alerts(activity_log_alerts_path)
