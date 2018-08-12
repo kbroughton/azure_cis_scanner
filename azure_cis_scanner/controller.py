@@ -119,6 +119,7 @@ def main():
 
     credentials_tuples = utils.set_credentials_tuples(parser)
 
+    scans_dir = parser.scans_dir
     if not os.path.exists(scans_dir):
         if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
             scans_dir = '/engagements/cis_test/scans'    
@@ -129,7 +130,7 @@ def main():
     accounts_list = json.loads(utils.call("az account list"))
     with open(os.path.join(scans_dir, 'accounts.json'), 'w') as f:
         json.dump(accounts_list, f, indent=4, sort_keys=True)
-        
+
     for tenant_id, subscription_id, subscription_name, credentials in credentials_tuples:
 
         sp_credentials = utils.get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=parser.refresh_sp_credentials)
@@ -140,7 +141,6 @@ def main():
         access_token, token_expiry = utils.get_access_token()
         # create a part-friendly/part-uniquie-id name
         subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
-        scans_dir = parser.scans_dir
 
         scan_data_dir, raw_data_dir, filtered_data_dir = utils.set_data_paths(subscription_dirname, scans_dir)
 
