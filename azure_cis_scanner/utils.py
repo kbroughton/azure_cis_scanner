@@ -76,8 +76,6 @@ def get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_
                             tenantId=credentials['tenantId']),
                          f, indent=4, sort_keys=True)
     
-    print("sp_credentials", sp_credentials, type(sp_credentials))
-
     return sp_credentials
 
 def get_credentials_from_cli(tenant_id=None, subscription_id=None):
@@ -104,7 +102,6 @@ def get_credentials_from_cli(tenant_id=None, subscription_id=None):
         
         # this is a modification of https://github.com/Azure/azure-sdk-for-python/blob/master/azure-common/azure/common/credentials.py
         # until https://github.com/Azure/azure-sdk-for-python/issues/2898 gets fixed
-        print('get_clients_from_cli', subscription_id, tenant_id)
         credentials = get_azure_cli_credentials(resource=None, with_tenant=False, subscription_id=subscription_id)[0]
         
         results.append((tenant_id, subscription_id, subscription_name, credentials))
@@ -145,9 +142,7 @@ def get_clients_from_service_principals(tenant_id=None, generate_credentials_ini
         subscription_id = profile['id']
         service_principle_name = profile['name'] + '-' + subscription_id
         result = call("az account set --subscription {}".format(subscription_id))
-        print(result)
         credentials = jsonify(call("az ad sp create-for-rbac --sdk-auth"))
-        print(credentials)
 
         credentials_ini += credentials_block(subscription_id, credentials, service_principle_name)
         if generate_auth_file:

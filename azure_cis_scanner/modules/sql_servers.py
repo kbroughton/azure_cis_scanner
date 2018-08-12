@@ -1,5 +1,17 @@
-sql_servers_path = os.path.join(raw_data_dir, 'sql_servers.json')
-sql_server_policies_path = os.path.join(raw_data_dir, 'sql_server_policies.json')
+import json
+import os
+import yaml
+
+from azure.mgmt.sql import SqlManagementClient
+from azure_cis_scanner import utils
+
+credentials = config['cli_credentials']
+sp_credentials = config['sp_credentials']
+subscription_id=config['subscription_id']
+
+filtered_sql_servers_path = os.path.join(config['filtered_data_dir'], 'sql_servers.json')
+sql_servers_path = os.path.join(config['raw_data_dir'], 'sql_servers.json')
+sql_server_policies_path = os.path.join(config['raw_data_dir'], 'sql_server_policies.json')
 
 import os
 import yaml
@@ -17,12 +29,11 @@ def get_sql_servers(sql_servers_path) :
 
 def get_sql_server_policies(sql_server_policies_path, sql_servers):
     results = {}
-    subscriptionId = utils.get_subscription_id()
     for sql_server in sql_servers:
         server_name = sql_server['name']
         resource_group = sql_server['resourceGroup']
         sql_server_policies = {}
-        sql_server_policies['audit_policy'] = get_sql_server_audit_policies(subscriptionId, resource_group, server_name)
+        sql_server_policies['audit_policy'] = get_sql_server_audit_policies(subscription_id, resource_group, server_name)
         sql_server_policies['threat_detection_policy'] = get_sql_server_threat_detection_policies(subscriptionId, resource_group, server_name)
         sql_server_policies['active_directory_admin_configurations'] = get_sql_server_active_directory_admin_configuration(subscriptionId, resource_group, server_name)
         results[(resource_group, server_name)] = sql_server_policies
@@ -132,7 +143,7 @@ def test_controls() :
                     "columns": ["Region", "Server"]}            
         stats_results[finding] = {"items": items_flagged_list, "stats": stats, "metadata": metadata}
         
-    with open(os.path.join(scan_data_dir, 'filtered', 'sql_servers_filtered.json'), 'w') as f:
+    with open(filtered_sql_servers_path, 'w') as f:
         yaml.dump(stats_results, f)
     # clear results for next run
     results = {}

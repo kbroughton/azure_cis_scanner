@@ -10,3 +10,4 @@ __pycache__/
 build
 dist
 azure_cis_scanner.egg*
+crash.log

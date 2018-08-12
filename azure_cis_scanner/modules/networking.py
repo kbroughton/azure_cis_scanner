@@ -114,7 +114,7 @@ def access_is_restricted_from_the_internet_6_1(network_security_groups):
                     items_flagged_list.append((nsg['resourceGroup'],nsg['name'], '3389', security_rule))
             if security_rule['destinationPortRange'] == '22' and security_rule['direction'] == 'Inbound':
                 if security_rule['sourceAddressPrefix'] in ['*', '/0', 'internet', 'any']:
-                    items_flagged_list.append((nsg['resourceGroup'],nsg['name'], '22', security_rule))
+                    items_flagged_list.append((nsg['resourceGroup'],nsg['name'], '22', security_rule['name']))
                     
     stats = {'items_flagged': len(items_flagged_list),
              'items_checked': len(network_security_groups)}
