@@ -237,7 +237,7 @@ def set_data_paths(subscription_dirname, base_dir='.'):
         base_dir = os.path.abspath(base_dir)
     elif base_dir.startswith('~'):
         base_dir = os.path.expanduser(base_dir)
-    scan_data_dir = os.path.join(base_dir, 'scans', subscription_dirname, day)
+    scan_data_dir = os.path.join(base_dir, subscription_dirname, day)
     print("scan_data_dir", scan_data_dir)
     raw_data_dir = scan_data_dir + '/raw'
     print("raw_data_dir", raw_data_dir)

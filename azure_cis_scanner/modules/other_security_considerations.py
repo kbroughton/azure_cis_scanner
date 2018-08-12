@@ -11,7 +11,7 @@ from msrestazure.azure_active_directory import ServicePrincipalCredentials
 #from azure.common.credentials import ServicePrincipalCredentials
 
 from azure_cis_scanner.utils import get_list_from_paged_results, get_service_principal_credentials, AzScannerException
-from azure.keyvault.models.key_vault_error import KeyVaultErrorException
+from azure.keyvault.models import KeyVaultErrorException
 
 # RESOURCES
 # https://github.com/Azure-Samples/key-vault-recovery-python/blob/master/key_vault_sample_config.py
