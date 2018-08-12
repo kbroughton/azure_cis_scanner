@@ -6,3 +6,6 @@ flask-nav
 azure
 azure-cli-core
 azurerm
+numpy
+pandas
+matplotlib

@@ -98,7 +98,7 @@ def main():
     mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
     mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
     # TODO, set default in __init__.py or somewhere and make it windows compatible
-    mainparser.add_argument('--scans-dir', default='/engagements/cis_test', help='base dir of where to place or load files')
+    mainparser.add_argument('--scans-dir', default='/engagements/cis_test/scans', help='base dir of where to place or load files')
     mainparser.add_argument('--stages', default='data,test,report', help='comma separated list of steps to run in data,test')
     mainparser.add_argument('--modules', default=None, help='comma separated list of module names e.g. security_center.py')
     mainparser.add_argument('--skip-modules', default=[], help='comma separated list of module names to skip')
@@ -109,9 +109,9 @@ def main():
 
     loglevel = parser.loglevel
 
+
     if loglevel != 'info':
         print("Checking to see if there is an Azure account associated with this session.")
-        account_list = utils.call("az account list")
         print("Running with arguments {}".format(parser))
 
     if True: #loglevel == "debug":
@@ -119,6 +119,17 @@ def main():
 
     credentials_tuples = utils.set_credentials_tuples(parser)
 
+    if not os.path.exists(scans_dir):
+        if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
+            scans_dir = '/engagements/cis_test/scans'    
+        else:
+            scans_dir = os.path.join(os.getcwd(), 'scans')
+        print("scans_dir {} not found.  Using {}".format(parser.scans_dir, scans_dir))
+        
+    accounts_list = json.loads(utils.call("az account list"))
+    with open(os.path.join(scans_dir, 'accounts.json'), 'w') as f:
+        json.dump(accounts_list, f, indent=4, sort_keys=True)
+        
     for tenant_id, subscription_id, subscription_name, credentials in credentials_tuples:
 
         sp_credentials = utils.get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=parser.refresh_sp_credentials)
@@ -130,13 +141,7 @@ def main():
         # create a part-friendly/part-uniquie-id name
         subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
         scans_dir = parser.scans_dir
-        if not os.path.exists(scans_dir):
-            if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
-                scans_dir = '/engagements/cis_test/scans'    
-            else:
-                scans_dir = os.path.join(os.getcwd(), 'scans')
-            print("scans_dir {} not found.  Using {}".format(parser.scans_dir, scans_dir))
-        
+
         scan_data_dir, raw_data_dir, filtered_data_dir = utils.set_data_paths(subscription_dirname, scans_dir)
 
         modules = parser.modules
