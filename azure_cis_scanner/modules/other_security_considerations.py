@@ -21,10 +21,11 @@ keyvault_keys_and_secrets_metadata_path = os.path.join(config['raw_data_dir'], '
 locked_resources_path = os.path.join(config['raw_data_dir'], 'locked_resources.json')
 other_security_considerations_filtered_path = os.path.join(config['filtered_data_dir'], 'other_security_considerations_filtered.json')
 credentials = config['cli_credentials']
+sp_credentials = config['sp_credentials']
 subscription_id = config['subscription_id']
 
 def get_keyvault_client():
-    return KeyVaultClient(credentials)
+    return KeyVaultClient(sp_credentials)
 
 #############
 # DATA
@@ -62,7 +63,6 @@ def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_pa
     metadata = {}
     kvm_client = KeyVaultManagementClient(credentials, subscription_id)
     kv_client = get_keyvault_client()
-    print(kv_client.config.credentials)       
     for keyvault in keyvaults:        
         subsciption_id, resource_group, vault_name = parse_vault_id(keyvault['id'])
         vault_url = 'https://{vault_name}.vault.azure.net'.format(vault_name=vault_name)
@@ -83,7 +83,7 @@ def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_pa
                 raise(Exception("Unexpected KeyVaultErrorException response for vault {}".format(vault_url)))
 
         try:
-            secrets = utils.call("az keyvault secret list --vault-name {}".format(vault_name))
+            secrets = json.loads(utils.call("az keyvault secret list --vault-name {}".format(vault_name)))
             metadata[vault_name]['secrets'] = secrets
             #secrets = kv_client.get_secrets(vault_url)    
             #metadata[vault_name]['secrets'] = get_list_from_paged_results(secrets)

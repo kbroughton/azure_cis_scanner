@@ -19,16 +19,15 @@ sp_credentials = config['sp_credentials']
 subscription_id=config['subscription_id']
 
 def get_vms(sp_credentials, subscription_id=subscription_id):
-    instances = []
+    virtual_machines = []
     resource_groups = utils.load_resource_groups(resource_groups_path)
-    compute = ComputeManagementClient(sp_credentials, subscription_id)
+    compute = ComputeManagementClient(credentials, subscription_id)
     for resource_group in [x['name'] for x in resource_groups]:
         vms = compute.virtual_machines.list(resource_group)
-        print(vms)
-        instances.extend(utils.get_list_from_paged_results(vms))
+        virtual_machines.extend(utils.get_list_from_paged_results(vms))
     with open(virtual_machines_path, 'w') as f:
         json.dump(virtual_machines, f, indent=4, sort_keys=True)
-    return instances
+    return virtual_machines
 
 def get_disks(disks_path):
     compute = ComputeManagementClient(sp_credentials, subscription_id)
@@ -75,6 +74,7 @@ def load_snapshots(snapshots_path):
 
 def get_data():
     get_virtual_machines(virtual_machines_path)
+    # TODO switch to api below, but the datastructure is less detailed.  Trace cli call.
     #get_vms(virtual_machines_path)
     get_snapshots(snapshots_path)
     get_disks(disks_path)
@@ -183,8 +183,6 @@ def endpoint_protection_for_all_virtual_machines_is_installed_7_6(virtual_machin
     for vm in virtual_machines:
         name = vm['name']
         resource_group = vm['resourceGroup']
-#         endpoint_protection = !az vm show --resource-group {resource_group} --name {name} -d
-#         endpoint_protection = yaml.load(endpoint_protection.nlstr)
         extensions = json.loads(utils.call("az vm extension list --vm-name {name} --resource-group {resource_group}".format(name=name,
             resource_group=resource_group)))
         has_protection = False

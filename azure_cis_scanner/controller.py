@@ -128,10 +128,10 @@ def main():
         
         access_token, token_expiry = utils.get_access_token()
         # create a part-friendly/part-uniquie-id name
-        subscription_dirname = get_subscription_dirname(subscription_id, subscription_name)
+        subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
         scans_dir = parser.scans_dir
-        if not os.path.exists():
-            if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans'))
+        if not os.path.exists(scans_dir):
+            if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
                 scans_dir = '/engagements/cis_test/scans'    
             else:
                 scans_dir = os.path.join(os.getcwd(), 'scans')
