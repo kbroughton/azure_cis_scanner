@@ -297,6 +297,8 @@ def get_subscription_name(subscription_id, accounts):
             return accounts['name']
     raise ValueError("subscription_id {} not found in accounts {}".format(subscription_id, accounts))
 
+def get_subscription_dirname(subscription_id, subscription_name):
+    return subscription_name.split(' ')[0] + '-' + subscription_id.split('-')[0]
 
 def get_access_token():
     global token_expiry, access_token
@@ -309,6 +311,65 @@ def get_access_token():
         token_expiry = datetime.datetime.strptime(token_expiry, '%Y-%m-%d %H:%M:%S.%f')
     return access_token, token_expiry
 
+def set_credentials_tuples(parser):
+
+    # While we have a mixture of azcle and az-python-sdk we need to set the subscription_id 
+    # both with az account set, and with subscription_client using a modified credentials.py
+    use_api_for_auth = parser.use_api_for_auth
+
+    if parser.subscription_id:
+        if verify_subscription_id_format(parser.subscription_id):
+            subscription_id = parser.subscription_id
+            try:
+                if use_api_for_auth:
+                    credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
+                    tenant_id, subscription_id, subscription_name, credentials = credentials_tuples[0]
+                    if parser.tenant_id and (tenant_id != parser.tenant_id):
+                        raise(ValueError("subscription {} does not belong to tenant {}".format(subscription_id, parser.tenant_id))) 
+
+                else:
+                    call("az account set --subscription {}".format(subscription_id))
+                    account = json.loads(call("az account show"))
+                    if parser.tenant_id:
+                        if account['tenantId'] != parser.tenant_id:
+                            raise(ValueError("subscription {} does not belong to tenant {}".format(subscription_id, parser.tenant_id))) 
+            except Exception as e:
+                print(e)
+                print(traceback.format_exc())
+                raise ValueError("Unable to set or find subscription {}".format(subscription_id))
+        else:
+            raise ValueError("supplied subscription id '{}' is invalid".format(parser.subscription_id))
+    else:
+        try:
+            if parser.tenant_id:
+                if not use_api_for_auth:
+                    raise(ValueError("use_api_for_auth=False is only supported for default tenant.  Create an issue or PR"))
+                tenant_id = parser.tenant_id
+                print("No subscription specified, running on all subscriptions for supplied tenant {}".format(tenant_id))
+                credentials_tuples = get_credentials_from_cli(tenant_id=tenant_id)
+                print(credentials_tuples)
+            else:
+                print("No tenant or subscription specified, getting active account")
+                account = get_active_account()
+                print('account', account)
+                subscription_id = account['id']
+                credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
+
+        except Exception as e:
+            print(e)
+            print(traceback.format_exc())
+            print("No Azure account associated with this session. Please authenticate to continue.")
+            call("az login")
+            account = get_active_account()
+
+    if not use_api_for_auth:
+        subscription_id = account['id']
+        subscription_name = account['name']
+        print("Using subscription_id {} {}".format(subscription_id, subscription_name))
+        print("Re-run with --subscription-id if you wish to change")
+        credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
+
+    return credentials_tuples
 
 def make_request(url, args=[]):
     print('requesting ', url)

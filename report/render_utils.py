@@ -5,7 +5,7 @@ import re
 
 
 @functools.lru_cache(maxsize=32, typed=False)
-def get_filtered_data_path(date=None):
+def get_filtered_data_path(scans_root, date=None):
     """
     Get the filtered data root for the scan run on date=date or latest if date=None
     Returns path, date where date is the most recent date with data <= requested date
@@ -28,7 +28,7 @@ def get_filtered_data_path(date=None):
             return os.path.join(scans_root, 'scans', date, 'filtered'), date
 
 @functools.lru_cache(maxsize=32, typed=False)
-def get_filtered_data(date=None):
+def get_filtered_data(scans_root, date=None):
     """
     Returns a dict of filtered data for a specific date or latest (default)
     
@@ -36,7 +36,7 @@ def get_filtered_data(date=None):
     The structure is {"Identity and Access Management": {"finding1": results_dict1}, "finding2": results_dict2}
     where results_dict has keys stats, metadata, items, date - where date is actual date where data was found
     """
-    filtered_data_root, date = get_filtered_data_path(date)
+    filtered_data_root, date = get_filtered_data_path(scans_root, date)
     filtered_data = {}
     for item in cis_structure['section_ordering']:
         item = '_'.join(map(str.lower, item.split(' '))) + '_filtered.json'
@@ -47,7 +47,7 @@ def get_filtered_data(date=None):
     return filtered_data
 
 @functools.lru_cache(maxsize=128, typed=False)
-def get_filtered_data_by_name(section_name, date=None):
+def get_filtered_data_by_name(scans_root, section_name, date=None):
     """
     Get the latest data for a section returning first found <= date
     @params sectoin_name: Name of CIS section as a string e.g. ("Identity and Access Management")
@@ -72,25 +72,25 @@ def get_filtered_data_by_name(section_name, date=None):
 
 
 @functools.lru_cache(maxsize=1, typed=False)
-def get_latest_filtered_data(date=None):
+def get_latest_filtered_data(scans_root, date=None):
     """
     Returns a dict as in get_filtered_data, but if a section is missing, it will search
     back in time for a date where the section does exist.
     """
-    data = get_filtered_data(date)
+    data = get_filtered_data(scans_root, date)
     if not data:
         return None
     else:
         for section_name in cis_structure['section_ordering']:
             #section_name = '_'.join(map(lower, section_name.split(' '))) + '.json'
             if section_name not in data:
-                section_data = get_filtered_data_by_name(section_name, date)
+                section_data = get_filtered_data_by_name(scans_root, section_name, date)
                 if section_data:
                     data[section_name] = section_data
     return data
 
 @functools.lru_cache(maxsize=1, typed=False)
-def get_stats():
+def get_stats(scans_root):
     stats = {}
     dir_list = sorted(get_dirs(scans_root))
     for section_name in cis_structure['section_ordering']:
@@ -108,9 +108,9 @@ def get_stats():
     return stats
 
 @functools.lru_cache(maxsize=1, typed=False)
-def get_latest_stats():
+def get_latest_stats(scans_root):
     latest_stats = {}
-    stats = get_stats()
+    stats = get_stats(scans_root)
     for section_name in stats:
         latest_stats[section_name] = {}
         for finding_name in stats[section_name]:

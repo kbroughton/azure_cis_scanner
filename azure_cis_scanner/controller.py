@@ -93,67 +93,6 @@ def _test_controls(config):
             print(traceback.format_exc())
 
 
-def set_credentials_tuples(parser):
-
-    # While we have a mixture of azcle and az-python-sdk we need to set the subscription_id 
-    # both with az account set, and with subscription_client using a modified credentials.py
-    use_api_for_auth = parser.use_api_for_auth
-
-    if parser.subscription_id:
-        if utils.verify_subscription_id_format(parser.subscription_id):
-            subscription_id = parser.subscription_id
-            try:
-                if use_api_for_auth:
-                    credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
-                    tenant_id, subscription_id, subscription_name, credentials = credentials_tuples[0]
-                    if parser.tenant_id and (tenant_id != parser.tenant_id):
-                        raise(ValueError("subscription {} does not belong to tenant {}".format(subscription_id, parser.tenant_id))) 
-
-                else:
-                    utils.call("az account set --subscription {}".format(subscription_id))
-                    account = json.loads(utils.call("az account show"))
-                    if parser.tenant_id:
-                        if account['tenantId'] != parser.tenant_id:
-                            raise(ValueError("subscription {} does not belong to tenant {}".format(subscription_id, parser.tenant_id))) 
-            except Exception as e:
-                print(e)
-                print(traceback.format_exc())
-                raise ValueError("Unable to set or find subscription {}".format(subscription_id))
-        else:
-            raise ValueError("supplied subscription id '{}' is invalid".format(parser.subscription_id))
-    else:
-        try:
-            if parser.tenant_id:
-                if not use_api_for_auth:
-                    raise(ValueError("use_api_for_auth=False is only supported for default tenant.  Create an issue or PR"))
-                tenant_id = parser.tenant_id
-                print("No subscription specified, running on all subscriptions for supplied tenant {}".format(tenant_id))
-                credentials_tuples = get_credentials_from_cli(tenant_id=tenant_id)
-                print(credentials_tuples)
-            else:
-                print("No tenant or subscription specified, getting active account")
-                account = utils.get_active_account()
-                print('account', account)
-                subscription_id = account['id']
-                credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
-
-        except Exception as e:
-            print(e)
-            print(traceback.format_exc())
-            print("No Azure account associated with this session. Please authenticate to continue.")
-            utils.call("az login")
-            account = utils.get_active_account()
-
-    if not use_api_for_auth:
-        subscription_id = account['id']
-        subscription_name = account['name']
-        print("Using subscription_id {} {}".format(subscription_id, subscription_name))
-        print("Re-run with --subscription-id if you wish to change")
-        credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
-
-    return credentials_tuples
-
-
 def main():
     mainparser = argparse.ArgumentParser()
     mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
@@ -178,7 +117,7 @@ def main():
     if True: #loglevel == "debug":
         _LOGGER.setLevel(logging.DEBUG)
 
-    credentials_tuples = set_credentials_tuples(parser)
+    credentials_tuples = utils.set_credentials_tuples(parser)
 
     for tenant_id, subscription_id, subscription_name, credentials in credentials_tuples:
 
@@ -189,8 +128,15 @@ def main():
         
         access_token, token_expiry = utils.get_access_token()
         # create a part-friendly/part-uniquie-id name
-        subscription_dirname = subscription_name.split(' ')[0] + '-' + subscription_id.split('-')[0]
+        subscription_dirname = get_subscription_dirname(subscription_id, subscription_name)
         scans_dir = parser.scans_dir
+        if not os.path.exists():
+            if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans'))
+                scans_dir = '/engagements/cis_test/scans'    
+            else:
+                scans_dir = os.path.join(os.getcwd(), 'scans')
+            print("scans_dir {} not found.  Using {}".format(parser.scans_dir, scans_dir))
+        
         scan_data_dir, raw_data_dir, filtered_data_dir = utils.set_data_paths(subscription_dirname, scans_dir)
 
         modules = parser.modules
