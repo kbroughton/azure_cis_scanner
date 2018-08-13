@@ -122,7 +122,7 @@ def plot_finding(service, finding):
     section_name = service
     subsection_name = finding
     stats = get_stats(scans_root)
-    df = multi_index_df_from_stats(scans_root, stats)
+    df = multi_index_df_from_stats(stats)
     finding_df = df.loc[section_name].loc[subsection_name]
     y = finding_df["Flagged"].tolist()
     y = np.array(y)
