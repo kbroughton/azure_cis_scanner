@@ -23,18 +23,17 @@ def get_data():
     get_sql_server_policies(sql_server_policies_path, sql_servers)
 
 def get_sql_servers(sql_servers_path) :
-    sql_servers_string = utils.call("az sql server list")
-    sql_servers_json = utils.jsonify(sql_servers_string)
+    sql_servers = json.loads(utils.call("az sql server list"))
     with open(sql_servers_path, 'w') as f:
-        json.dump(sql_servers_json, f, indent=4, sort_keys=True)
-    return sql_servers_json
+        json.dump(sql_servers, f, indent=4, sort_keys=True)
+    return sql_servers
 
 def get_sql_databases(sql_databases_path, sql_servers) :
     sql_dbs = []
     for sql_server in sql_servers:
         server_name = sql_server['name']
         resource_group = sql_server['resourceGroup']
-        dbs = json.loads(utils.call("az sql db list"))
+        dbs = json.loads(utils.call("az sql db list --resource-group {} --server {}".format(resource_group, server_name)))
         sql_dbs.extend(dbs)
     with open(sql_databases_path, 'w') as f:
         json.dump(sql_dbs, f, indent=4, sort_keys=True)
