@@ -37,7 +37,7 @@ def get_sql_databases(sql_databases_path, sql_servers) :
         sql_dbs.extend(dbs)
     with open(sql_databases_path, 'w') as f:
         json.dump(sql_dbs, f, indent=4, sort_keys=True)
-    return sql_servers_json
+    return sql_dbs
 
 def get_sql_server_policies(sql_server_policies_path, sql_servers):
     results = {}
