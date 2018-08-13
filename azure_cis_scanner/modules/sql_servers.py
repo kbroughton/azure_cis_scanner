@@ -10,7 +10,8 @@ sp_credentials = config['sp_credentials']
 subscription_id=config['subscription_id']
 
 filtered_sql_servers_path = os.path.join(config['filtered_data_dir'], 'sql_servers.json')
-sql_servers_path = os.path.join(config['raw_data_dir'], 'sql_servers.json')
+sql_servers_path = os.path.join(config['raw_data_dir'], 'sql_databases.json')
+sql_databases_path = os.path.join(config['raw_data_dir'], 'sql_servers.json')
 sql_server_policies_path = os.path.join(config['raw_data_dir'], 'sql_server_policies.json')
 
 import os
@@ -18,6 +19,7 @@ import yaml
 
 def get_data():
     sql_servers = get_sql_servers(sql_servers_path)
+    sql_databases = get_sql_databases(sql_databases_path, sql_servers)
     get_sql_server_policies(sql_server_policies_path, sql_servers)
 
 def get_sql_servers(sql_servers_path) :
@@ -27,6 +29,17 @@ def get_sql_servers(sql_servers_path) :
         json.dump(sql_servers_json, f, indent=4, sort_keys=True)
     return sql_servers_json
 
+def get_sql_databases(sql_databases_path, sql_servers) :
+    sql_dbs = []
+    for sql_server in sql_servers:
+        server_name = sql_server['name']
+        resource_group = sql_server['resourceGroup']
+        dbs = json.loads(utils.call("az sql db list"))
+        sql_dbs.extend(dbs)
+    with open(sql_databases_path, 'w') as f:
+        json.dump(sql_dbs, f, indent=4, sort_keys=True)
+    return sql_servers_json
+
 def get_sql_server_policies(sql_server_policies_path, sql_servers):
     results = {}
     for sql_server in sql_servers:
@@ -34,8 +47,8 @@ def get_sql_server_policies(sql_server_policies_path, sql_servers):
         resource_group = sql_server['resourceGroup']
         sql_server_policies = {}
         sql_server_policies['audit_policy'] = get_sql_server_audit_policies(subscription_id, resource_group, server_name)
-        sql_server_policies['threat_detection_policy'] = get_sql_server_threat_detection_policies(subscriptionId, resource_group, server_name)
-        sql_server_policies['active_directory_admin_configurations'] = get_sql_server_active_directory_admin_configuration(subscriptionId, resource_group, server_name)
+        sql_server_policies['threat_detection_policy'] = get_sql_server_threat_detection_policies(subscription_id, resource_group, server_name)
+        sql_server_policies['active_directory_admin_configurations'] = get_sql_server_active_directory_admin_configuration(subscription_id, resource_group, server_name)
         results[(resource_group, server_name)] = sql_server_policies
     with open(sql_server_policies_path, 'w') as f:
         yaml.dump(results, f)
@@ -52,20 +65,20 @@ def load_sql_server_policies(sql_server_policies_path):
     return sql_server_policies
     
 # This function will be recentered around Azure Command Line, after such an option becomes available.
-def get_sql_server_audit_policies(subscriptionId, resource_group, server_name):
-    endpoint = "https://management.azure.com/subscriptions/"+subscriptionId+"/resourceGroups/"+resource_group+"/providers/Microsoft.Sql/servers/"+server_name+"/auditingSettings/Default?api-version=2015-05-01-preview"
+def get_sql_server_audit_policies(subscription_id, resource_group, server_name):
+    endpoint = "https://management.azure.com/subscriptions/"+subscription_id+"/resourceGroups/"+resource_group+"/providers/Microsoft.Sql/servers/"+server_name+"/auditingSettings/Default?api-version=2015-05-01-preview"
     sql_server_audit_policy = utils.make_request(endpoint)
     sql_server_audit_policy = utils.jsonify(sql_server_audit_policy)
     return sql_server_audit_policy
 
 # This function will be recentered around Azure Command Line, after such an option becomes available.
-def get_sql_server_threat_detection_policies(subscriptionId, resource_group, server_name):
-    endpoint = "https://management.azure.com/subscriptions/"+subscriptionId+"/resourceGroups/"+resource_group+"/providers/Microsoft.Sql/servers/"+server_name+"/securityAlertPolicies/Default?api-version=2015-05-01-preview"
+def get_sql_server_threat_detection_policies(subscription_id, resource_group, server_name):
+    endpoint = "https://management.azure.com/subscriptions/"+subscription_id+"/resourceGroups/"+resource_group+"/providers/Microsoft.Sql/servers/"+server_name+"/securityAlertPolicies/Default?api-version=2015-05-01-preview"
     sql_server_threat_detection_policy = utils.make_request(endpoint)
     sql_server_threat_detection_policy = utils.jsonify(sql_server_threat_detection_policy)
     return sql_server_threat_detection_policy
 
-def get_sql_server_active_directory_admin_configuration(subscriptionId, resource_group, server_name):
+def get_sql_server_active_directory_admin_configuration(subscription_id, resource_group, server_name):
     active_directory_admin_configuration = utils.call("az sql server ad-admin list --resource-group " + resource_group + " --server " + server_name)
     active_directory_admin_configuration = utils.jsonify(active_directory_admin_configuration)
     return active_directory_admin_configuration

@@ -268,9 +268,9 @@ def call(command, retrieving_access_token=False, stderr=None):
         raise(e)
 
 
-def verify_subscription_id_format(subscriptionId) :
+def verify_subscription_id_format(subscription_id) :
     r = re.compile("([a-f]|[0-9]){8}-([a-f]|[0-9]){4}-([a-f]|[0-9]){4}-([a-f]|[0-9]){4}-([a-f]|[0-9]){12}")
-    if r.match(subscriptionId):
+    if r.match(subscription_id):
         return True
     else :
         return False
@@ -373,7 +373,7 @@ def set_credentials_tuples(parser):
 
 def make_request(url, args=[]):
     print('requesting ', url)
-    authorization_headers = {"Authorization" : "Bearer " + get_access_token()}
+    authorization_headers = {"Authorization" : "Bearer " + get_access_token()[0]}
     r = requests.get(url, headers=authorization_headers)
     return r.text
 
