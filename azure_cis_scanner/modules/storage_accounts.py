@@ -39,8 +39,6 @@ def get_activity_logs(activity_logs_path, resource_groups):
     start_time = get_start_time(activity_logs_starttime_timedelta)
     for resource_group in resource_groups:
         resource_group = resource_group['name']
-        #activity_log = !az monitor activity-log list --resource-group {resource_group} --start-time {start_time}
-        #activity_log = yaml.safe_load(activity_log.nlstr)
         activity_log_cmd = "az monitor activity-log list --resource-group {resource_group} --start-time {start_time}".format(
             resource_group=resource_group, start_time=start_time)
         activity_log = json.loads(utils.call(activity_log_cmd))
@@ -162,14 +160,10 @@ def public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accoun
         account_name = account["name"]
         resource_group = account["resourceGroup"]
         # get a key that works.  likely this will be a specific key not key[0]
-        #keys = !az storage account keys list --account-name {account_name} --resource-group {resource_group}
-        #keys = yaml.safe_load(keys.nlstr)
         keys_cmd = "az storage account keys list --account-name {account_name} --resource-group {resource_group}".format(
             account_name=account_name, resource_group=resource_group)
         keys = json.loads(utils.call(keys_cmd))
         key = keys[0]
-        #container_list = !az storage container list --account-name {account_name} --account-key {account_key}
-        #container_list = yaml.load(container_list.nlstr)
         container_list_cmd = "az storage container list --account-name {account_name} --account-key {account_key}".format(
             account_name=account_name, account_key=account_key)
         container_list = json.loads(utils.call(container_list_cmd))

@@ -51,14 +51,22 @@ Filtered data will be in files named by the finding and have the following forma
 ### Commandline + pip install
 
 ```
-pip install azure_scanner
+pip3 install azure_scanner
 ```
 
 If you only have one subscription, defaults will work.  If you have multiple
 subscriptions, due to a limitation in the python-azure-sdk, you need to ensure that the default subscription is the currently active subscription `az account set --subscription aaaaa-bbbbbb-111111-444444-xxxxx`.
 
+### Known Issues
+Depending on previous pip installs, you may see
+```
+error: PyYAML 3.12 is installed but pyyaml~=4.2b4 is required by {'azure-cli-core'}
+```
+This can be ignored
+
 ### Github
 ```
+git clone https://github.com/praetorian-inc/azure_cis_scanner
 pip3 install -r requirements.txt
 python3/controller.py azure_cis_scanner/contoller.py --modules "security_center.py,storage_accounts.py" --stages "data,tests"
 ```
