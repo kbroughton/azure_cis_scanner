@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session, make_response, render_template_string
 from flask_nav import Nav
 from flask_nav.elements import *
+import argparse
 import os
 import numpy as np
 import pandas as pd
@@ -10,26 +11,31 @@ import re
 import datetime
 import random
 
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-from matplotlib.dates import DateFormatter
-import matplotlib.pyplot as plt
-
-
-from settings import *
+from azure_cis_scanner import utils
+import settings
 from render_utils import *
 
-with open(os.path.expanduser(APP_ROOT + '/cis_structure.yaml'), 'r') as f:
-    cis_structure = yaml.load(f)
+HAS_MATPLOTLIB = False
+
+try:
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    from matplotlib.figure import Figure
+    from matplotlib.dates import DateFormatter
+    import matplotlib.pyplot as plt
+    HAS_MATPLOTLIB = True
+except ImportError as e:
+    print(e)
+    print("Unable to import matplotlib.  No graphing available.")
+
 
 app = Flask(__name__)
 nav = Nav(app)
-app.secret_key = 'super secret key'
+app.secret_key = os.urandom(16)
 app.config['SESSION_TYPE'] = 'filesystem'
 
 @app.route('/')
 def index_base():
-    return redirect("/{}".format(active_subscription_dir), code=302)
+    return redirect("/{}".format(app.config['ACTIVE_SUBSCRIPTION_DIR']), code=302)
 
 @app.route('/_subscription_dir')
 def _subscription_dir():
@@ -38,12 +44,12 @@ def _subscription_dir():
 
     print('subscription_dir route', subscription_dir)
 
-    session['active_subscription_dir'] = subscription_dir
+    session['ACTIVE_SUBSCRIPTION_DIR'] = subscription_dir
     return jsonify({'selected': subscription_dir})
 
 @app.route('/<active_subscription_dir>')
 def index(active_subscription_dir, methods=['POST','GET']):
-    selected_active_subscription_dir = request.args.get('selected', session.get('active_subscription_dir', active_subscription_dir))
+    selected_active_subscription_dir = request.args.get('selected', session.get('ACTIVE_SUBSCRIPTION_DIR', active_subscription_dir))
     session['active_subscription_dir'] = selected_active_subscription_dir
     state = {'selected', selected_active_subscription_dir}
     print('selected_active_subscription_dir', selected_active_subscription_dir)
@@ -61,13 +67,13 @@ def index(active_subscription_dir, methods=['POST','GET']):
 @app.route('/services/<service>')
 def service(service):
     findings_table = [(x['subsection_number'], x['subsection_name'], get_finding_name(x['finding_name'], x['subsection_name'])) for x in cis_structure['TOC'][service]]
-    stats = get_latest_stats()
+    stats = get_latest_stats(scans_root)
     return render_template('service.html', service=service, title=title_except(service), findings_table=findings_table, stats=stats)
 
 @app.route('/services/<service>/<finding>')
 def finding(service, finding):
     finding_entry = get_finding_index(cis_structure['TOC'][service], finding)
-    service_data = get_filtered_data_by_name(service)
+    service_data = get_filtered_data_by_name(scans_root, service)
     error_str = ''
     if not service_data:
         error_str = 'No section named "{}" found\n'.format(service)
@@ -111,15 +117,19 @@ def subscription_dir_from_account(account):
 
 @app.route("/graphs/<service>/<finding>.png")
 def plot_finding(service, finding):
+    if not HAS_MATPLOTLIB:
+        return make_response("Install matplotlib for graphing support")
     section_name = service
     subsection_name = finding
-    stats = get_stats()
+    stats = get_stats(scans_root)
     df = multi_index_df_from_stats(stats)
     finding_df = df.loc[section_name].loc[subsection_name]
+    finding_df = finding_df.fillna(method='ffill')
     y = finding_df["Flagged"].tolist()
     y = np.array(y)
     x = finding_df.index
-    
+    print("plot_finding x: ", x)
+    print("plot_finding y: ", y)
     mask = np.isfinite(y)
 
     fig, ax = plt.subplots()
@@ -155,6 +165,7 @@ def multi_index_tuples_from_stats(stats):
             subsection_name = subsection['subsection_name']
             finding_name = '_'.join(map(str.lower, subsection_name.split(' ')))
             start_date, end_date = min_max_dates()
+            print("start_date {} end_date {}".format(start_date, end_date))
             for date in sorted(pd.date_range(start=start_date, end=end_date, freq='D')):
                 str_date = datetime_to_dir_date(date)
                 has_data = True
@@ -174,6 +185,7 @@ def multi_index_tuples_from_stats(stats):
 def multi_index_df_from_stats(stats):
     tuples, index_tuples = multi_index_tuples_from_stats(stats)
     multi_index = pd.MultiIndex.from_tuples(index_tuples, names=["section", "finding", "date"])
+    print(multi_index)
     return pd.DataFrame(tuples, index=multi_index, columns=["section_drop", "finding_drop", "date","Flagged", "Checked"])
 
 def dir_date_to_datetime(string):
@@ -203,7 +215,7 @@ nav.register_element(
         View('Networking', 'service', service='Networking'),
         View('Virtual Machines', 'service', service='Virtual Machines'),
         View('Other Security Considerations', 'service', service='Other Security Considerations'),
-        Text(active_subscription_dir)
+        #Text(active_subscription_dir)
         #Subgroup(active_subscription_dir, *[Link(account['name']) for account in accounts], [])
         )
     )
@@ -231,6 +243,29 @@ nav.register_element(
 
 #     return app
 
+
 if __name__ == "__main__":
+
+    mainparser = argparse.ArgumentParser()
+    mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
+    mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
+    mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
+    # TODO, set default in __init__.py or somewhere and make it windows compatible
+    mainparser.add_argument('--scans-dir', default='/engagements/cis_test', help='base dir of where to place or load files')
+
+    parser = mainparser.parse_args()
+
+    # TODO figure out better way to get base dir or let user select in UI
+    credentials_tuples = utils.set_credentials_tuples(parser)
+
+    tenant_id, subscription_id, subscription_name, credentials = credentials_tuples[0]
+    subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
+    active_subscription_dir = subscription_dirname
+    #active_subscription_dir = "510f92e0-xxxx-yyyy-zzzz-095d37e6a299"
+    scans_root = os.path.join(settings.scans_base, active_subscription_dir)
+    
+    app.config['ACTIVE_SUBSCRIPTION_DIR'] = active_subscription_dir
+    app.config['SCANS_ROOT'] = scans_root
+
     app.run(debug=True, host='0.0.0.0')
 

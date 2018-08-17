@@ -36,15 +36,16 @@ from jupyter-scipy-azurecli-alpine:working
 # Now we can build our azure-cis-scanner-apline:working
 ##############################################################
 
-COPY ./ /praetorian-tools/cis_azure_scanner/
+COPY ./ /praetorian-tools/azure_cis_scanner/
 
 RUN apk add terraform
 # jupyter notebook runs with python3
-RUN pip3 install -r /praetorian-tools/cis_azure_scanner/requirements.txt
+RUN pip3 install -r /praetorian-tools/azure_cis_scanner/requirements.txt
 
 SHELL ["/bin/bash", "-c"]
 RUN source '/root/.bashrc'
 RUN ln -s /root/bin/az /bin/az
+RUN ln -s /praetorian-tools/azure_cis_scanner /notebooks/azure_cis_scanner
 
 WORKDIR /notebooks
 

@@ -4,4 +4,11 @@ _run_jnb
 .env
 .azure
 terraform.tfstate
+terraform.tfstate.backup
 .terraform
+__pycache__/
+build
+dist
+azure_cis_scanner.egg*
+crash.log
+scans/

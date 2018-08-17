@@ -1,0 +1,16 @@
+# Use docker-compose-dev.yml if you want your edits outside the container (pycharm or sublime) to affect
+# the working container jupyter notebook and docker runtime
+
+version: "3"
+services:
+  azure-cis-scanner:
+    image: ${AZURE_CIS_SCANNER_IMAGE}
+    volumes:
+      - ./:/notebooks/azure_cis_scanner                            # Development
+      - ${ENGAGEMENTS_DIR}:/engagements
+      - ${AZURE_CONFIG_DIR}:/root/.azure 
+      - ${HOST_AZURE_SCANNER_PATH}:/praetorian-tools/azure_cis_scanner  # Development
+    ports:
+      - ${JUPYTER_PORT}:8888
+      - ${FLASK_PORT}:5000
+    entrypoint: ["jupyter", "notebook", "--port=8888", "--ip=0.0.0.0", "--allow-root"]

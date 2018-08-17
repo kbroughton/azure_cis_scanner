@@ -1,8 +1,12 @@
 # azure_cis_scanner
 
-Security Compliance Scanning tool for CIS Azure Benchmark 1.0
+Security Compliance Scanning tool using CIS Azure Benchmark 1.0
 
 The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2.
+
+## BETA NOTICE
+
+This private beta is intended to expose the Azure CIS Scanner to a small handful of Azure security users for focused, high-quality testing and feedback to help perfect and expand on the tool's capabilities before its official release. While this will be an open source project when it's released, we ask everyone in the beta to please not share internal tool details (such as source code) until after the public release. Please do not join the beta if you can't agree to that.
 
 This project is not yet production ready and should only be run from a local machine not exposed to untrusted networks.
 
@@ -42,7 +46,42 @@ Filtered data will be in files named by the finding and have the following forma
 }
 ```
 
-## Getting Started
+## Quickstart
+
+### Commandline + pip install
+
+```
+pip3 install azure_scanner
+```
+
+If you only have one subscription, defaults will work.  If you have multiple
+subscriptions, due to a limitation in the python-azure-sdk, you need to ensure that the default subscription is the currently active subscription `az account set --subscription aaaaa-bbbbbb-111111-444444-xxxxx`.
+
+### Known Issues
+Depending on previous pip installs, you may see
+```
+error: PyYAML 3.12 is installed but pyyaml~=4.2b4 is required by {'azure-cli-core'}
+```
+This can be ignored
+
+### Github
+```
+git clone https://github.com/praetorian-inc/azure_cis_scanner
+pip3 install -r requirements.txt
+python3/controller.py azure_cis_scanner/contoller.py --modules "security_center.py,storage_accounts.py" --stages "data,tests"
+```
+
+### Docker
+If you already have an account and the default subscription is correct,
+you can just copy the docker-compose.yml file to a new folder, copy .env-sample to .env next to the docker-compose.yml and run
+
+```
+docker-compose up
+```
+
+This will mount ~/.azure into the container and use the default subscription.
+
+## Detailed Usage
 
 Best practice is to work inside a docker container to avoid any issues that would arise from a multi-tenant environment.
 If running from the native command-line, take care that multi-subscription calls like permissions.sh only see the right target
@@ -55,6 +94,21 @@ We assume you have already created an azure account or have been granted credent
 We will login once outside of the container (merges creds with anything in ~/.azure) to get the correct subscription id, and then
 again inside the container to restrict ourselves to the correct creds only.
 
+### Create service principals if using multiple subscriptions
+Following the [Azure Documentation](https://docs.microsoft.com/en-us/python/azure/python-sdk-azure-authenticate?view=azure-python) create a service principal for a given subscription:
+
+```
+az ad sp create-for-rbac --name "<service-principal-name>" --password "STRONG-SECRET-PASSWORD" > ~/.azure/<service-principal-name>.json
+
+```
+where <service-principal-name> can be anything - a good choice might be
+scanner-<first-digits-of-subscription> and STRONG-SECRET-PASSWORD is also
+chosen randomly.
+
+Now run the scanner providing the --auth-location
+```
+python3 azure_cis_scanner/controller.py --auth-location ~/.azure/<service-principal-name>.json
+```
 
 ### Configure
 
@@ -109,7 +163,10 @@ For each folder, cd into it and run
 terraform init
 terraform apply
 ```
-You will likely have to re-login as terraform has short timeouts on tokens.
+If you receive a token expiry error with terraform, run the following:
+```
+az account get-access-token
+```
 REMEMBER TO DESTROY YOUR RESOURCES WHEN FINISHED
 ```
 terraform destroy
@@ -143,11 +200,29 @@ Inside the container we now run a flask app to server generated html pages with 
 
 ```
 bash-4.4 scanner$ cd ../report
-bash-4.4 report$ python3 app.py
+bash-4.4 report$ flask app.py
 ```
 Browse to 127.0.0.1:5000 to view the report.  The subscription switching via the UI does not work yet.
 
 Currently, graphs will not display until there are two days of data.
+
+If you wish to work with the scanner in an interactive jupyter notebook, open `127.0.0.1:8888` and browse to the azure_cis_scanner.ipynb file.
+
+## Explore in jupyter notebook
+A jupyter development notebook is available in your browser at localhost:5000.
+If you plan to run the notebook please install [nbstripout](https://github.com/kynan/nbstripout) to ensure no sensitive information is accidentally committed to git.
+```
+azure_cis_scanner > pip install --upgrade nbstripout
+azure_cis_scanner> nbstripout --install
+```
+
+## Security considerations
+
+* nbstripout performs Jupyter notebook scrubbing of output cells which may contain sensitive information.  Github pre-commit webhooks perform this automatically.
+* All credentials in ~/.azure are mounted into the container when using docker-compose and thus do not get baked into the container.
+* A script to remove any files or folders likely to contain sensitive information
+  from container in case of `docker save`.
+
 
 ## Requesting credentials with the correct RBACs to run the scanner
 If you need to run the scanner on someone else's Azure environment, you should ask for the minimum possible
@@ -200,21 +275,26 @@ users and can copy the generated (resource_group, account, SAS keys) tuples and 
 ## Constraints
 
 An attempt was made to convert to json everywhere, but the current raw/filtered data used key tuples - eg (resource_group, server, database) -
-which only supported in yaml.  An attempt to use safe_yaml was made, but the tuples caused errors.  The intention is to have `raw` data pulled
-as infrequently as possible from the cloud API, stored as close as possible to the delivered format.  
+which are only supported in yaml.  An attempt to use safe_yaml was made, but the tuples caused errors.  The intention is to have `raw` data pulled
+as infrequently as possible from the cloud API, and stored as close as possible to the delivered format.  
 We may switch from tuple to nested dict in the future.
 
 ## Roadmap
 
-* Further development of automation for deployment of an insecure test environment.
+* ~~Further development of automation for deployment of an insecure test environment.~~
 * Add to remediation scripts in the `remediations` folder to automatically resolve many simple "switch on" issues.
 * Use the python sdk instead of bash.
 * Wrap the flask project with praetorian-flask for security.  Only run on a local network until this is complete.
 * Remove manual steps by generating minimal_tester_role.json with correct subscriptions/resource_group paths.
 * The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
 * Replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
-* Add git hooks to automatically remove cell output of azure_cis_scanner.ipynb to avoid checking in sensitive info
+* ~~Add git hooks to automatically remove cell output of azure_cis_scanner.ipynb to avoid checking in sensitive info~~
 
+## Contributing 
+az_scanner uses the python-azure-sdk.  There are a few limitations compared to the azure cli.
+Some good resources are: 
+*[Azure Samples](https://github.com/Azure-Samples?utf8=%E2%9C%93&q=python&type=&language=)
+*
 ## Digging Deeper
 
 A Scanner is a good first tool for securing a cloud environment to ensure best practices and secure configuration settings are employed.
@@ -223,4 +303,6 @@ However, this scanner does not assess the health of your IAM policies and roles 
 More advanced SecOps teams should consider leveraging automation tools, policy configurations, Azure Quick Templates, EventGrid and many other advanced features.
 
 Need manual penetration testing?  Praetorian has expertise in the Cloud, IOT, NetSec and more.
+
+![Azure Security Journey Stages](images/Azure_Security_Stages.png?raw=true "Azure Security Journey Stages")
 
