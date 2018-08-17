@@ -24,7 +24,7 @@ def get_filtered_data_path(scans_root, date=None):
         if len(dir_list) == 0:
             print("No data found in {}.  Please run scanner first".format(scans_root))
         else:
-            date = sorted(dir_list)[0]
+            date = dir_list[0]
             return os.path.join(scans_root, 'scans', date, 'filtered'), date
 
 @functools.lru_cache(maxsize=32, typed=False)
@@ -55,7 +55,7 @@ def get_filtered_data_by_name(scans_root, section_name, date=None):
     @returns filtered data, date
     """
     # get date folders, most to least recent
-    dir_list = reversed(sorted(get_dirs(scans_root)))
+    dir_list = get_dirs(scans_root)
     section_name_file = '_'.join(map(str.lower, section_name.split(' '))) + '_filtered.json'
     for dir_date in dir_list:
         if date and (dir_date > date):
@@ -92,7 +92,8 @@ def get_latest_filtered_data(scans_root, date=None):
 @functools.lru_cache(maxsize=1, typed=False)
 def get_stats(scans_root):
     stats = {}
-    dir_list = sorted(get_dirs(scans_root))
+    dir_list = get_dirs(scans_root)
+    print("get_stats dir_list {}".format(dir_list))
     for section_name in cis_structure['section_ordering']:
         stats[section_name] = {}
         section_name_file = '_'.join(map(str.lower, section_name.split(' '))) + '_filtered.json'
@@ -114,6 +115,7 @@ def get_latest_stats(scans_root):
     for section_name in stats:
         latest_stats[section_name] = {}
         for finding_name in stats[section_name]:
+            print("HHHHHH {}".format(stats[section_name][finding_name]))
             date = max(stats[section_name][finding_name])
             latest_stats[section_name][finding_name] = {"date": date, **stats[section_name][finding_name][date]}
 
@@ -144,6 +146,7 @@ def get_finding_index(findings_list, finding):
         if finding_entry['subsection_name'] == finding:
             return finding_entry
     raise ValueError("finding {} not found in {}".format(finding, findings_list))
+
 
 # def get_summary_stats(section=None):
 # 	"""

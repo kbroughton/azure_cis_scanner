@@ -13,7 +13,7 @@ def get_filtered_data_path(date=None):
     <scans_root>/scans/<date>/<section_lowercase_underscores>.json
     """
     if date:
-        if os.path.exists:
+        if os.path.join(scans_root, 'scans', date):
             return os.path.join(scans_root, 'scans', date, 'filtered'), date
         else:
             raise ValueError("Filtered data requested for {} but file does not exist at {}".format(
@@ -23,7 +23,9 @@ def get_filtered_data_path(date=None):
         if len(dir_list) == 0:
             print("No data found in {}.  Please run scanner first".format(scans_root))
         else:
-            date = sorted(dir_list)[0]
+            print(dir_list)
+            date = dir_list[0]
+            print('get_filtered_data_path', date)
             return os.path.join(scans_root, 'scans', date, 'filtered'), date
 
 @functools.lru_cache(maxsize=32, typed=False)
@@ -54,7 +56,7 @@ def get_filtered_data_by_name(section_name, date=None):
     @returns filtered data, date
     """
     # get date folders, most to least recent
-    dir_list = reversed(sorted(get_dirs(scans_root)))
+    dir_list = get_dirs(scans_root)
     section_name_file = '_'.join(map(str.lower, section_name.split(' '))) + '_filtered.json'
     for dir_date in dir_list:
         if date and (dir_date > date):
@@ -91,7 +93,8 @@ def get_latest_filtered_data(date=None):
 @functools.lru_cache(maxsize=1, typed=False)
 def get_stats():
     stats = {}
-    dir_list = sorted(get_dirs(scans_root))
+    dir_list = get_dirs(scans_root)
+    print("get_stats dirlist: {}".format(dir_list))
     for section_name in cis_structure['section_ordering']:
         stats[section_name] = {}
         section_name_file = '_'.join(map(str.lower, section_name.split(' '))) + '_filtered.json'

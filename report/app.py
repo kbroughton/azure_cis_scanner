@@ -124,10 +124,12 @@ def plot_finding(service, finding):
     stats = get_stats(scans_root)
     df = multi_index_df_from_stats(stats)
     finding_df = df.loc[section_name].loc[subsection_name]
+    finding_df = finding_df.fillna(method='ffill')
     y = finding_df["Flagged"].tolist()
     y = np.array(y)
     x = finding_df.index
-    
+    print("plot_finding x: ", x)
+    print("plot_finding y: ", y)
     mask = np.isfinite(y)
 
     fig, ax = plt.subplots()
@@ -163,6 +165,7 @@ def multi_index_tuples_from_stats(stats):
             subsection_name = subsection['subsection_name']
             finding_name = '_'.join(map(str.lower, subsection_name.split(' ')))
             start_date, end_date = min_max_dates()
+            print("start_date {} end_date {}".format(start_date, end_date))
             for date in sorted(pd.date_range(start=start_date, end=end_date, freq='D')):
                 str_date = datetime_to_dir_date(date)
                 has_data = True
@@ -182,6 +185,7 @@ def multi_index_tuples_from_stats(stats):
 def multi_index_df_from_stats(stats):
     tuples, index_tuples = multi_index_tuples_from_stats(stats)
     multi_index = pd.MultiIndex.from_tuples(index_tuples, names=["section", "finding", "date"])
+    print(multi_index)
     return pd.DataFrame(tuples, index=multi_index, columns=["section_drop", "finding_drop", "date","Flagged", "Checked"])
 
 def dir_date_to_datetime(string):

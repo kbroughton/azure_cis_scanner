@@ -14,8 +14,13 @@ from os.path import splitext, basename
 from azure.common.client_factory import get_client_from_cli_profile, get_client_from_auth_file
 from azure.mgmt.resource import ResourceManagementClient, SubscriptionClient
 
-_LOGGER = logging.getLogger(__name__)
-print(_LOGGER)
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+formatter = logging.Formatter(
+        '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 
 def load_module(module_name, **kwargs):
     name = splitext(basename(module_name))[0]
@@ -115,7 +120,7 @@ def main():
         print("Running with arguments {}".format(parser))
 
     if True: #loglevel == "debug":
-        _LOGGER.setLevel(logging.DEBUG)
+        logger.setLevel(logging.DEBUG)
 
     credentials_tuples = utils.set_credentials_tuples(parser)
 
@@ -135,7 +140,7 @@ def main():
 
         sp_credentials = utils.get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=parser.refresh_sp_credentials)
         print("sp_credentials", sp_credentials, type(sp_credentials))
-        _LOGGER.debug("DEBUGGER WORKS! running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
+        logger.debug("DEBUGGER WORKS! running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
         print("running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
         
         access_token, token_expiry = utils.get_access_token()

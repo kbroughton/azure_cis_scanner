@@ -21,7 +21,7 @@ else:
 
 @functools.lru_cache(1, typed=False)
 def get_dirs(directory):
-    return [x for x in os.listdir(directory) if os.path.isdir(directory) and not x.endswith('.DS_Store')]
+    return list(reversed(sorted([x for x in os.listdir(directory) if os.path.isdir(directory) and not x.endswith('.DS_Store')])))
 
 
 accounts = {}
