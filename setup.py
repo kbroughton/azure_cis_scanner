@@ -57,7 +57,7 @@ setup(
     install_requires=requirements,
     license='GNU General Public License v2 (GPLv2)',
     classifiers=[
-        'Development Status :: 1 - Beta',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
         'Intended Audience :: System Administrators',
