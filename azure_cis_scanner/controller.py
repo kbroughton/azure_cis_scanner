@@ -103,34 +103,36 @@ def main():
     mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
     mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
     # TODO, set default in __init__.py or somewhere and make it windows compatible
-    mainparser.add_argument('--scans-dir', default='/engagements/cis_test/scans', help='base dir of where to place or load files')
+    mainparser.add_argument('--scans-dir', default='/engagements/cis_test/scans', help='existing base dir of where to place or load files')
     mainparser.add_argument('--stages', default='data,test,report', help='comma separated list of steps to run in data,test')
     mainparser.add_argument('--modules', default=None, help='comma separated list of module names e.g. security_center.py')
     mainparser.add_argument('--skip-modules', default=[], help='comma separated list of module names to skip')
     mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
     mainparser.add_argument('--refresh-sp-credentials', action='store_true', help='refresh service principal creds needed for keyvault')
-    mainparser.add_argument('--loglevel', default='info', help='loglevel in ["info", "debug", "trace"]')
+    mainparser.add_argument('--loglevel', default='info', help='loglevel in ["debug", "info", "warning", "error"]')
     parser = mainparser.parse_args()
 
     loglevel = parser.loglevel
-
 
     if loglevel != 'info':
         print("Checking to see if there is an Azure account associated with this session.")
         print("Running with arguments {}".format(parser))
 
-    if True: #loglevel == "debug":
+    if loglevel == "debug":
         logger.setLevel(logging.DEBUG)
+    elif loglevel == "info":
+        logger.setlevel(logging.INFO)
+    elif loglevel == "warning":
+        logger.setlevel(logging.INFO)
+    elif loglevel == "error":
+        logger.setlevel(logging.ERROR)
+
 
     credentials_tuples = utils.set_credentials_tuples(parser)
 
-    scans_dir = parser.scans_dir
-    if not os.path.exists(scans_dir):
-        if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
-            scans_dir = '/engagements/cis_test/scans'    
-        else:
-            scans_dir = os.path.join(os.getcwd(), 'scans')
-        print("scans_dir {} not found.  Using {}".format(parser.scans_dir, scans_dir))
+    scans_dir = os.path.realpath(parser.scans_dir)
+    scans_dir = utils.set_scans_dir(scans_dir)
+
         
     accounts_list = json.loads(utils.call("az account list"))
     with open(os.path.join(scans_dir, 'accounts.json'), 'w') as f:

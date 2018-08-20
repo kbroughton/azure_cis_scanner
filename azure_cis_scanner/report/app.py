@@ -67,18 +67,25 @@ def index(active_subscription_dir, methods=['POST','GET']):
 @app.route('/services/<service>')
 def service(service):
     findings_table = [(x['subsection_number'], x['subsection_name'], get_finding_name(x['finding_name'], x['subsection_name'])) for x in cis_structure['TOC'][service]]
-    stats = get_latest_stats(scans_root)
+    stats = get_latest_stats(app.config['SCANS_DATA_DIR'])
+    #pprint.pprint("service:stats: {}".format(stats))
     return render_template('service.html', service=service, title=title_except(service), findings_table=findings_table, stats=stats)
 
 @app.route('/services/<service>/<finding>')
 def finding(service, finding):
+    """
+    Render the non-graph portion of the finding as a table of the latest date recording this finding
+    The graph portion is rendered in plot_finding
+    """
     finding_entry = get_finding_index(cis_structure['TOC'][service], finding)
-    service_data = get_filtered_data_by_name(scans_root, service)
+    service_data = get_filtered_data_by_name(app.config['SCANS_DATA_DIR'], service)
+    pprint.pprint("finding:service_data: {}".format(service_data))
     error_str = ''
     if not service_data:
         error_str = 'No section named "{}" found\n'.format(service)
     finding_name = get_finding_name(finding_entry['finding_name'], finding_entry['subsection_name'])
     finding_data = service_data.get(finding_name, None)
+    print("finding_data {}".format(finding_data))
     if not finding_data:
         error_str += 'No finding named "{}" in {}\n'.format(finding, service_data.keys())
     elif (not finding_data.get("metadata", None)):
@@ -87,7 +94,10 @@ def finding(service, finding):
         error_str += 'No columns in metadata for "{}"\n'.format(finding)
     elif not finding_data.get("items", None):
         error_str += 'No items list for "{}"\n'.format(finding)
-
+    elif not finding_data.get("stats", None):
+        error_str += 'No stats section in finding_data {}'.format(finding)
+    elif not finding_data.get("stats", None):
+        error_str += 'No stats section in finding_data {}'.format(finding)
     if error_str:
         return render_template('finding.html', service=service, finding=finding,
             finding_entry=finding_entry, table='', title=title_except(finding), error_str=error_str, items_checked=0)
@@ -121,9 +131,11 @@ def plot_finding(service, finding):
         return make_response("Install matplotlib for graphing support")
     section_name = service
     subsection_name = finding
-    stats = get_stats(scans_root)
+    stats = get_stats(app.config['SCANS_DATA_DIR'])
     df = multi_index_df_from_stats(stats)
     finding_df = df.loc[section_name].loc[subsection_name]
+    if len(finding_df) < 2:
+        return make_response('Need at least 2 days of data for a plot.  Come back tomorrow!')
     finding_df = finding_df.fillna(method='ffill')
     y = finding_df["Flagged"].tolist()
     y = np.array(y)
@@ -199,7 +211,7 @@ def datetime_to_dir_date(dt):
     return dt.strftime("%Y-%m-%d")
 
 def min_max_dates():
-    dates = list(map(dir_date_to_datetime, get_dirs(scans_root)))
+    dates = list(map(dir_date_to_datetime, get_dirs(app.config['SCANS_DATA_DIR'])))
     return min(dates), max(dates)
 
 
@@ -219,6 +231,31 @@ nav.register_element(
         #Subgroup(active_subscription_dir, *[Link(account['name']) for account in accounts], [])
         )
     )
+
+def main():
+    mainparser = argparse.ArgumentParser()
+    mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
+    mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
+    mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
+    # TODO, set default in __init__.py or somewhere and make it windows compatible
+    mainparser.add_argument('--scans-dir', default='/engagements/cis_test', help='base dir of where to place or load files')
+
+    parser = mainparser.parse_args()
+
+    # TODO figure out better way to get base dir or let user select in UI
+    credentials_tuples = utils.set_credentials_tuples(parser)
+
+    tenant_id, subscription_id, subscription_name, credentials = credentials_tuples[0]
+    subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
+    active_subscription_dir = subscription_dirname
+    print("dir(utils)", dir(utils))
+    scans_dir = utils.set_scans_dir(parser.scans_dir)
+    
+    app.config['ACTIVE_SUBSCRIPTION_DIR'] = active_subscription_dir
+    app.config['SCANS_DIR'] = scans_dir
+    app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
+
+    app.run(debug=True, host='0.0.0.0')
 
 # Might need something like https://testdriven.io/developing-a-single-page-app-with-flask-and-vuejs for menu drop-down multi-subscription.
 
@@ -245,27 +282,6 @@ nav.register_element(
 
 
 if __name__ == "__main__":
+    main()
 
-    mainparser = argparse.ArgumentParser()
-    mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
-    mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
-    mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
-    # TODO, set default in __init__.py or somewhere and make it windows compatible
-    mainparser.add_argument('--scans-dir', default='/engagements/cis_test', help='base dir of where to place or load files')
-
-    parser = mainparser.parse_args()
-
-    # TODO figure out better way to get base dir or let user select in UI
-    credentials_tuples = utils.set_credentials_tuples(parser)
-
-    tenant_id, subscription_id, subscription_name, credentials = credentials_tuples[0]
-    subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
-    active_subscription_dir = subscription_dirname
-    #active_subscription_dir = "510f92e0-xxxx-yyyy-zzzz-095d37e6a299"
-    scans_root = os.path.join(settings.scans_base, active_subscription_dir)
-    
-    app.config['ACTIVE_SUBSCRIPTION_DIR'] = active_subscription_dir
-    app.config['SCANS_ROOT'] = scans_root
-
-    app.run(debug=True, host='0.0.0.0')
 

@@ -223,6 +223,22 @@ filtered_data_dir = ''
 scan_data_dir = ''
 raw_data_dir = ''
 
+def set_scans_dir(scans_dir):
+    """
+    Set scans_dir to requested value if it exists, otherwise default to ./scans and create
+    """
+    if not os.path.exists(scans_dir):
+        if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
+            scans_dir = '~/engagements/cis_test/scans'    
+        elif os.path.exists('/engagements/cis_test/scans'):
+            scans_dir = '/engagements/cis_test/scans'                
+        else:
+            scans_dir = os.path.join(os.getcwd(), 'scans')
+            if not os.path.exists(scans_dir):
+                os.mkdir(scans_dir)
+        print("scans_dir {} not found.  Using {}".format(parser.scans_dir, scans_dir))
+    return scans_dir
+
 def set_data_paths(subscription_dirname, base_dir='.'):
     """
     Given a base_dir, create subdirs scans/{day}/raw

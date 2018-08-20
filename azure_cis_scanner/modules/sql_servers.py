@@ -9,7 +9,7 @@ credentials = config['cli_credentials']
 sp_credentials = config['sp_credentials']
 subscription_id=config['subscription_id']
 
-filtered_sql_servers_path = os.path.join(config['filtered_data_dir'], 'sql_servers.json')
+filtered_sql_servers_path = os.path.join(config['filtered_data_dir'], 'sql_servers_filtered.json')
 sql_servers_path = os.path.join(config['raw_data_dir'], 'sql_databases.json')
 sql_databases_path = os.path.join(config['raw_data_dir'], 'sql_servers.json')
 sql_server_policies_path = os.path.join(config['raw_data_dir'], 'sql_server_policies.json')
