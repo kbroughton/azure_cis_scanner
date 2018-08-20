@@ -236,7 +236,7 @@ def set_scans_dir(scans_dir):
             scans_dir = os.path.join(os.getcwd(), 'scans')
             if not os.path.exists(scans_dir):
                 os.mkdir(scans_dir)
-        print("scans_dir {} not found.  Using {}".format(parser.scans_dir, scans_dir))
+        print("scans_dir {} not found.  Using {}".format(scans_dir, scans_dir))
     return scans_dir
 
 def set_data_paths(subscription_dirname, base_dir='.'):

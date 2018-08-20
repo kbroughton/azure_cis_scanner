@@ -61,17 +61,21 @@ def get_filtered_data_by_name(scans_data_dir, section_name, date=None):
     """
     # get date folders, most to least recent
     dir_list = get_dirs(scans_data_dir)
+    print("get_filtered_data_by_name:dir_list: {}".format(dir_list))
     section_name_file = '_'.join(map(str.lower, section_name.split(' '))) + '_filtered.json'
     for dir_date in dir_list:
         if date and (dir_date > date):
             continue
         filtered_data_path = os.path.join(scans_data_dir, dir_date, 'filtered', section_name_file)
         if os.path.exists(filtered_data_path):
-            print('get_filtered_data_by_name', filtered_data_path)
+            print('get_filtered_data_by_name:filtered_data_path', filtered_data_path)
             with open(filtered_data_path, 'r') as f:
                 data = yaml.load(f)
-                data['date'] = dir_date
-                return data
+                # We might have, for example, deleted all the databases.  Keep going till we find data.
+                if data:
+                    for key,val in data.items():
+                        data[key]['date'] = dir_date
+                    return data
     else:
         return None
 

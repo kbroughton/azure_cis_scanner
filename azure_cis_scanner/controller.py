@@ -48,7 +48,7 @@ def _get_modules(modules=None, skip_modules=None):
     """
     if modules and skip_modules:
         print("WARNING: both modules and skip_modules specified, ignoring skip_modules")
-    all_modules = [x for x in os.listdir(MODULES_PATH) if x.endswith('.py')]
+    all_modules = [x for x in os.listdir(MODULES_PATH) if x.endswith('.py') and x != '__init__.py']
     if modules:
         intersect_modules = set(all_modules).intersection(set(modules))
         diff_modules = set(modules).difference(intersect_modules)
@@ -121,11 +121,11 @@ def main():
     if loglevel == "debug":
         logger.setLevel(logging.DEBUG)
     elif loglevel == "info":
-        logger.setlevel(logging.INFO)
+        logger.setLevel(logging.INFO)
     elif loglevel == "warning":
-        logger.setlevel(logging.INFO)
+        logger.setLevel(logging.INFO)
     elif loglevel == "error":
-        logger.setlevel(logging.ERROR)
+        logger.setLevel(logging.ERROR)
 
 
     credentials_tuples = utils.set_credentials_tuples(parser)

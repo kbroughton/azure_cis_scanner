@@ -99,12 +99,13 @@ def finding(service, finding):
     elif not finding_data.get("stats", None):
         error_str += 'No stats section in finding_data {}'.format(finding)
     if error_str:
-        return render_template('finding.html', service=service, finding=finding,
+        return render_template('finding.html', service=service, finding=finding, date=date,
             finding_entry=finding_entry, table='', title=title_except(finding), error_str=error_str, items_checked=0)
     else:
         items_checked=finding_data['stats']['items_checked']
         data = pd.DataFrame(finding_data['items'], columns=finding_data['metadata']['columns'])
-        return render_template('finding.html', service=service, finding=finding,
+        date = finding_data['date']
+        return render_template('finding.html', service=service, finding=finding, date=date,
             finding_entry=finding_entry, table=data.to_html(), title=title_except(finding), items_checked=items_checked)
 
 @app.route("/subscription_dir/<subscription_dir>")
@@ -177,7 +178,7 @@ def multi_index_tuples_from_stats(stats):
             subsection_name = subsection['subsection_name']
             finding_name = '_'.join(map(str.lower, subsection_name.split(' ')))
             start_date, end_date = min_max_dates()
-            print("start_date {} end_date {}".format(start_date, end_date))
+            #print("start_date {} end_date {}".format(start_date, end_date))
             for date in sorted(pd.date_range(start=start_date, end=end_date, freq='D')):
                 str_date = datetime_to_dir_date(date)
                 has_data = True
@@ -238,7 +239,7 @@ def main():
     mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
     mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
     # TODO, set default in __init__.py or somewhere and make it windows compatible
-    mainparser.add_argument('--scans-dir', default='/engagements/cis_test', help='base dir of where to place or load files')
+    mainparser.add_argument('--scans-dir', default='/engagements/cis_test/sacans', help='base dir of where to place or load files')
 
     parser = mainparser.parse_args()
 

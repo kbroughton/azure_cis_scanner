@@ -32,7 +32,7 @@ setup(
     url='https://github.com/praetorian-inc/azure_cis_scanner',
     entry_points={
         'console_scripts': [
-            'azscan = azure_cis_scanner.__main__:main',
+            'azscan = azure_cis_scanner.controller:main',
             #'azscanRulesGenerator = azure_cis_scanner.__rules_generator__:main',
             #'azscanListAll = azure_cis_scanner.__listall__:main'
         ]
@@ -48,9 +48,9 @@ setup(
             'cis_structure.yaml'
         ],
         'report': [
-            'reports/static/*.css',
-            'reports/templates/*.html',
-            'reports/requirements.txt'
+            'azure_cis_scanner/report/static/*.css',
+            'azure_cis_scanner/report/templates/*.html',
+            'azure_cis_scanner/report/requirements.txt'
         ]
     },
     include_package_data=True,
