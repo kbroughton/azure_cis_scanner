@@ -40,7 +40,7 @@ setup(
     packages=[
         'azure_cis_scanner', 
         'azure_cis_scanner.modules',
-        'report', 
+        'azure_cis_scanner.report', 
     ],
     package_data={
         'azure_cis_scanner': [
@@ -48,9 +48,9 @@ setup(
             'cis_structure.yaml'
         ],
         'report': [
-            'static/*.css',
-            'templates/*.html',
-            'requirements.txt'
+            'reports/static/*.css',
+            'reports/templates/*.html',
+            'reports/requirements.txt'
         ]
     },
     include_package_data=True,
@@ -67,7 +67,7 @@ setup(
         'Programming Language :: Python :: 3.6'
     ],
     scripts=[
-      'bin/azscanner',
-      'bin/azscanner.bat'
+      'bin/azscan',
+      'bin/azscan.bat'
     ]
 )

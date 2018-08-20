@@ -91,15 +91,21 @@ def load_monitor_log_profiles(monitor_log_profiles_path):
         monitor_log_profiles = yaml.load(f)
     return monitor_log_profiles
 
-
-activity_logs_starttime_timedelta = datetime.timedelta(days=90)
-def get_start_time(timedelta=datetime.timedelta(days=90)):
+# duplicated in storage_accounts.log
+# timedelta=90 days can cause BadRequest error depending on timezone
+# https://github.com/Azure/azure-cli/issues/4885
+activity_log_timedelta_days = 89
+activity_logs_starttime_timedelta = datetime.timedelta(days=activity_log_timedelta_days)
+def get_start_time(timedelta=activity_logs_starttime_timedelta):
     """
     Given datetime.timedelta(days=days, hours=hours), return string in iso tz format 
     """
     return datetime.datetime.strftime(datetime.datetime.now() - timedelta, "%Y-%m-%dT%H:%M:%SZ")
 
 def get_activity_logs(activity_logs_path, resource_groups):
+    if os.path.exists(activity_logs_path):
+        print("activity_logs_path {} exists, using existing values".format(activity_logs_path))
+        return
     activity_logs = {}
     start_time = get_start_time(activity_logs_starttime_timedelta)
     for resource_group in resource_groups:

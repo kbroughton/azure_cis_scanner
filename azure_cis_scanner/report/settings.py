@@ -8,7 +8,7 @@ if os.path.exists('/praetorian-tools/azure_cis_scanner/'):
 elif os.path.exists(os.path.expanduser('~/praetorian-tools/azure_cis_scanner/')):
     cis_scanner_root = os.path.expanduser('~/praetorian-tools/azure_cis_scanner/')
 else:
-    cis_scanner_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+    cis_scanner_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 
 print("cis_scanner_root", cis_scanner_root)
 
