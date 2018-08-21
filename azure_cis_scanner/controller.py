@@ -104,7 +104,7 @@ def main():
     mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
     # TODO, set default in __init__.py or somewhere and make it windows compatible
     mainparser.add_argument('--scans-dir', default='/engagements/cis_test/scans', help='existing base dir of where to place or load files')
-    mainparser.add_argument('--stages', default='data,test,report', help='comma separated list of steps to run in data,test')
+    mainparser.add_argument('--stages', default='data,test,report', help='comma separated list of steps to run in [data,test,report]')
     mainparser.add_argument('--modules', default=None, help='comma separated list of module names e.g. security_center.py')
     mainparser.add_argument('--skip-modules', default=[], help='comma separated list of module names to skip')
     mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')

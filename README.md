@@ -51,7 +51,8 @@ Filtered data will be in files named by the finding and have the following forma
 ### Commandline + pip install
 
 ```
-pip3 install azure_scanner
+pip3 install azure-cis-scanner
+azscan
 ```
 
 If you only have one subscription, defaults will work.  If you have multiple
@@ -67,6 +68,7 @@ This can be ignored
 ### Github
 ```
 git clone https://github.com/praetorian-inc/azure_cis_scanner
+virtualenv venv && source venv/bin/activate  # optional
 pip3 install -r requirements.txt
 python3/controller.py azure_cis_scanner/contoller.py --modules "security_center.py,storage_accounts.py" --stages "data,tests"
 ```
