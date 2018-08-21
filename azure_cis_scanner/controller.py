@@ -179,7 +179,9 @@ def main():
         if 'test' in stages:
             print('test', config)
             _test_controls(config)
-
+        if 'report' in stages:
+            from azure_cis_scanner.report import app
+            app.main(parser=parser)
 
 def az_login():
     from azure.common.client_factory import get_client_from_cli_profile

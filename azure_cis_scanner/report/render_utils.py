@@ -1,6 +1,6 @@
 import functools
 import yaml
-from settings import *
+from azure_cis_scanner.report.settings import *
 import re
 import pprint 
 

@@ -12,8 +12,8 @@ import datetime
 import random
 
 from azure_cis_scanner import utils
-import settings
-from render_utils import *
+from azure_cis_scanner.report import settings
+from azure_cis_scanner.report.render_utils import *
 
 HAS_MATPLOTLIB = False
 
@@ -26,7 +26,9 @@ try:
 except ImportError as e:
     print(e)
     print("Unable to import matplotlib.  No graphing available.")
-
+except RuntimeError as e:
+    print(e)
+    print("Unable to import matplotlib.  No graphing available.")
 
 app = Flask(__name__)
 nav = Nav(app)
@@ -137,7 +139,9 @@ def plot_finding(service, finding):
     finding_df = df.loc[section_name].loc[subsection_name]
     if len(finding_df) < 2:
         return make_response('Need at least 2 days of data for a plot.  Come back tomorrow!')
-    finding_df = finding_df.fillna(method='ffill')
+    filled_df = finding_df.fillna(method='ffill')
+    y_filled = filled_df["Flagged"].tolist()
+    y_filled = np.array(y_filled)
     y = finding_df["Flagged"].tolist()
     y = np.array(y)
     x = finding_df.index
@@ -153,7 +157,7 @@ def plot_finding(service, finding):
     ax.axes.set_xlabel('Date')
     ax.set_title(subsection_name, verticalalignment='bottom')
     line, = ax.plot(x[mask],y[mask], ls="--",lw=1)
-    ax.plot(x,y, color=line.get_color(), lw=1.5)
+    ax.plot(x,y_filled, color=line.get_color(), lw=1.5)
 
     canvas=FigureCanvas(fig)
     png_output = io.BytesIO()
@@ -233,15 +237,20 @@ nav.register_element(
         )
     )
 
-def main():
-    mainparser = argparse.ArgumentParser()
-    mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
-    mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
-    mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
-    # TODO, set default in __init__.py or somewhere and make it windows compatible
-    mainparser.add_argument('--scans-dir', default='/engagements/cis_test/sacans', help='base dir of where to place or load files')
+def main(parser=None):
+    """
+    parser is a parsed argparse parser passed in from controller
+    """
+    if not parser:
+        print("app:main: Parsing")
+        mainparser = argparse.ArgumentParser()
+        mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
+        mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
+        mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
+        # TODO, set default in __init__.py or somewhere and make it windows compatible
+        mainparser.add_argument('--scans-dir', default='/engagements/cis_test/sacans', help='base dir of where to place or load files')
 
-    parser = mainparser.parse_args()
+        parser = mainparser.parse_args()
 
     # TODO figure out better way to get base dir or let user select in UI
     credentials_tuples = utils.set_credentials_tuples(parser)
