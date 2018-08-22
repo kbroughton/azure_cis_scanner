@@ -88,6 +88,7 @@ def finding(service, finding):
     finding_name = get_finding_name(finding_entry['finding_name'], finding_entry['subsection_name'])
     finding_data = service_data.get(finding_name, None)
     print("finding_data {}".format(finding_data))
+    date = finding_data.get('date', 'No Date')
     if not finding_data:
         error_str += 'No finding named "{}" in {}\n'.format(finding, service_data.keys())
     elif (not finding_data.get("metadata", None)):
@@ -106,7 +107,6 @@ def finding(service, finding):
     else:
         items_checked=finding_data['stats']['items_checked']
         data = pd.DataFrame(finding_data['items'], columns=finding_data['metadata']['columns'])
-        date = finding_data['date']
         return render_template('finding.html', service=service, finding=finding, date=date,
             finding_entry=finding_entry, table=data.to_html(), title=title_except(finding), items_checked=items_checked)
 
@@ -227,7 +227,6 @@ nav.register_element(
         View('Security Center', 'service', service='Security Center'),
         View('Storage Accounts', 'service', service='Storage Accounts'),
         View('SQL Servers', 'service', service='SQL Servers'),
-        View('SQL Databases', 'service', service='SQL Databases'),
         View('Logging and Monitoring', 'service', service='Logging and Monitoring'),
         View('Networking', 'service', service='Networking'),
         View('Virtual Machines', 'service', service='Virtual Machines'),
@@ -265,7 +264,10 @@ def main(parser=None):
     app.config['SCANS_DIR'] = scans_dir
     app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
 
-    app.run(debug=True, host='0.0.0.0')
+    if os.name in utils.WINDOWS_OS_NAMES:
+        app.run(debug=True, host='0.0.0.0', run_reloader=False)
+    else:
+        app.run(debug=True, host='0.0.0.0')
 
 # Might need something like https://testdriven.io/developing-a-single-page-app-with-flask-and-vuejs for menu drop-down multi-subscription.
 

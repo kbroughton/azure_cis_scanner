@@ -205,31 +205,31 @@ TOC:
     - subsection_number: 4.1.8
       subsection_name: 'Azure Active Directory Admin is configured'
       finding_name: ''
-  "SQL Databases":
-    - subsection_number: 4.2.1 
-      subsection_name: 'Auditing is set to On'
-      finding_name: ''
-    - subsection_number: 4.2.2 
-      subsection_name: 'Threat Detection is set to On'
-      finding_name: ''
-    - subsection_number: 4.2.3 
-      subsection_name: 'Threat Detection types is set to All'
-      finding_name: ''
-    - subsection_number: 4.2.4 
-      subsection_name: 'Send alerts to is set'
-      finding_name: ''
-    - subsection_number: 4.2.5 
-      subsection_name: 'Email service and co-administrators is Enabled'
-      finding_name: 'email_service_and_co_administrators_is_enabled'
-    - subsection_number: 4.2.6 
-      subsection_name: 'Data encryption is set to On'
-      finding_name: ''
-    - subsection_number: 4.2.7 
-      subsection_name: 'Auditing Retention is greater than 90 days'
-      finding_name: ''
-    - subsection_number: 4.2.8 
-      subsection_name: 'Threat Retention is greater than 90 days'
-      finding_name: ''
+  # "SQL Databases":
+  #   - subsection_number: 4.2.1 
+  #     subsection_name: 'Auditing is set to On'
+  #     finding_name: ''
+  #   - subsection_number: 4.2.2 
+  #     subsection_name: 'Threat Detection is set to On'
+  #     finding_name: ''
+  #   - subsection_number: 4.2.3 
+  #     subsection_name: 'Threat Detection types is set to All'
+  #     finding_name: ''
+  #   - subsection_number: 4.2.4 
+  #     subsection_name: 'Send alerts to is set'
+  #     finding_name: ''
+  #   - subsection_number: 4.2.5 
+  #     subsection_name: 'Email service and co-administrators is Enabled'
+  #     finding_name: 'email_service_and_co_administrators_is_enabled'
+  #   - subsection_number: 4.2.6 
+  #     subsection_name: 'Data encryption is set to On'
+  #     finding_name: ''
+  #   - subsection_number: 4.2.7 
+  #     subsection_name: 'Auditing Retention is greater than 90 days'
+  #     finding_name: ''
+  #   - subsection_number: 4.2.8 
+  #     subsection_name: 'Threat Retention is greater than 90 days'
+  #     finding_name: ''
   "Logging and Monitoring":
     - subsection_number: 5.1
       subsection_name: 'a Log Profile exists'

@@ -76,8 +76,8 @@ def get_data():
     get_virtual_machines(virtual_machines_path)
     # TODO switch to api below, but the datastructure is less detailed.  Trace cli call.
     #get_vms(virtual_machines_path)
-    get_snapshots(snapshots_path)
-    get_disks(disks_path)
+    #get_snapshots(snapshots_path)
+    #get_disks(disks_path)
 
 def vm_agent_is_installed_7_1(virtual_machines):
     items_flagged_list = []
@@ -116,7 +116,7 @@ def os_disk_is_encrypted_7_2(virtual_machines):
                 "columns": ["Resource Group", "Name", "Disk Name"]}            
     return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
 
-def data_disks_are_encrypted_7_3(virtual_machines, disks, snapshots):
+def data_disks_are_encrypted_7_3(virtual_machines):
     items_flagged_list = []
     items_checked = 0
     for vm in virtual_machines:
@@ -126,11 +126,11 @@ def data_disks_are_encrypted_7_3(virtual_machines, disks, snapshots):
             name=name, resource_group=resource_group))
         if encrypted in ["", "Azure Disk Encryption is not enabled"]:
             items_flagged_list.append((vm['resourceGroup'], vm['name'], "unknown"))
-    for disk in disks:
-        if ('encryptionSettings' not in disk) or \
-        (disk['encryptionSettings'] == None) or \
-        (not disk['encryptionSettings']['enabled']):
-            items_flagged_list.append((disk['location'], "unknown", disk['name']))
+    # for disk in disks:
+    #     if ('encryptionSettings' not in disk) or \
+    #     (disk['encryptionSettings'] == None) or \
+    #     (not disk['encryptionSettings']['enabled']):
+    #         items_flagged_list.append((disk['location'], "unknown", disk['name']))
 
     # There doesn't seem to be encryption info in the snapshot.json
     # for snap in snapshots:
@@ -203,11 +203,11 @@ def endpoint_protection_for_all_virtual_machines_is_installed_7_6(virtual_machin
 def test_controls():
     results = {}
     virtual_machines = load_virtual_machines(virtual_machines_path)
-    disks = load_disks(disks_path)
-    snapshots = load_snapshots(snapshots_path)
+    #disks = load_disks(disks_path)
+    #snapshots = load_snapshots(snapshots_path)
     results['vm_agent_is_installed'] = vm_agent_is_installed_7_1(virtual_machines)
     results['os_disk_is_encrypted'] = os_disk_is_encrypted_7_2(virtual_machines)
-    results['data_disks_are_encrypted'] = data_disks_are_encrypted_7_3(virtual_machines, disks, snapshots)
+    results['data_disks_are_encrypted'] = data_disks_are_encrypted_7_3(virtual_machines)
     results['only_approved_extensions_are_installed'] = only_approved_extensions_are_installed_7_4(virtual_machines)
     results['endpoint_protection_for_all_virtual_machines_is_installed'] = endpoint_protection_for_all_virtual_machines_is_installed_7_6(virtual_machines)
     

@@ -27,6 +27,9 @@ AZURE_PROFILE_PATH = os.path.join(AZURE_CONFIG_DIR, 'azureProfile.json')
 AZURE_CREDENTIALS_PATH = os.path.join(AZURE_CONFIG_DIR, 'credentials')
 AZURE_SERVICE_PRINCIPALS_PATH = os.path.join(AZURE_CONFIG_DIR, 'servicePrincipals-{subscription_id}.json')
 
+# If os.name gives something other than 'nt' on windows add it here
+WINDOWS_OS_NAMES = ['nt']
+
 # https://github.com/Azure/azure-cli/blob/dev/src/command_modules/azure-cli-keyvault/azure/cli/command_modules/keyvault/_client_factory.py
 def keyvault_data_plane_factory(cli_ctx, _):
     from azure.keyvault import KeyVaultAuthentication, KeyVaultClient
@@ -271,6 +274,9 @@ def call(command, retrieving_access_token=False, stderr=None):
     #    get_access_token()
     if(isinstance(command, str)) :
         command = command.split()           # subprocess needs an array of arguments
+    if os.name in WINDOWS_OS_NAMES: # windows
+        if not command[0].startswith('curl'):
+            command[0] = command[0] + '.cmd'    # https://github.com/kennethreitz/legit/issues/148
     try :
         print('running: ', command)
         result = subprocess.check_output(command, shell=False, stderr=stderr).decode('utf-8')
@@ -387,8 +393,8 @@ def set_credentials_tuples(parser):
 
     return credentials_tuples
 
-def make_request(url, args=[]):
-    print('requesting ', url)
+def make_request(url, headers=None):
+    print('requesting {} with headers {}'.format(url, headers))
     authorization_headers = {"Authorization" : "Bearer " + get_access_token()[0]}
     r = requests.get(url, headers=authorization_headers)
     return r.text

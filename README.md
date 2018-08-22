@@ -47,6 +47,8 @@ Filtered data will be in files named by the finding and have the following forma
 ```
 
 ## Quickstart
+All platforms require installing the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+Install [python3 for your platform](https://realpython.com/installing-python/).
 
 ### Commandline + pip install
 
@@ -58,22 +60,15 @@ azscan
 If you only have one subscription, defaults will work.  If you have multiple
 subscriptions, due to a limitation in the python-azure-sdk, you need to ensure that the default subscription is the currently active subscription `az account set --subscription aaaaa-bbbbbb-111111-444444-xxxxx`.
 
-### Known Issues
-Depending on previous pip installs, you may see
-```
-error: PyYAML 3.12 is installed but pyyaml~=4.2b4 is required by {'azure-cli-core'}
-```
-This can be ignored
-
-### Github
+### Install from Github
 ```
 git clone https://github.com/praetorian-inc/azure_cis_scanner
-virtualenv venv && source venv/bin/activate  # optional
+virtualenv venv && source venv/bin/activate  # optional`
 pip3 install -r requirements.txt
 python3/controller.py azure_cis_scanner/contoller.py --modules "security_center.py,storage_accounts.py" --stages "data,tests"
 ```
 
-### Docker
+### Install with Docker
 If you already have an account and the default subscription is correct,
 you can just copy the docker-compose.yml file to a new folder, copy .env-sample to .env next to the docker-compose.yml and run
 
@@ -82,6 +77,30 @@ docker-compose up
 ```
 
 This will mount ~/.azure into the container and use the default subscription.
+
+#### Known Issues
+Depending on previous pip installs, you may see
+```
+error: PyYAML 3.12 is installed but pyyaml~=4.2b4 is required by {'azure-cli-core'}
+```
+This can be ignored
+
+Expired tokens:
+Message: The access token expiry UTC time '8/21/2018 3:22:00 PM' is earlier than current UTC time '8/21/2018 3:48:45 PM'.
+This happens more often if you switch between the container and native environments.
+Try the following
+```
+az account get-access-token
+```
+or
+```
+az login
+```
+Or in rare cases
+```
+rm ~/.azure/accessTokens.json
+az login
+```
 
 ## Detailed Usage
 
