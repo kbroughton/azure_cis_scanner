@@ -55,17 +55,19 @@ Install [python3 for your platform](https://realpython.com/installing-python/).
 ```
 pip3 install azure-cis-scanner
 azscan
+open localhost:5000
 ```
 
 If you only have one subscription, defaults will work.  If you have multiple
-subscriptions, due to a limitation in the python-azure-sdk, you need to ensure that the default subscription is the currently active subscription `az account set --subscription aaaaa-bbbbbb-111111-444444-xxxxx`.
+subscriptions, due to a limitation in the python-azure-sdk, you need to ensure that the default subscription is the currently active subscription `az account set --subscription-id aaaaa-bbbbbb-111111-444444-xxxxx`.
 
 ### Install from Github
 ```
 git clone https://github.com/praetorian-inc/azure_cis_scanner
 virtualenv venv && source venv/bin/activate  # optional`
 pip3 install -r requirements.txt
-python3/controller.py azure_cis_scanner/contoller.py --modules "security_center.py,storage_accounts.py" --stages "data,tests"
+python3 setup.py install
+azscan --modules "security_center.py,storage_accounts.py" --stages "data,tests"
 ```
 
 ### Install with Docker
@@ -74,6 +76,12 @@ you can just copy the docker-compose.yml file to a new folder, copy .env-sample 
 
 ```
 docker-compose up
+```
+Then find the docker conatiner id, exec into the container and run the scanner 
+```
+docker ps | grep azure 
+docker exec -it <id from above> bash
+bash# azscan
 ```
 
 This will mount ~/.azure into the container and use the default subscription.
