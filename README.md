@@ -114,6 +114,11 @@ az login
 Occasionally the ~/.azure/azureProfiles.json gets some non-ascii characters causing an error about unicode decoding.  
 The current fix is to open the file and delete the (possiby invisible) characters inserted at the start of the file.
 
+No Graphig:
+You may see the error "Unable to import matplotlib.  No graphing available" even though matplotlib pip-installed fine.
+Check the install/ directory to see if there are specific aids for your platform.  This may be an issue with virtualenvs
+not finding python correctly if `import matplotlib` works outside of the virtualenv.
+
 ## Detailed Usage
 
 Best practice is to work inside a docker container to avoid any issues that would arise from a multi-tenant environment.

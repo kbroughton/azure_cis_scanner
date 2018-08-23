@@ -259,10 +259,7 @@ def main(parser=None):
     app.config['SCANS_DIR'] = scans_dir
     app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
 
-    if os.name in utils.WINDOWS_OS_NAMES:
-        app.run(debug=True, host='0.0.0.0', run_reloader=False)
-    else:
-        app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', run_reloader=False)
 
 
 if __name__ == "__main__":
