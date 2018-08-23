@@ -91,7 +91,7 @@ Depending on previous pip installs, you may see
 ```
 error: PyYAML 3.12 is installed but pyyaml~=4.2b4 is required by {'azure-cli-core'}
 ```
-This can be ignored
+This can be ignored as long as the rest of the pip install succeeds.  You may need to comment out requests from requirements.txt.
 
 Expired tokens:
 Message: The access token expiry UTC time '8/21/2018 3:22:00 PM' is earlier than current UTC time '8/21/2018 3:48:45 PM'.
@@ -109,6 +109,9 @@ Or in rare cases
 rm ~/.azure/accessTokens.json
 az login
 ```
+
+Occasionally the ~/.azure/azureProfiles.json gets some non-ascii characters causing an error about unicode decoding.  
+The current fix is to open the file and delete the (possiby invisible) characters inserted at the start of the file.
 
 ## Detailed Usage
 
@@ -182,7 +185,11 @@ from the correct `id` in `account list` above. Since it is mounted into the cont
 
 ### Sample deploy (optional)
 If you have no resource or just want to test the scanner on fresh resources, try some of the automated deployment resources.
-Currently, sample-deploy/terraform-azure is working the best.  First we need to add terraform to the container.
+Currently, sample-deploy/terraform-azure is working the best.  
+
+Install terraform, and [setup terraform to talk to azure](https://github.com/mitchellh/packer/blob/master/contrib/azure-setup.sh).
+
+If using the container we need to add terraform to the container.
 ```
 apk add terraform
 ```
@@ -252,6 +259,7 @@ azure_cis_scanner> nbstripout --install
 * A script to remove any files or folders likely to contain sensitive information
   from container in case of `docker save`.
 
+* Github's new static scanner for python was added and [discovered some issues that were fixed](images/azure_cis_scanner_git_vuln_scan)! 
 
 ## Requesting credentials with the correct RBACs to run the scanner
 If you need to run the scanner on someone else's Azure environment, you should ask for the minimum possible
@@ -312,8 +320,8 @@ We may switch from tuple to nested dict in the future.
 
 * ~~Further development of automation for deployment of an insecure test environment.~~
 * Add to remediation scripts in the `remediations` folder to automatically resolve many simple "switch on" issues.
-* Use the python sdk instead of bash.
-* Wrap the flask project with praetorian-flask for security.  Only run on a local network until this is complete.
+* Use the python sdk instead of bash.  This was attempted but the sdk has multiple auth strategies and isn't well documented.
+* Wrap the flask project with praetorian-flask for security.  Only run on a local network until this is complete or switch to django.
 * Remove manual steps by generating minimal_tester_role.json with correct subscriptions/resource_group paths.
 * The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
 * Replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
@@ -323,7 +331,9 @@ We may switch from tuple to nested dict in the future.
 az_scanner uses the python-azure-sdk.  There are a few limitations compared to the azure cli.
 Some good resources are: 
 *[Azure Samples](https://github.com/Azure-Samples?utf8=%E2%9C%93&q=python&type=&language=)
-*
+
+Please see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## Digging Deeper
 
 A Scanner is a good first tool for securing a cloud environment to ensure best practices and secure configuration settings are employed.

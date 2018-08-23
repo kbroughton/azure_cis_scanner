@@ -33,8 +33,6 @@ setup(
     entry_points={
         'console_scripts': [
             'azscan = azure_cis_scanner.controller:main',
-            #'azscanRulesGenerator = azure_cis_scanner.__rules_generator__:main',
-            #'azscanListAll = azure_cis_scanner.__listall__:main'
         ]
     },
     packages=[
@@ -68,6 +66,5 @@ setup(
     ],
     scripts=[
       'bin/azscan',
-      'bin/azscan.bat'
     ]
 )
