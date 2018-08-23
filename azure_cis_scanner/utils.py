@@ -232,7 +232,8 @@ def set_scans_dir(scans_dir):
     """
     if os.path.exists(scans_dir):
         return scans_dir
-    else os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
+    else:
+        if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
             _scans_dir = os.path.expanduser('~/engagements/cis_test/scans')
         elif os.path.exists('/engagements/cis_test/scans'):
             _scans_dir = '/engagements/cis_test/scans'                
