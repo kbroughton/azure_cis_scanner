@@ -87,7 +87,7 @@ bash# azscan
 
 This will mount ~/.azure into the container and use the default subscription.
 
-#### Known Issues
+### Known Issues
 Depending on previous pip installs, you may see
 ```
 error: PyYAML 3.12 is installed but pyyaml~=4.2b4 is required by {'azure-cli-core'}
@@ -260,7 +260,7 @@ azure_cis_scanner> nbstripout --install
 * A script to remove any files or folders likely to contain sensitive information
   from container in case of `docker save`.
 
-* Github's new static scanner for python was added and [discovered some issues that were fixed](images/azure_cis_scanner_git_vuln_scan)! 
+* Github's new static scanner for python was added and [discovered some issues that were fixed](images/azure_cis_scanner_git_vuln_scan.png)! 
 
 ## Requesting credentials with the correct RBACs to run the scanner
 If you need to run the scanner on someone else's Azure environment, you should ask for the minimum possible
