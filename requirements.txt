@@ -29,4 +29,5 @@ azure-mgmt-resource
 azure-mgmt-sql
 azure-mgmt-storage
 azure-mgmt-subscription
+azure-cli-core
 azurerm

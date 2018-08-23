@@ -1,0 +1,90 @@
+[
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg",
+        "location": "westus2",
+        "name": "azsanner_vm_rg",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        },
+        "tags": {}
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azure-key-vault-samples",
+        "location": "westus",
+        "name": "azure-key-vault-samples",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        }
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/AzureBackupRG_westus_1",
+        "location": "westus",
+        "managed_by": "subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/providers/Microsoft.RecoveryServices/",
+        "name": "AzureBackupRG_westus_1",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        }
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/cis_scanner_rg1_2018-05-24",
+        "location": "centralus",
+        "name": "cis_scanner_rg1_2018-05-24",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        },
+        "tags": {
+            "env": "test ttl_days=1"
+        }
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/DefaultResourceGroup-EUS",
+        "location": "eastus",
+        "name": "DefaultResourceGroup-EUS",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        },
+        "tags": {}
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/kb-event-hub",
+        "location": "southcentralus",
+        "name": "kb-event-hub",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        }
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/kb-may2018-lab",
+        "location": "southcentralus",
+        "name": "kb-may2018-lab",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        }
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG",
+        "location": "westus",
+        "name": "NetworkWatcherRG",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        }
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/scannerDefaultResourceGroup",
+        "location": "westus2",
+        "name": "scannerDefaultResourceGroup",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        },
+        "tags": {}
+    },
+    {
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/scannerStorageRg",
+        "location": "westus2",
+        "name": "scannerStorageRg",
+        "properties": {
+            "provisioning_state": "Succeeded"
+        },
+        "tags": {}
+    }
+]

@@ -1,0 +1,46 @@
+{
+    "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/kb-may2018-lab/providers/Microsoft.KeyVault/vaults/kbroughton-keyvault-1": {
+        "value": [
+            {
+                "additionalProperties": {
+                    "identity": null,
+                    "kind": null,
+                    "location": null,
+                    "tags": null
+                },
+                "eventHubAuthorizationRuleId": null,
+                "eventHubName": null,
+                "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourcegroups/kb-may2018-lab/providers/microsoft.keyvault/vaults/kbroughton-keyvault-1/providers/microsoft.insights/diagnosticSettings/kbroughton-keyvault-1-logs",
+                "logs": [
+                    {
+                        "category": "AuditEvent",
+                        "enabled": true,
+                        "retentionPolicy": {
+                            "days": 168,
+                            "enabled": true
+                        }
+                    }
+                ],
+                "metrics": [
+                    {
+                        "category": "AllMetrics",
+                        "enabled": true,
+                        "retentionPolicy": {
+                            "days": 156,
+                            "enabled": true
+                        },
+                        "timeGrain": null
+                    }
+                ],
+                "name": "kbroughton-keyvault-1-logs",
+                "resourceGroup": "kb-may2018-lab",
+                "storageAccountId": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/kb-may2018-lab/providers/Microsoft.Storage/storageAccounts/kbroughtonstorage1",
+                "type": null,
+                "workspaceId": null
+            }
+        ]
+    },
+    "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/scannerDefaultResourceGroup/providers/Microsoft.KeyVault/vaults/scannerTestvault": {
+        "value": []
+    }
+}

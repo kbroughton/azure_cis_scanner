@@ -1,0 +1,100 @@
+{
+    "a_log_profile_exists": {
+        "items": [
+            "No log profile"
+        ],
+        "metadata": {
+            "columns": [
+                "Monitor Log Profile"
+            ],
+            "finding_name": "a_log_profile_exists",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 1,
+            "items_flagged": 1
+        }
+    },
+    "activity_log_alert_is_configured": {
+        "items": [
+            [
+                "create_policy_assignment",
+                "Microsoft.Authorization/policyAssignments/write"
+            ],
+            [
+                "create_or_update_network_security_group",
+                "Microsoft.Network/networkSecurityGroups/write"
+            ],
+            [
+                "delete_network_security_group",
+                "Microsoft.Network/networkSecurityGroups/delete"
+            ],
+            [
+                "create_or_update_network_security_group_rule",
+                "Microsoft.Network/networkSecurityGroups/securityRules/write"
+            ],
+            [
+                "delete_network_security_group_rule",
+                "Microsoft.Network/networkSecurityGroups/securityRules/delete"
+            ],
+            [
+                "create_or_update_security_solution",
+                "Microsoft.Security/securitySolutions/write"
+            ],
+            [
+                "delete_security_solution",
+                "Microsoft.Security/securitySolutions/delete"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Missing Policy"
+            ],
+            "finding_name": "activity_log_alert_is_configured",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 10,
+            "items_flagged": 7
+        }
+    },
+    "activity_log_retention_is_set_365_days_or_greater": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Monitor Log Profile",
+                "Retention Days"
+            ],
+            "finding_name": "activity_log_retention_is_set_365_days_or_greater",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 1,
+            "items_flagged": 0
+        }
+    },
+    "logging_for_azure_keyvault_is_enabled": {
+        "items": [
+            [
+                "kbroughton-keyvault-1",
+                true,
+                true,
+                168
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Keyvault",
+                "Enabled",
+                "Retention Enabled",
+                "Retention Days"
+            ],
+            "finding_name": "logging_for_azure_keyvault_is_enabled",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 2,
+            "items_flagged": 1
+        }
+    }
+}

@@ -230,17 +230,18 @@ def set_scans_dir(scans_dir):
     """
     Set scans_dir to requested value if it exists, otherwise default to ./scans and create
     """
-    if not os.path.exists(scans_dir):
-        if os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
-            scans_dir = os.path.expanduser('~/engagements/cis_test/scans')
+    if os.path.exists(scans_dir):
+        return scans_dir
+    else os.path.exists(os.path.expanduser('~/engagements/cis_test/scans')):
+            _scans_dir = os.path.expanduser('~/engagements/cis_test/scans')
         elif os.path.exists('/engagements/cis_test/scans'):
-            scans_dir = '/engagements/cis_test/scans'                
+            _scans_dir = '/engagements/cis_test/scans'                
         else:
-            scans_dir = os.path.join(os.getcwd(), 'scans')
-            if not os.path.exists(scans_dir):
+            _scans_dir = os.path.join(os.getcwd(), 'scans')
+            if not os.path.exists(_scans_dir):
                 os.mkdir(scans_dir)
-        print("scans_dir {} not found.  Using {}".format(scans_dir, scans_dir))
-    return scans_dir
+        print("scans_dir {} not found.  Using {}".format(scans_dir, _scans_dir))
+        return _scans_dir
 
 def set_data_paths(subscription_dirname, base_dir='.'):
     """

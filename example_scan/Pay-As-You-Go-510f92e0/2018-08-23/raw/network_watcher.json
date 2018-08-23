@@ -1,0 +1,272 @@
+[
+    {
+        "etag": "W/\"a5be21c5-3fa0-4202-aa86-7cc9eec3a038\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westus",
+        "location": "westus",
+        "name": "NetworkWatcher_westus",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"1999291d-91bc-41e2-9705-74be3187e118\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus",
+        "location": "eastus",
+        "name": "NetworkWatcher_eastus",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"3c50897f-aa98-4d20-a6b5-14df08d652c1\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_northeurope",
+        "location": "northeurope",
+        "name": "NetworkWatcher_northeurope",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"91d86e20-98b6-4eba-90c9-f6d2f19a74a3\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westeurope",
+        "location": "westeurope",
+        "name": "NetworkWatcher_westeurope",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"4bde627d-76d5-4219-8d3a-db9ea6bbc2fe\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastasia",
+        "location": "eastasia",
+        "name": "NetworkWatcher_eastasia",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"d13c5d15-6163-4865-8a4c-fb7c3b38e84d\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_southeastasia",
+        "location": "southeastasia",
+        "name": "NetworkWatcher_southeastasia",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"367b9f1b-720d-4155-bb93-192d63d5ff30\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_northcentralus",
+        "location": "northcentralus",
+        "name": "NetworkWatcher_northcentralus",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"d534071a-04e3-4477-83e2-cb750d38f39e\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_southcentralus",
+        "location": "southcentralus",
+        "name": "NetworkWatcher_southcentralus",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"94ee132c-1491-4ef4-b16d-f5cfcc53017b\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_centralus",
+        "location": "centralus",
+        "name": "NetworkWatcher_centralus",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"5a0dfa91-83c5-4d5b-886f-492afdb631ff\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus2",
+        "location": "eastus2",
+        "name": "NetworkWatcher_eastus2",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"35542303-1985-4340-b198-9f909b565e5b\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_japaneast",
+        "location": "japaneast",
+        "name": "NetworkWatcher_japaneast",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"16419263-9f0a-486c-a299-366d824a5622\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_japanwest",
+        "location": "japanwest",
+        "name": "NetworkWatcher_japanwest",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"b7da7c59-7f97-44bd-8797-38b439b17348\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_brazilsouth",
+        "location": "brazilsouth",
+        "name": "NetworkWatcher_brazilsouth",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"f24ece7d-059c-4ca4-a4c8-a6f3c0a60abb\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_australiaeast",
+        "location": "australiaeast",
+        "name": "NetworkWatcher_australiaeast",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"e735a01d-0086-433e-b053-4e8e4363f5d7\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_australiasoutheast",
+        "location": "australiasoutheast",
+        "name": "NetworkWatcher_australiasoutheast",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"440cfe67-5b2d-4756-a250-a1e77408a761\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_centralindia",
+        "location": "centralindia",
+        "name": "NetworkWatcher_centralindia",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"f80a56fb-d7ef-4a81-bb5a-833eb128cbbb\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_southindia",
+        "location": "southindia",
+        "name": "NetworkWatcher_southindia",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"b3e18e6f-ad48-4e99-a90a-4baca561c4d3\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westindia",
+        "location": "westindia",
+        "name": "NetworkWatcher_westindia",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"4ffe39fe-0590-47b5-a09d-bccdd0a6f4d3\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_canadacentral",
+        "location": "canadacentral",
+        "name": "NetworkWatcher_canadacentral",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"263b2603-34fb-4b17-9b4c-6f8605906eec\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_canadaeast",
+        "location": "canadaeast",
+        "name": "NetworkWatcher_canadaeast",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"eafbdfd9-8353-425d-ac84-1cd4a1a33ca7\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westcentralus",
+        "location": "westcentralus",
+        "name": "NetworkWatcher_westcentralus",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"346ec6a7-ef77-4dc0-bab7-87d62eb199dd\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westus2",
+        "location": "westus2",
+        "name": "NetworkWatcher_westus2",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"6c105e78-0107-441b-a7c8-fc7177abe46a\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_ukwest",
+        "location": "ukwest",
+        "name": "NetworkWatcher_ukwest",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"ba2ee2ea-fb9a-4e7d-bc9f-1fd5d433bd06\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_uksouth",
+        "location": "uksouth",
+        "name": "NetworkWatcher_uksouth",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"38ec13ce-2090-426b-881f-a88f9a2f8cbf\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_koreacentral",
+        "location": "koreacentral",
+        "name": "NetworkWatcher_koreacentral",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"ffc61a70-8759-48b2-8da2-9b8e03d7ddcd\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_koreasouth",
+        "location": "koreasouth",
+        "name": "NetworkWatcher_koreasouth",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    },
+    {
+        "etag": "W/\"e10530c2-193b-4ac4-8d8f-e21b2b2e4ee9\"",
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_francecentral",
+        "location": "francecentral",
+        "name": "NetworkWatcher_francecentral",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "NetworkWatcherRG",
+        "tags": null,
+        "type": "Microsoft.Network/networkWatchers"
+    }
+]

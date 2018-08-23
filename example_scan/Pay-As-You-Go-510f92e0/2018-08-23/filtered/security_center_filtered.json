@@ -1,0 +1,300 @@
+{
+    "adaptive_application_controls_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "adaptive_application_controls_is_set_to_on",
+            "negative_name": "adaptive_application_controls_noto_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "automatic_provisioning_of_monitoring_agent_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "automatic_provisioning_of_monitoring_agent_is_set_to_on",
+            "negative_name": "automatic_provisioning_of_monitoring_agent_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "disk_encryption_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "disk_encryption_is_set_to_on",
+            "negative_name": "disk_encryption_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "endpoint_protection_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "endpoint_protection_is_set_to_on",
+            "negative_name": "endpoint_protection_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "just_in_time_access_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "just_in_time_access_is_set_to_on",
+            "negative_name": "just_in_time_access_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "network_security_groups_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "network_security_groups_is_set_to_on",
+            "negative_name": "network_security_groups_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "next_generation_firewall_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "automatic_provisioning_of_monitoring_agent_is_set_to_on",
+            "negative_name": "automatic_provisioning_of_monitoring_agent_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "security_configurations_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "security_configurations_is_set_to_on",
+            "negative_name": "security_configurations_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "security_contact_emails_is_set": {
+        "items": [
+            "azsanner_vm_rg",
+            "azure-key-vault-samples",
+            "AzureBackupRG_westus_1",
+            "cis_scanner_rg1_2018-05-24",
+            "DefaultResourceGroup-EUS",
+            "kb-event-hub",
+            "kb-may2018-lab",
+            "NetworkWatcherRG",
+            "scannerDefaultResourceGroup",
+            "scannerStorageRg"
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "security_contact_emails_is_set",
+            "negative_name": "security_contact_emails_not_set"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 10
+        }
+    },
+    "security_contact_phone_number_is_set": {
+        "items": [
+            "azsanner_vm_rg",
+            "azure-key-vault-samples",
+            "AzureBackupRG_westus_1",
+            "cis_scanner_rg1_2018-05-24",
+            "DefaultResourceGroup-EUS",
+            "kb-event-hub",
+            "kb-may2018-lab",
+            "NetworkWatcherRG",
+            "scannerDefaultResourceGroup",
+            "scannerStorageRg"
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "security_contact_phone_number_is_set",
+            "negative_name": "security_contact_phone_number_not_set"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 10
+        }
+    },
+    "send_email_also_to_subscription_owners_is_set_to_on": {
+        "items": [
+            "default",
+            "azsanner_vm_rg",
+            "azure-key-vault-samples",
+            "AzureBackupRG_westus_1",
+            "cis_scanner_rg1_2018-05-24",
+            "DefaultResourceGroup-EUS",
+            "kb-event-hub",
+            "kb-may2018-lab",
+            "NetworkWatcherRG",
+            "scannerDefaultResourceGroup",
+            "scannerStorageRg"
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "send_email_also_to_subscription_owners_is_set_to_on",
+            "negative_name": "send_email_also_to_subscription_owners_is_set_to_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 11
+        }
+    },
+    "send_me_emails_about_alerts_is_set_to_on": {
+        "items": [
+            "default",
+            "azsanner_vm_rg",
+            "azure-key-vault-samples",
+            "AzureBackupRG_westus_1",
+            "cis_scanner_rg1_2018-05-24",
+            "DefaultResourceGroup-EUS",
+            "kb-event-hub",
+            "kb-may2018-lab",
+            "NetworkWatcherRG",
+            "scannerDefaultResourceGroup",
+            "scannerStorageRg"
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "send_email_alerts_about_alerts_is_set_to_on",
+            "negative_name": "send_email_alerts_about_alerts_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 11
+        }
+    },
+    "sql_auditing_and_threat_detection_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "sql_auditing_and_threat_detection_is_set_to_on",
+            "negative_name": "sql_auditing_and_threat_detection_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "sql_encryption_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "sql_encryption_is_set_to_on",
+            "negative_name": "sql_encryption_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "storage_encryption_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "storage_encryption_is_set_to_on",
+            "negative_name": "storage_encryption_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "system_updates_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "system_updates_is_set_to_on",
+            "negative_name": "system_updates_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "vulnerability_assessment_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "automatic_provisioning_of_monitoring_agent_is_set_to_on",
+            "negative_name": "automatic_provisioning_of_monitoring_agent_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    },
+    "web_application_firewall_is_set_to_on": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group"
+            ],
+            "finding_name": "web_application_firewall_is_set_to_on",
+            "negative_name": "web_application_firewall_not_on"
+        },
+        "stats": {
+            "items_checked": 11,
+            "items_flagged": 0
+        }
+    }
+}

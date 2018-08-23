@@ -1,0 +1,111 @@
+{
+    "data_disks_are_encrypted": {
+        "items": [
+            [
+                "AZSANNER_VM_RG",
+                "azscanner_vm_ubuntu",
+                "unknown"
+            ],
+            [
+                "AZSANNER_VM_RG",
+                "windows-workstation",
+                "unknown"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Name",
+                "Disk Name"
+            ],
+            "finding_name": "data_disks_are_encrypted",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 2,
+            "items_flagged": 2
+        }
+    },
+    "endpoint_protection_for_all_virtual_machines_is_installed": {
+        "items": [
+            [
+                "AZSANNER_VM_RG",
+                "azscanner_vm_ubuntu"
+            ],
+            [
+                "AZSANNER_VM_RG",
+                "windows-workstation"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Name"
+            ],
+            "finding_name": "endpoint_protection_for_all_virtual_machines_is_installed",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 2,
+            "items_flagged": 2
+        }
+    },
+    "only_approved_extensions_are_installed": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "VM Name",
+                "Extension Name"
+            ],
+            "finding_name": "only_approved_extensions_are_installed",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 2,
+            "items_flagged": 0
+        }
+    },
+    "os_disk_is_encrypted": {
+        "items": [
+            [
+                "AZSANNER_VM_RG",
+                "azscanner_vm_ubuntu",
+                "myosdisk1"
+            ],
+            [
+                "AZSANNER_VM_RG",
+                "windows-workstation",
+                "azscanner-windows-workstation-disk"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Name",
+                "Disk Name"
+            ],
+            "finding_name": "os_disk_is_encrypted",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 2,
+            "items_flagged": 2
+        }
+    },
+    "vm_agent_is_installed": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Name"
+            ],
+            "finding_name": "vm_agent_is_installed",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 2,
+            "items_flagged": 0
+        }
+    }
+}

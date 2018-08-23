@@ -1,0 +1,320 @@
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/providers/Microsoft.Security/policies/default
+  name: default
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: default
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: Subscription
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: true
+      lastSaveDateTime: '2018-06-05T16:15:00.3206846Z'
+      securityContactEmails: [kesten.broughton@gmail.com]
+      securityContactPhone: '5127014209'
+      sendToAdminOn: true
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg/providers/Microsoft.Security/policies/azsanner_vm_rg
+  name: azsanner_vm_rg
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: azsanner_vm_rg
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azure-key-vault-samples/providers/Microsoft.Security/policies/azure-key-vault-samples
+  name: azure-key-vault-samples
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: azure-key-vault-samples
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/AzureBackupRG_westus_1/providers/Microsoft.Security/policies/AzureBackupRG_westus_1
+  name: AzureBackupRG_westus_1
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: AzureBackupRG_westus_1
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/cis_scanner_rg1_2018-05-24/providers/Microsoft.Security/policies/cis_scanner_rg1_2018-05-24
+  name: cis_scanner_rg1_2018-05-24
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: cis_scanner_rg1_2018-05-24
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Security/policies/DefaultResourceGroup-EUS
+  name: DefaultResourceGroup-EUS
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: DefaultResourceGroup-EUS
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/kb-event-hub/providers/Microsoft.Security/policies/kb-event-hub
+  name: kb-event-hub
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: kb-event-hub
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/kb-may2018-lab/providers/Microsoft.Security/policies/kb-may2018-lab
+  name: kb-may2018-lab
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: kb-may2018-lab
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/NetworkWatcherRG/providers/Microsoft.Security/policies/NetworkWatcherRG
+  name: NetworkWatcherRG
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: NetworkWatcherRG
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/scannerDefaultResourceGroup/providers/Microsoft.Security/policies/scannerDefaultResourceGroup
+  name: scannerDefaultResourceGroup
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: scannerDefaultResourceGroup
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies
+- id: /subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/scannerStorageRg/providers/Microsoft.Security/policies/scannerStorageRg
+  name: scannerStorageRg
+  properties:
+    logCollection: 'On'
+    logsConfiguration:
+      storages: {}
+    name: scannerStorageRg
+    omsWorkspaceConfiguration:
+      workspaces: {}
+    policyLevel: ResourceGroup
+    pricingConfiguration:
+      active: 'On'
+      level: Subscription
+      premiumTierStartDate: '0001-01-01T00:00:00'
+      resourceGroup: ''
+      selectedPricingTier: Standard
+      standardBundles: [VirtualMachines]
+      standardTierStartDate: '2018-08-13T23:49:06'
+    recommendations: {acls: 'On', antimalware: 'On', appWhitelisting: 'On', baseline: 'On',
+      diskEncryption: 'On', jitNetworkAccess: 'On', ngfw: 'On', nsgs: 'On', patch: 'On',
+      sqlAuditing: 'On', sqlTde: 'On', storageEncryption: 'On', vulnerabilityAssessment: 'On',
+      waf: 'On'}
+    securityContactConfiguration:
+      areNotificationsOn: false
+      securityContactEmails: []
+      securityContactPhone: ''
+      sendToAdminOn: false
+    unique: 'Off'
+  type: Microsoft.Security/policies

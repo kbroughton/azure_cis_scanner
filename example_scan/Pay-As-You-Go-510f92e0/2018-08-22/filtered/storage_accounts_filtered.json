@@ -1,0 +1,87 @@
+{
+    "secure_transfer_required_is_set_to_enabled": {
+        "items": [
+            [
+                "cis_scanner_rg1_2018-05-24",
+                "cisscannerrg120180524271"
+            ],
+            [
+                "scannerStorageRg",
+                "storageaccountname13123"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Storage Account Name"
+            ],
+            "finding_name": "secure_transfer_required_is_set_to_enabled",
+            "negative_name": "secure_transfer_required_not_enabled"
+        },
+        "stats": {
+            "items_checked": 3,
+            "items_flagged": 2
+        }
+    },
+    "storage_account_access_keys_are_periodically_regenerated": {
+        "items": [
+            [
+                "kb-may2018-lab",
+                "kbroughtonstorage1",
+                "No rotation"
+            ],
+            [
+                "cis_scanner_rg1_2018-05-24",
+                "cisscannerrg120180524271",
+                "No rotation"
+            ],
+            [
+                "scannerStorageRg",
+                "storageaccountname13123",
+                "No rotation"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Storage Account",
+                "Rotation Date"
+            ],
+            "finding_name": "storage_account_access_keys_are_periodically_regenerated",
+            "negative_name": "storage_account_access_keys_not_periodically_regenerated"
+        },
+        "stats": {
+            "items_checked": 3,
+            "items_flagged": 3
+        }
+    },
+    "storage_service_encryption_is_set_to_enabled_for_blob_service": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Storage Account Name"
+            ],
+            "finding_name": "storage_service_encryption_is_set_to_enabled_for_blob_service",
+            "negative_name": "storage_service_encryption_not_enabled_for_blob_service"
+        },
+        "stats": {
+            "items_checked": 3,
+            "items_flagged": 0
+        }
+    },
+    "storage_service_encryption_is_set_to_enabled_for_file_service": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Storage Account Name"
+            ],
+            "finding_name": "storage_service_encryption_is_set_to_enabled_for_file_service",
+            "negative_name": "storage_service_encryption_not_enabled_for_file_service"
+        },
+        "stats": {
+            "items_checked": 3,
+            "items_flagged": 0
+        }
+    }
+}

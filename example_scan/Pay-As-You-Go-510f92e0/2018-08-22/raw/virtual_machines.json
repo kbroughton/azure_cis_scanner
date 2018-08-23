@@ -1,0 +1,220 @@
+[
+    {
+        "additionalProperties": {},
+        "availabilitySet": null,
+        "diagnosticsProfile": null,
+        "hardwareProfile": {
+            "additionalProperties": {},
+            "vmSize": "Standard_DS1_v2"
+        },
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/AZSANNER_VM_RG/providers/Microsoft.Compute/virtualMachines/azscanner_vm_ubuntu",
+        "identity": null,
+        "instanceView": null,
+        "licenseType": null,
+        "location": "westus2",
+        "name": "azscanner_vm_ubuntu",
+        "networkProfile": {
+            "additionalProperties": {},
+            "networkInterfaces": [
+                {
+                    "additionalProperties": {},
+                    "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg/providers/Microsoft.Network/networkInterfaces/azscanner_vm_nic",
+                    "primary": false,
+                    "resourceGroup": "azsanner_vm_rg"
+                }
+            ]
+        },
+        "osProfile": {
+            "additionalProperties": {},
+            "adminPassword": null,
+            "adminUsername": "testadmin-5SDXp0pVwNc=",
+            "computerName": "hostname",
+            "customData": null,
+            "linuxConfiguration": {
+                "additionalProperties": {},
+                "disablePasswordAuthentication": false,
+                "ssh": null
+            },
+            "secrets": [],
+            "windowsConfiguration": null
+        },
+        "plan": null,
+        "provisioningState": "Succeeded",
+        "resourceGroup": "AZSANNER_VM_RG",
+        "resources": [
+            {
+                "additionalProperties": {},
+                "autoUpgradeMinorVersion": null,
+                "forceUpdateTag": null,
+                "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/AZSANNER_VM_RG/providers/Microsoft.Compute/virtualMachines/azscanner_vm_ubuntu/extensions/OmsAgentForLinux",
+                "instanceView": null,
+                "location": null,
+                "name": null,
+                "protectedSettings": null,
+                "provisioningState": null,
+                "publisher": null,
+                "resourceGroup": "AZSANNER_VM_RG",
+                "settings": null,
+                "tags": null,
+                "type": null,
+                "typeHandlerVersion": null,
+                "virtualMachineExtensionType": null
+            }
+        ],
+        "storageProfile": {
+            "additionalProperties": {},
+            "dataDisks": [
+                {
+                    "additionalProperties": {
+                        "writeAcceleratorEnabled": false
+                    },
+                    "caching": "None",
+                    "createOption": "Empty",
+                    "diskSizeGb": 10,
+                    "image": null,
+                    "lun": 0,
+                    "managedDisk": {
+                        "additionalProperties": {},
+                        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg/providers/Microsoft.Compute/disks/datadisk_new",
+                        "resourceGroup": "azsanner_vm_rg",
+                        "storageAccountType": "Standard_LRS"
+                    },
+                    "name": "datadisk_new",
+                    "vhd": null
+                },
+                {
+                    "additionalProperties": {
+                        "writeAcceleratorEnabled": false
+                    },
+                    "caching": "None",
+                    "createOption": "Attach",
+                    "diskSizeGb": 10,
+                    "image": null,
+                    "lun": 1,
+                    "managedDisk": {
+                        "additionalProperties": {},
+                        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg/providers/Microsoft.Compute/disks/azscanner_datadisk_existing",
+                        "resourceGroup": "azsanner_vm_rg",
+                        "storageAccountType": "Standard_LRS"
+                    },
+                    "name": "azscanner_datadisk_existing",
+                    "vhd": null
+                }
+            ],
+            "imageReference": {
+                "additionalProperties": {},
+                "id": null,
+                "offer": "UbuntuServer",
+                "publisher": "Canonical",
+                "sku": "16.04-LTS",
+                "version": "latest"
+            },
+            "osDisk": {
+                "additionalProperties": {
+                    "writeAcceleratorEnabled": false
+                },
+                "caching": "ReadWrite",
+                "createOption": "FromImage",
+                "diskSizeGb": 30,
+                "encryptionSettings": null,
+                "image": null,
+                "managedDisk": {
+                    "additionalProperties": {},
+                    "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg/providers/Microsoft.Compute/disks/myosdisk1",
+                    "resourceGroup": "azsanner_vm_rg",
+                    "storageAccountType": "Standard_LRS"
+                },
+                "name": "myosdisk1",
+                "osType": "Linux",
+                "vhd": null
+            }
+        },
+        "tags": {
+            "billing": "internal",
+            "client": "internal",
+            "environment": "dev",
+            "project": "azure_scanner"
+        },
+        "type": "Microsoft.Compute/virtualMachines",
+        "vmId": "416d17c3-180b-4873-acd4-ed16871a77a6",
+        "zones": null
+    },
+    {
+        "additionalProperties": {},
+        "availabilitySet": null,
+        "diagnosticsProfile": null,
+        "hardwareProfile": {
+            "additionalProperties": {},
+            "vmSize": "Standard_D2s_v3"
+        },
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/AZSANNER_VM_RG/providers/Microsoft.Compute/virtualMachines/windows-workstation",
+        "identity": null,
+        "instanceView": null,
+        "licenseType": null,
+        "location": "westus2",
+        "name": "windows-workstation",
+        "networkProfile": {
+            "additionalProperties": {},
+            "networkInterfaces": [
+                {
+                    "additionalProperties": {},
+                    "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg/providers/Microsoft.Network/networkInterfaces/azscanner-nic2",
+                    "primary": false,
+                    "resourceGroup": "azsanner_vm_rg"
+                }
+            ]
+        },
+        "osProfile": null,
+        "plan": null,
+        "provisioningState": "Succeeded",
+        "resourceGroup": "AZSANNER_VM_RG",
+        "resources": null,
+        "storageProfile": {
+            "additionalProperties": {},
+            "dataDisks": [
+                {
+                    "additionalProperties": {
+                        "writeAcceleratorEnabled": false
+                    },
+                    "caching": "None",
+                    "createOption": "Empty",
+                    "diskSizeGb": 20,
+                    "image": null,
+                    "lun": 0,
+                    "managedDisk": {
+                        "additionalProperties": {},
+                        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg/providers/Microsoft.Compute/disks/azscanner-windows-unmanaged-disk",
+                        "resourceGroup": "azsanner_vm_rg",
+                        "storageAccountType": "Premium_LRS"
+                    },
+                    "name": "azscanner-windows-unmanaged-disk",
+                    "vhd": null
+                }
+            ],
+            "imageReference": null,
+            "osDisk": {
+                "additionalProperties": {
+                    "writeAcceleratorEnabled": false
+                },
+                "caching": "ReadWrite",
+                "createOption": "Attach",
+                "diskSizeGb": 30,
+                "encryptionSettings": null,
+                "image": null,
+                "managedDisk": {
+                    "additionalProperties": {},
+                    "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/azsanner_vm_rg/providers/Microsoft.Compute/disks/azscanner-windows-workstation-disk",
+                    "resourceGroup": "azsanner_vm_rg",
+                    "storageAccountType": "Standard_LRS"
+                },
+                "name": "azscanner-windows-workstation-disk",
+                "osType": "Windows",
+                "vhd": null
+            }
+        },
+        "tags": {},
+        "type": "Microsoft.Compute/virtualMachines",
+        "vmId": "cab41310-1fc7-4701-99bb-caf762c1546e",
+        "zones": null
+    }
+]

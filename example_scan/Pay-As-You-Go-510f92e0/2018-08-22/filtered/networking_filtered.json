@@ -1,0 +1,80 @@
+{
+    "access_is_restricted_from_the_internet": {
+        "items": [
+            [
+                "cis_scanner_rg1_2018-05-24",
+                "cistestvm-nsg",
+                "22",
+                "SSH"
+            ],
+            [
+                "cis_scanner_rg1_2018-05-24",
+                "cistestvm-nsg",
+                "389",
+                "RDP"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "NSG",
+                "Port",
+                "Rule"
+            ],
+            "finding_name": "access_is_restricted_from_the_internet",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 3,
+            "items_flagged": 2
+        }
+    },
+    "network_security_group_flow_log_retention_period_is_greater_than_90_days": {
+        "items": [
+            [
+                "kb-may2018-lab",
+                "kb-lab-nsg1",
+                "Not enabled"
+            ],
+            [
+                "AzureBackupRG_westus_1",
+                "cis-alert-test",
+                "Not enabled"
+            ],
+            [
+                "cis_scanner_rg1_2018-05-24",
+                "cistestvm-nsg",
+                "Not enabled"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Network Flow",
+                "Status"
+            ],
+            "finding_name": "network_security_group_flow_log_retention_period_is_greater_than_90_days",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 3,
+            "items_flagged": 3
+        }
+    },
+    "network_watcher_is_enabled": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Resource Group",
+                "Network Flow",
+                "Status"
+            ],
+            "finding_name": "network_security_group_flow_log_retention_period_is_greater_than_90_days",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 27,
+            "items_flagged": 0
+        }
+    }
+}

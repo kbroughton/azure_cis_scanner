@@ -1,0 +1,62 @@
+{
+    "expiry_date_is_set_on_all_keys_and_secrets": {
+        "items": [
+            [
+                "kbroughton-keyvault-1",
+                "cis-test-key1",
+                "key",
+                "no expiry",
+                "2018-05-30",
+                "None"
+            ],
+            [
+                "scannerTestvault",
+                "scanner-test-generated-certificate",
+                "key",
+                "no expiry",
+                "2018-08-11",
+                "None"
+            ],
+            [
+                "scannerTestvault",
+                "azscanner-disk-encryption-key",
+                "secret",
+                "no expiry",
+                "2018-08-11",
+                "None"
+            ]
+        ],
+        "metadata": {
+            "columns": [
+                "KeyVault Name",
+                "Name",
+                "Type",
+                "Status",
+                "Created",
+                "Expires"
+            ],
+            "finding_name": "expiry_date_is_set_on_all_keys_and_secrets",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 3,
+            "items_flagged": 3
+        }
+    },
+    "resource_locks_are_set_for_mission_critical_azure_resources": {
+        "items": [],
+        "metadata": {
+            "columns": [
+                "Lock Name",
+                "Lock ID",
+                "Notes"
+            ],
+            "finding_name": "resource_locks_are_set_for_mission_critical_Azure_resources",
+            "negative_name": ""
+        },
+        "stats": {
+            "items_checked": 1,
+            "items_flagged": 1
+        }
+    }
+}

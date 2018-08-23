@@ -1,0 +1,64 @@
+auditing_is_set_to_on:
+  items:
+  - !!python/tuple [scannerTestSqlRg, kv1208604109466264035]
+  metadata:
+    columns: [Region, Server]
+    finding_name: auditing_is_set_to_on
+    negative_name: ''
+  stats: {items_checked: 1, items_flagged: 1}
+auditing_retention_is_greater_than_90_days:
+  items:
+  - !!python/tuple [scannerTestSqlRg, kv1208604109466264035]
+  metadata:
+    columns: [Region, Server]
+    finding_name: auditing_retention_is_greater_than_90_days
+    negative_name: ''
+  stats: {items_checked: 1, items_flagged: 1}
+azure_active_directory_admin_is_configured:
+  items:
+  - !!python/tuple [scannerTestSqlRg, kv1208604109466264035]
+  metadata:
+    columns: [Region, Server]
+    finding_name: azure_active_directory_admin_is_configured
+    negative_name: ''
+  stats: {items_checked: 1, items_flagged: 1}
+email_service_and_co_administrators_is_enabled:
+  items:
+  - !!python/tuple [scannerTestSqlRg, kv1208604109466264035]
+  metadata:
+    columns: [Region, Server]
+    finding_name: email_service_and_co_administrators_is_enabled
+    negative_name: ''
+  stats: {items_checked: 1, items_flagged: 1}
+send_alerts_to_is_set:
+  items:
+  - !!python/tuple [scannerTestSqlRg, kv1208604109466264035]
+  metadata:
+    columns: [Region, Server]
+    finding_name: send_alerts_to_is_set
+    negative_name: ''
+  stats: {items_checked: 1, items_flagged: 1}
+threat_detection_is_set_to_on:
+  items:
+  - !!python/tuple [scannerTestSqlRg, kv1208604109466264035]
+  metadata:
+    columns: [Region, Server]
+    finding_name: threat_detection_is_set_to_on
+    negative_name: ''
+  stats: {items_checked: 1, items_flagged: 1}
+threat_detection_retention_is_greater_than_90_days:
+  items:
+  - !!python/tuple [scannerTestSqlRg, kv1208604109466264035]
+  metadata:
+    columns: [Region, Server]
+    finding_name: threat_detection_retention_is_greater_than_90_days
+    negative_name: ''
+  stats: {items_checked: 1, items_flagged: 1}
+threat_detection_types_is_set_to_all:
+  items:
+  - !!python/tuple [scannerTestSqlRg, kv1208604109466264035]
+  metadata:
+    columns: [Region, Server]
+    finding_name: threat_detection_types_is_set_to_all
+    negative_name: ''
+  stats: {items_checked: 1, items_flagged: 1}

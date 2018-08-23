@@ -1,0 +1,183 @@
+[
+    {
+        "accessTier": "Hot",
+        "creationTime": "2018-05-07T20:15:51.406537+00:00",
+        "customDomain": null,
+        "enableHttpsTrafficOnly": true,
+        "encryption": {
+            "keySource": "Microsoft.Storage",
+            "keyVaultProperties": null,
+            "services": {
+                "blob": {
+                    "enabled": true,
+                    "lastEnabledTime": "2018-05-07T20:15:51.469045+00:00"
+                },
+                "file": {
+                    "enabled": true,
+                    "lastEnabledTime": "2018-05-07T20:15:51.469045+00:00"
+                },
+                "queue": null,
+                "table": null
+            }
+        },
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/kb-may2018-lab/providers/Microsoft.Storage/storageAccounts/kbroughtonstorage1",
+        "identity": null,
+        "kind": "StorageV2",
+        "lastGeoFailoverTime": null,
+        "location": "southcentralus",
+        "name": "kbroughtonstorage1",
+        "networkRuleSet": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow",
+            "ipRules": [],
+            "virtualNetworkRules": []
+        },
+        "primaryEndpoints": {
+            "blob": "https://kbroughtonstorage1.blob.core.windows.net/",
+            "file": "https://kbroughtonstorage1.file.core.windows.net/",
+            "queue": "https://kbroughtonstorage1.queue.core.windows.net/",
+            "table": "https://kbroughtonstorage1.table.core.windows.net/"
+        },
+        "primaryLocation": "southcentralus",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "kb-may2018-lab",
+        "secondaryEndpoints": {
+            "blob": "https://kbroughtonstorage1-secondary.blob.core.windows.net/",
+            "file": null,
+            "queue": "https://kbroughtonstorage1-secondary.queue.core.windows.net/",
+            "table": "https://kbroughtonstorage1-secondary.table.core.windows.net/"
+        },
+        "secondaryLocation": "northcentralus",
+        "sku": {
+            "capabilities": null,
+            "kind": null,
+            "locations": null,
+            "name": "Standard_RAGRS",
+            "resourceType": null,
+            "restrictions": null,
+            "tier": "Standard"
+        },
+        "statusOfPrimary": "available",
+        "statusOfSecondary": "available",
+        "tags": {},
+        "type": "Microsoft.Storage/storageAccounts"
+    },
+    {
+        "accessTier": null,
+        "creationTime": "2018-07-07T19:29:24.355583+00:00",
+        "customDomain": null,
+        "enableHttpsTrafficOnly": false,
+        "encryption": {
+            "keySource": "Microsoft.Storage",
+            "keyVaultProperties": null,
+            "services": {
+                "blob": {
+                    "enabled": true,
+                    "lastEnabledTime": "2018-07-07T19:29:24.480590+00:00"
+                },
+                "file": {
+                    "enabled": true,
+                    "lastEnabledTime": "2018-07-07T19:29:24.480590+00:00"
+                },
+                "queue": null,
+                "table": null
+            }
+        },
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/cis_scanner_rg1_2018-05-24/providers/Microsoft.Storage/storageAccounts/cisscannerrg120180524271",
+        "identity": null,
+        "kind": "Storage",
+        "lastGeoFailoverTime": null,
+        "location": "centralus",
+        "name": "cisscannerrg120180524271",
+        "networkRuleSet": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow",
+            "ipRules": [],
+            "virtualNetworkRules": []
+        },
+        "primaryEndpoints": {
+            "blob": "https://cisscannerrg120180524271.blob.core.windows.net/",
+            "file": "https://cisscannerrg120180524271.file.core.windows.net/",
+            "queue": "https://cisscannerrg120180524271.queue.core.windows.net/",
+            "table": "https://cisscannerrg120180524271.table.core.windows.net/"
+        },
+        "primaryLocation": "centralus",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "cis_scanner_rg1_2018-05-24",
+        "secondaryEndpoints": null,
+        "secondaryLocation": null,
+        "sku": {
+            "capabilities": null,
+            "kind": null,
+            "locations": null,
+            "name": "Standard_LRS",
+            "resourceType": null,
+            "restrictions": null,
+            "tier": "Standard"
+        },
+        "statusOfPrimary": "available",
+        "statusOfSecondary": null,
+        "tags": {},
+        "type": "Microsoft.Storage/storageAccounts"
+    },
+    {
+        "accessTier": null,
+        "creationTime": "2018-08-07T18:55:10.556285+00:00",
+        "customDomain": null,
+        "enableHttpsTrafficOnly": false,
+        "encryption": {
+            "keySource": "Microsoft.Storage",
+            "keyVaultProperties": null,
+            "services": {
+                "blob": {
+                    "enabled": true,
+                    "lastEnabledTime": "2018-08-07T18:55:10.681301+00:00"
+                },
+                "file": {
+                    "enabled": true,
+                    "lastEnabledTime": "2018-08-07T18:55:10.681301+00:00"
+                },
+                "queue": null,
+                "table": null
+            }
+        },
+        "id": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/scannerStorageRg/providers/Microsoft.Storage/storageAccounts/storageaccountname13123",
+        "identity": null,
+        "kind": "Storage",
+        "lastGeoFailoverTime": null,
+        "location": "westus2",
+        "name": "storageaccountname13123",
+        "networkRuleSet": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow",
+            "ipRules": [],
+            "virtualNetworkRules": []
+        },
+        "primaryEndpoints": {
+            "blob": "https://storageaccountname13123.blob.core.windows.net/",
+            "file": "https://storageaccountname13123.file.core.windows.net/",
+            "queue": "https://storageaccountname13123.queue.core.windows.net/",
+            "table": "https://storageaccountname13123.table.core.windows.net/"
+        },
+        "primaryLocation": "westus2",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "scannerStorageRg",
+        "secondaryEndpoints": null,
+        "secondaryLocation": "westcentralus",
+        "sku": {
+            "capabilities": null,
+            "kind": null,
+            "locations": null,
+            "name": "Standard_GRS",
+            "resourceType": null,
+            "restrictions": null,
+            "tier": "Standard"
+        },
+        "statusOfPrimary": "available",
+        "statusOfSecondary": "available",
+        "tags": {
+            "project": "azure_scanner"
+        },
+        "type": "Microsoft.Storage/storageAccounts"
+    }
+]

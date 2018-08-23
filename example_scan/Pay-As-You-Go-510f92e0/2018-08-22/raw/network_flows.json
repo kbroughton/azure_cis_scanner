@@ -1,0 +1,71 @@
+[
+    {
+        "network_flow": {
+            "additionalProperties": {
+                "flowAnalyticsConfiguration": {
+                    "networkWatcherFlowAnalyticsConfiguration": {
+                        "enabled": false,
+                        "workspaceId": "",
+                        "workspaceRegion": "",
+                        "workspaceResourceId": "/subscriptions//resourcegroups//providers/microsoft.operationalinsights/workspaces/"
+                    }
+                }
+            },
+            "enabled": false,
+            "retentionPolicy": {
+                "days": 0,
+                "enabled": false
+            },
+            "storageId": null,
+            "targetResourceId": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/kb-may2018-lab/providers/Microsoft.Network/networkSecurityGroups/kb-lab-nsg1"
+        },
+        "nsg_name": "kb-lab-nsg1",
+        "resource_group": "kb-may2018-lab"
+    },
+    {
+        "network_flow": {
+            "additionalProperties": {
+                "flowAnalyticsConfiguration": {
+                    "networkWatcherFlowAnalyticsConfiguration": {
+                        "enabled": false,
+                        "workspaceId": "",
+                        "workspaceRegion": "",
+                        "workspaceResourceId": "/subscriptions//resourcegroups//providers/microsoft.operationalinsights/workspaces/"
+                    }
+                }
+            },
+            "enabled": false,
+            "retentionPolicy": {
+                "days": 0,
+                "enabled": false
+            },
+            "storageId": null,
+            "targetResourceId": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/AzureBackupRG_westus_1/providers/Microsoft.Network/networkSecurityGroups/cis-alert-test"
+        },
+        "nsg_name": "cis-alert-test",
+        "resource_group": "AzureBackupRG_westus_1"
+    },
+    {
+        "network_flow": {
+            "additionalProperties": {
+                "flowAnalyticsConfiguration": {
+                    "networkWatcherFlowAnalyticsConfiguration": {
+                        "enabled": false,
+                        "workspaceId": "",
+                        "workspaceRegion": "",
+                        "workspaceResourceId": "/subscriptions//resourcegroups//providers/microsoft.operationalinsights/workspaces/"
+                    }
+                }
+            },
+            "enabled": false,
+            "retentionPolicy": {
+                "days": 0,
+                "enabled": false
+            },
+            "storageId": null,
+            "targetResourceId": "/subscriptions/510f92e0-3fcf-4b8f-8a23-095d37e6a299/resourceGroups/cis_scanner_rg1_2018-05-24/providers/Microsoft.Network/networkSecurityGroups/cistestvm-nsg"
+        },
+        "nsg_name": "cistestvm-nsg",
+        "resource_group": "cis_scanner_rg1_2018-05-24"
+    }
+]

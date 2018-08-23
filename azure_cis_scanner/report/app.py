@@ -231,8 +231,6 @@ nav.register_element(
         View('Networking', 'service', service='Networking'),
         View('Virtual Machines', 'service', service='Virtual Machines'),
         View('Other Security Considerations', 'service', service='Other Security Considerations'),
-        #Text(active_subscription_dir)
-        #Subgroup(active_subscription_dir, *[Link(account['name']) for account in accounts], [])
         )
     )
 
@@ -241,12 +239,10 @@ def main(parser=None):
     parser is a parsed argparse parser passed in from controller
     """
     if not parser:
-        print("app:main: Parsing")
         mainparser = argparse.ArgumentParser()
         mainparser.add_argument('--tenant-id', default=None, help='azure tenant id, if None, use default.  Scanner assumes different runs/project dirs for distinct tenants')
         mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
         mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
-        # TODO, set default in __init__.py or somewhere and make it windows compatible
         mainparser.add_argument('--scans-dir', default='/engagements/cis_test/sacans', help='base dir of where to place or load files')
 
         parser = mainparser.parse_args()
@@ -257,7 +253,6 @@ def main(parser=None):
     tenant_id, subscription_id, subscription_name, credentials = credentials_tuples[0]
     subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
     active_subscription_dir = subscription_dirname
-    print("dir(utils)", dir(utils))
     scans_dir = utils.set_scans_dir(parser.scans_dir)
     
     app.config['ACTIVE_SUBSCRIPTION_DIR'] = active_subscription_dir
@@ -268,29 +263,6 @@ def main(parser=None):
         app.run(debug=True, host='0.0.0.0', run_reloader=False)
     else:
         app.run(debug=True, host='0.0.0.0')
-
-# Might need something like https://testdriven.io/developing-a-single-page-app-with-flask-and-vuejs for menu drop-down multi-subscription.
-
-# def create_app(configfile=None):
-#     app = Flask(__name__)
-#     nav.init_app(app)
-
-#     # not good style, but like to keep our examples short
-#     @app.route('/')
-#     def index():
-#         return render_template('index.html')
-
-#     @app.route('/services/<service>')
-#     def service(service):
-#         findings_table = [(x['section_number'], x['section_name']) for x in service['findings'].items()]
-#         print(findings_table)
-#         return render_template('service.html', service=service, findings_table=findings_table)
-
-#     @app.route('/services/<service>/<finding>')
-#     def finding(service, finding):
-#         return render_template('finding.html', service=service, finding=finding)
-
-#     return app
 
 
 if __name__ == "__main__":
