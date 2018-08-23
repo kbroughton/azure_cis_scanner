@@ -59,7 +59,8 @@ open localhost:5000
 ```
 
 If you only have one subscription, defaults will work.  If you have multiple
-subscriptions, due to a limitation in the python-azure-sdk, you need to ensure that the default subscription is the currently active subscription `az account set --subscription-id aaaaa-bbbbbb-111111-444444-xxxxx`.
+subscriptions, pass in `azscan --subscription-id aaaaa-bbbbbb-111111-444444-xxxxx`.  Run
+`azscan --help` to see a list of all options.
 
 ### Install from Github
 ```
