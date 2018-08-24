@@ -1,8 +1,16 @@
 # azure_cis_scanner
 
+[![PypI](http://img.shields.io/pypi/v/azure_cis_scanner.svg)](http://img.shields.io/pypi/v/azure_cis_scanner.svg)
+
 Security Compliance Scanning tool using CIS Azure Benchmark 1.0
 
-The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2.
+The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2. 
+
+Capabilities:
+* scan multiple subscription_ids for a tenant
+* test for most of the controls in the CIS Azure Foundation Benchmark 1.0
+* save raw and filtered (non-passing) data
+* render a report for viewing
 
 ## BETA NOTICE
 
@@ -56,6 +64,11 @@ Install [python3 for your platform](https://realpython.com/installing-python/).
 pip3 install azure-cis-scanner
 azscan
 open localhost:5000
+```
+
+If you do not have an azure account or want to try it on sample data first, run just the report on sample data
+```
+azscan --stages report --scans-dir example_scan
 ```
 
 If you only have one subscription, defaults will work.  If you have multiple
@@ -121,12 +134,37 @@ not finding python correctly if `import matplotlib` works outside of the virtual
 
 ## Detailed Usage
 
+```
+$ azscan --help
+usage: azscan [-h] [--tenant-id TENANT_ID] [--subscription-id SUBSCRIPTION_ID]
+              [--scans-dir SCANS_DIR] [--stages STAGES] [--modules MODULES]
+              [--skip-modules SKIP_MODULES]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --tenant-id TENANT_ID
+                        azure tenant id, if None, use default. Scanner assumes
+                        different runs/project dirs for distinct tenants
+  --subscription-id SUBSCRIPTION_ID
+                        azure subscription id, if None, use default, if "all"
+                        use all subscriptions with default tenant
+  --scans-dir SCANS_DIR
+                        existing base dir of where to place or load files
+  --stages STAGES       comma separated list of steps to run in data,test
+  --modules MODULES     comma separated list of module names e.g.
+                        security_center.py
+  --skip-modules SKIP_MODULES
+                        comma separated list of module names to skip
+```
+
 Best practice is to work inside a docker container to avoid any issues that would arise from a multi-tenant environment.
 If running from the native command-line, take care that multi-subscription calls like permissions.sh only see the right target
 subscriptions in the `~/.azure/ directory`.  
 
-The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
-We will replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
+The Dockerfile.apline container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile 
+layered on top.  It builds an 800 Mb container. We will replace the pshchelo base with a more official (nbgallery or jupyter)
+docker image and tune the image in the future.  Dockerfile is based on ubuntu / jupyter/scipy-notebook and builds a 4.5 Gb
+container. 
 
 We assume you have already created an azure account or have been granted credentials with privileges sufficient to run the scanner.
 We will login once outside of the container (merges creds with anything in ~/.azure) to get the correct subscription id, and then
@@ -293,7 +331,7 @@ If you are going to be working over many days and shutting down the container be
 ```
 $ cd /path/to/working-project
 $ cp /path/to/azure_cis_scanner/{permissions.sh,minimal_tester_role.sh} .
-working-project$ docker run -it -v .azure/:~/.azure -v .:/workdir
+working-project$ docker --rm run -it -v .azure/:~/.azure -v .:/workdir
 bash-4.3#
 ```
 
@@ -332,6 +370,7 @@ We may switch from tuple to nested dict in the future.
 * The container is currently a base of pshchelo/alpine-jupyter-sci-py3 with microsoft/azure-cli Dockerfile layered on top.
 * Replace the pshchelo base with a more official (nbgallery or jupyter) docker image and tune the image in the future.
 * ~~Add git hooks to automatically remove cell output of azure_cis_scanner.ipynb to avoid checking in sensitive info~~
+* Update to CIS Azure Foundation Benchmark 1.1 - currently in development
 
 ## Contributing 
 az_scanner uses the python-azure-sdk.  There are a few limitations compared to the azure cli.

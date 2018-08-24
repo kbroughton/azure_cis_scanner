@@ -5,7 +5,7 @@ _run_jnb
 .azure
 terraform.tfstate
 terraform.tfstate.backup
-.terraform
+**/.terraform/**
 __pycache__/
 build
 dist

@@ -1,54 +1,79 @@
-from jupyter-scipy-azurecli-alpine:working
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+FROM jupyter/minimal-notebook
 
-##########################################################
-# The attempts
-##########################################################
+LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
-# Base container
-# We originally tried nbgallery/jupyter-notebook but it was lacking pandas, matplotlib and numpy and
-# pshchelo/alpine-jupyter-sci-py3 was already complete and smaller.
+USER root
 
-# We also looked at jupyter and continuum (anaconda) official images, but they were either not
-# alpine based or had other issues.
+# ffmpeg for matplotlib anim
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Once we started using pshchelo/alpine-jupyter-sci-py3 his should have worked
-# git clone github.com/microsoft/azure-cli && cd azure-cli
-# Use their Dockerfile, but start with `from pshchelo/alpine-jupyter-sci-py3`
 
-# BUT there are lots of python versions floating around in pshchelo/alpine-jupyter-sci-py3 (conclicts)
-# and the azure command completion totally borked things
+USER $NB_UID
 
-# I next tried the azure-cli script install and after a few tries had it almost working
-# curl -L https://aka.ms/InstallAzureCli | bash
-# However, the script has no way to run install in silent/unattended mode.
+# Install Python 3 packages
+# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
+# use notebook-friendly backends in these images
+RUN conda install --quiet --yes \
+    'conda-forge::blas=*=openblas' \
+    'ipywidgets=7.2*' \
+    'pandas=0.23*' \
+    'numexpr=2.6*' \
+    'matplotlib=2.2*' \
+    'cython=0.28*' \
+    'patsy=0.5*' \
+    'sqlalchemy=1.2*' \
+    'protobuf=3.*' \
+    'xlrd'  && \
+    conda remove --quiet --yes --force qt pyqt && \
+    conda clean -tipsy && \
+    # Activate ipywidgets extension in the environment that runs the notebook server
+    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+    # Also activate ipywidgets extension for JupyterLab
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.37.0 && \
+    jupyter labextension install jupyterlab_bokeh@^0.6.0 && \
+    npm cache clean --force && \
+    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    rm -rf /home/$NB_USER/.node-gyp && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
 
-##########################################################################################
-# The hack that worked to build the base container jupyter-scipy-azurecli-alpine:working
-##########################################################################################
+# Install facets which does not have a pip or conda package at the moment
+RUN cd /tmp && \
+    git clone https://github.com/PAIR-code/facets.git && \
+    cd facets && \
+    jupyter nbextension install facets-dist/ --sys-prefix && \
+    cd && \
+    rm -rf /tmp/facets && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
 
-# docker exec -it <container-id-for-pshchelo/alpine-jupyter-sci-py3> bash
-# // handling the prompts manually
-# curl -L https://aka.ms/InstallAzureCli | bash
-# // Outside of the container
-# docker commit <container-id-for-pshchelo/alpine-jupyter-sci-py3> jupyter-scipy-azurecli-alpine:working
+# Import matplotlib the first time to build the font cache.
+ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+    fix-permissions /home/$NB_USER
 
-##############################################################
-# Now we can build our azure-cis-scanner-apline:working
-##############################################################
+LABEL scanner_maintainer="Praetorian <it@praetorian.com>"
 
-COPY ./ /praetorian-tools/azure_cis_scanner/
+USER root
 
-RUN apk add terraform
-# jupyter notebook runs with python3
-RUN pip3 install -r /praetorian-tools/azure_cis_scanner/requirements.txt
+RUN apt-get update && \
+    apt-get install -y gnupg && \
+    apt-get install -y curl && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ bionic main" | \
+     tee /etc/apt/sources.list.d/azure-cli.list && \
+    curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    apt-get install apt-transport-https && \
+    apt-get update && apt-get install azure-cli && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-SHELL ["/bin/bash", "-c"]
-RUN source '/root/.bashrc'
-RUN ln -s /root/bin/az /bin/az
-RUN ln -s /praetorian-tools/azure_cis_scanner /notebooks/azure_cis_scanner
+RUN pip install azure_cis_scanner
 
-WORKDIR /notebooks
+USER $NB_UID
 
-# To avoid shell terminal line overwrite weirdness
-# https://stackoverflow.com/questions/38786615/docker-number-of-lines-in-terminal-changing-inside-docker/49281526#49281526
-ENTRYPOINT [ "/bin/bash", "-l", "-i", "-c" ]
