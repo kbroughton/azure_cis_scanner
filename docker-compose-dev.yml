@@ -6,9 +6,9 @@ services:
   azure-cis-scanner:
     image: ${AZURE_CIS_SCANNER_IMAGE}
     volumes:
-      - ./:/notebooks/azure_cis_scanner                            # Development
+      - ./:/notebooks/azure_cis_scanner          # Development
       - ${ENGAGEMENTS_DIR}:/engagements
-      - ${AZURE_CONFIG_DIR}:/root/.azure 
+      - ${AZURE_CONFIG_DIR}:/home/jovyan/.azure  # if using the apline container then /root/.azure 
       - ${HOST_AZURE_SCANNER_PATH}:/praetorian-tools/azure_cis_scanner  # Development
     ports:
       - ${JUPYTER_PORT}:8888

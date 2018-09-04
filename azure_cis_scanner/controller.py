@@ -110,6 +110,7 @@ def main():
     mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
     mainparser.add_argument('--refresh-sp-credentials', action='store_true', help='refresh service principal creds needed for keyvault')
     mainparser.add_argument('--loglevel', default='info', help='loglevel in ["debug", "info", "warning", "error"]')
+    mainparser.add_argument('--example-scan', action='store_true', help='allow running without credentials on example_scan data')
     parser = mainparser.parse_args()
 
     loglevel = parser.loglevel
@@ -133,20 +134,25 @@ def main():
     scans_dir = os.path.realpath(parser.scans_dir)
     scans_dir = utils.set_scans_dir(scans_dir)
 
-        
-    accounts_list = json.loads(utils.call("az account list"))
-    with open(os.path.join(scans_dir, 'accounts.json'), 'w') as f:
-        json.dump(accounts_list, f, indent=4, sort_keys=True)
+    stages = parser.stages.split(',')
+    
+    with open(os.path.join(scans_dir, 'credentials_tuples.json'), 'w') as f:
+        json.dump(credentials_tuples, f, indent=4, sort_keys=True)
 
     for tenant_id, subscription_id, subscription_name, credentials in credentials_tuples:
 
-        sp_credentials = utils.get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=parser.refresh_sp_credentials)
-        print("sp_credentials", sp_credentials, type(sp_credentials))
-        logger.debug("DEBUGGER WORKS! running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
-        print("running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
-        
-        access_token, token_expiry = utils.get_access_token()
-        # create a part-friendly/part-uniquie-id name
+        sp_credentials = None
+
+        if parser.example_scan:
+            stages = ['report']
+        else:
+            sp_credentials = utils.get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=parser.refresh_sp_credentials)
+            print("sp_credentials", sp_credentials, type(sp_credentials))
+            logger.debug("DEBUGGER WORKS! running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
+            print("running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
+            
+            access_token, token_expiry = utils.get_access_token()
+            # create a part-friendly/part-uniquie-id name
         subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
 
         scan_data_dir, raw_data_dir, filtered_data_dir = utils.set_data_paths(subscription_dirname, scans_dir)
@@ -168,11 +174,10 @@ def main():
             )
 
         ### Get some data common to most modules
-        resource_groups_path = os.path.join(raw_data_dir, "resource_groups.json")
-        rm_client = ResourceManagementClient(credentials, subscription_id)
-        resource_groups = get_resource_groups(rm_client, subscription_id, resource_groups_path)
-
-        stages = parser.stages.split(',')
+        if not parser.example_scan:
+            resource_groups_path = os.path.join(raw_data_dir, "resource_groups.json")
+            rm_client = ResourceManagementClient(credentials, subscription_id)
+            resource_groups = get_resource_groups(rm_client, subscription_id, resource_groups_path)
 
         if 'data' in stages:
             _get_data(config)

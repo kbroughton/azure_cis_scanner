@@ -240,7 +240,7 @@ def set_scans_dir(scans_dir):
         else:
             _scans_dir = os.path.join(os.getcwd(), 'scans')
             if not os.path.exists(_scans_dir):
-                os.mkdir(scans_dir)
+                os.mkdir(_scans_dir)
         print("scans_dir {} not found.  Using {}".format(scans_dir, _scans_dir))
         return _scans_dir
 
@@ -337,10 +337,19 @@ def get_access_token():
 
 def set_credentials_tuples(parser):
 
-    # While we have a mixture of azcle and az-python-sdk we need to set the subscription_id 
+    # While we have a mixture of azcli and az-python-sdk we need to set the subscription_id 
     # both with az account set, and with subscription_client using a modified credentials.py
     use_api_for_auth = parser.use_api_for_auth
 
+    if parser.example_scan:
+        # We are not going to login or even assume an azure account
+        # Just use the data in example_scan to run reporting
+        if not os.path.exists(os.path.realpath("./example_scan/accounts.json")):
+            raise ValueError("""--example-scan passed, but ./example_scan not found.  Are 
+                we are not in the git repo?""")
+        with open(os.path.realpath("./example_scan/accounts.json"), 'r') as f:
+            accounts = json.load(f)
+            return accounts
     if parser.subscription_id:
         if verify_subscription_id_format(parser.subscription_id):
             subscription_id = parser.subscription_id

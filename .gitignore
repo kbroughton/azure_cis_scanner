@@ -12,3 +12,5 @@ dist
 azure_cis_scanner.egg*
 crash.log
 scans/
+.secrets.baseline
+blacklist.txt

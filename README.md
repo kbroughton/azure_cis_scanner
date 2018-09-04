@@ -55,8 +55,11 @@ Filtered data will be in files named by the finding and have the following forma
 ```
 
 ## Quickstart
-All platforms require installing the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
-Install [python3 for your platform](https://realpython.com/installing-python/).
+
+### Requirements
+*  All platforms require installing the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) \
+* Install [python3 for your platform](https://realpython.com/installing-python/). \
+* see the install folder for platform specific pre-requisits
 
 ### Commandline + pip install
 
@@ -66,11 +69,6 @@ azscan
 open localhost:5000
 ```
 
-If you do not have an azure account or want to try it on sample data first, run just the report on sample data
-```
-azscan --stages report --scans-dir example_scan
-```
-
 If you only have one subscription, defaults will work.  If you have multiple
 subscriptions, pass in `azscan --subscription-id aaaaa-bbbbbb-111111-444444-xxxxx`.  Run
 `azscan --help` to see a list of all options.
@@ -78,15 +76,30 @@ subscriptions, pass in `azscan --subscription-id aaaaa-bbbbbb-111111-444444-xxxx
 ### Install from Github
 ```
 git clone https://github.com/praetorian-inc/azure_cis_scanner
+cd azure_cis_scanner
 virtualenv venv && source venv/bin/activate  # optional`
 pip3 install -r requirements.txt
+nbstripout --install    # allows githooks to run, strips out ipynb output from commits
 python3 setup.py install
+azscan 
+```
+
+If you do not have an azure account or want to try it on sample data first, run just the report on sample data from the github install
+```
+azscan --
+```
+
+It is possible to only run certain modules and stages
+```
 azscan --modules "security_center.py,storage_accounts.py" --stages "data,tests"
 ```
 
 ### Install with Docker
+
 If you already have an account and the default subscription is correct,
-you can just copy the docker-compose.yml file to a new folder, copy .env-sample to .env next to the docker-compose.yml and run
+you can just copy the docker-compose.yml file to a new folder, copy 
+.env-sample to .env next to the docker-compose.yml.  Make any modifications
+necessary to .env for your environment and run
 
 ```
 docker-compose up

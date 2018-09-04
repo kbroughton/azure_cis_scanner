@@ -1,6 +1,7 @@
 requests
-pyyaml
+pyyaml==4.2b4
 run_jnb
+nbstripout
 numpy
 pandas
 matplotlib

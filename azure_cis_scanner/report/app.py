@@ -18,6 +18,8 @@ from azure_cis_scanner.report.render_utils import *
 HAS_MATPLOTLIB = False
 
 try:
+    import matplotlib
+    matplotlib.use('TkAgg')
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
@@ -244,6 +246,7 @@ def main(parser=None):
         mainparser.add_argument('--subscription-id', default=None, help='azure subscription id, if None, use default, if "all" use all subscriptions with default tenant')
         mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
         mainparser.add_argument('--scans-dir', default='/engagements/cis_test/sacans', help='base dir of where to place or load files')
+        mainparser.add_argument('--example-scan', action='store_true', help='allow running without credentials on example_scan data')
 
         parser = mainparser.parse_args()
 
