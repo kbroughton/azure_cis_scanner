@@ -25,7 +25,7 @@ def get_security_center(security_center_path):
 
     security_center = json.loads(utils.make_request(url, headers=headers))
     print("get_security_center {}".format(security_center))
-    security_center = security_center['value']
+    security_center = security_center.get('value', [])
         
     with open(security_center_path, 'w') as f:
         yaml.dump(security_center, f)

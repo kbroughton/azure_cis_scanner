@@ -4,7 +4,6 @@ section_ordering:
   - "Security Center"
   - "Storage Accounts"
   - "SQL Servers"
-  - "SQL Databases"
   - "Logging and Monitoring"
   - "Networking"
   - "Virtual Machines"

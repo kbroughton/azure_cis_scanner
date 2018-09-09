@@ -142,8 +142,8 @@ def plot_finding(service, finding):
     if len(finding_df) < 2:
         return make_response('Need at least 2 days of data for a plot.  Come back tomorrow!')
     filled_df = finding_df.fillna(method='ffill')
-    y_filled = filled_df["Flagged"].tolist()
-    y_filled = np.array(y_filled)
+    #y_filled = filled_df["Flagged"].tolist()
+    #y_filled = np.array(y_filled)
     y = finding_df["Flagged"].tolist()
     y = np.array(y)
     x = finding_df.index
@@ -159,12 +159,14 @@ def plot_finding(service, finding):
     ax.axes.set_xlabel('Date')
     ax.set_title(subsection_name, verticalalignment='bottom')
     line, = ax.plot(x[mask],y[mask], ls="--",lw=1)
-    ax.plot(x,y_filled, color=line.get_color(), lw=1.5)
+    print("line", line)
+    ax.plot(x,y, color=line.get_color(), lw=1.5)
 
     canvas=FigureCanvas(fig)
     png_output = io.BytesIO()
     canvas.print_png(png_output)
     response=make_response(png_output.getvalue())
+    del canvas
     response.headers['Content-Type'] = 'image/png'
     return response
 
@@ -262,7 +264,7 @@ def main(parser=None):
     app.config['SCANS_DIR'] = scans_dir
     app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
 
-    app.run(debug=True, host='0.0.0.0', run_reloader=False)
+    app.run(debug=True, host='0.0.0.0', use_reloader=True)
 
 
 if __name__ == "__main__":

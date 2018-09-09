@@ -68,12 +68,7 @@ def _get_data(config):
         print('Getting data for {}'.format(module.strip('.py')))
         module_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules', module)
         try:
-            # mod = load_module(module_path, **dict(raw_data_dir=raw_data_dir, 
-            #                                       filtered_data_dir=filtered_data_dir, 
-            #                                       cli_credentials=cli_credentials,
-            #                                       subscription_id=subscription_id))
             mod = load_module(module_path, **config)
-
             mod.get_data()
         except Exception as e:
             print("Exception was thrown! Unable to run get_data() for {}".format(module))
@@ -89,7 +84,6 @@ def _test_controls(config):
         module_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules', module)
         try:
             mod = load_module(module_path, **config)
-            #mod = load_module(module_path, **dict(raw_data_dir=raw_data_dir, filtered_data_dir=filtered_data_dir))
             mod.test_controls()
         except Exception as e:
             print("Exception was thrown! Unable to run test_controls() for {}".format(module))
@@ -136,8 +130,15 @@ def main():
 
     stages = parser.stages.split(',')
     
-    with open(os.path.join(scans_dir, 'credentials_tuples.json'), 'w') as f:
-        json.dump(credentials_tuples, f, indent=4, sort_keys=True)
+    try:
+        with open(os.path.join(scans_dir, 'credentials_tuples.json'), 'w') as f:
+            json.dump([x[0:2] for x in credentials_tuples], f, indent=4, sort_keys=True)
+    except TypeError as e:
+        print("credentials_tuples", credentials_tuples)
+        print(e)
+        print(traceback.format_exc())
+        raise ("Please run az login")
+
 
     for tenant_id, subscription_id, subscription_name, credentials in credentials_tuples:
 
