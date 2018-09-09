@@ -12,7 +12,7 @@ rm -rf dist
 # test pip install to new virtualenv
 
 # after successful build tests update frozen_requirements.txt
-pip freeze | grep -v azure_cis_scanner > frozen_requirements.txt
+# pip freeze | grep -v azure_cis_scanner > frozen_requirements.txt
 # https://gist.github.com/audreyr/5990987
 git push origin master 
 git push origin master --tags
