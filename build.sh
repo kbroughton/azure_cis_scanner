@@ -1,5 +1,10 @@
 #!/bin/bash
-set -x
+set -ex
+if [ ! -z "$(git status --porcelain)" ]; then 
+  echo "git is not clean.  Please commit files and retry"
+  exit 1
+fi
+
 #git add HISTORY.rst
 #git commit -m "Changelog for upcoming release 0.1.1."
 # bumpversion  --verbose  --dry-run --message '[{now:%Y-%m-%d}]Jenkins Build {$BUILD_NUMBER}: {new_version}' patch  # patch could also be minor or major
