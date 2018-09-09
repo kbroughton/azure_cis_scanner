@@ -1,6 +1,6 @@
 #!/bin/bash
 set -ex
-if [ ! -z "$(git status --porcelain)" ]; then 
+if [ ! -z "$(git status --porcelain --untracked-files=no)" ]; then 
   echo "git is not clean.  Please commit files and retry"
   exit 1
 fi
