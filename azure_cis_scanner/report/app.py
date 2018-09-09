@@ -19,7 +19,8 @@ HAS_MATPLOTLIB = False
 
 try:
     import matplotlib
-    matplotlib.use('TkAgg')
+    #matplotlib.use('TkAgg')
+    matplotlib.use('Agg')
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
@@ -162,11 +163,10 @@ def plot_finding(service, finding):
     print("line", line)
     ax.plot(x,y, color=line.get_color(), lw=1.5)
 
-    canvas=FigureCanvas(fig)
     png_output = io.BytesIO()
+    canvas = FigureCanvas(fig)
     canvas.print_png(png_output)
     response=make_response(png_output.getvalue())
-    del canvas
     response.headers['Content-Type'] = 'image/png'
     return response
 
@@ -207,7 +207,7 @@ def multi_index_df_from_stats(stats):
     tuples, index_tuples = multi_index_tuples_from_stats(stats)
     multi_index = pd.MultiIndex.from_tuples(index_tuples, names=["section", "finding", "date"])
     print(multi_index)
-    return pd.DataFrame(tuples, index=multi_index, columns=["section_drop", "finding_drop", "date","Flagged", "Checked"])
+    return pd.DataFrame(tuples, index=multi_index, columns=["section_drop", "finding_drop", "date", "Flagged", "Checked"])
 
 def dir_date_to_datetime(string):
     """
@@ -264,7 +264,7 @@ def main(parser=None):
     app.config['SCANS_DIR'] = scans_dir
     app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
 
-    app.run(debug=True, host='0.0.0.0', use_reloader=True)
+    app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
 
 if __name__ == "__main__":

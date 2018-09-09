@@ -73,7 +73,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install azure_cis_scanner
+#RUN pip install azure_cis_scanner
 
 USER $NB_UID
 

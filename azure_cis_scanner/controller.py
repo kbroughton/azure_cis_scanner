@@ -130,14 +130,14 @@ def main():
 
     stages = parser.stages.split(',')
     
-    try:
-        with open(os.path.join(scans_dir, 'credentials_tuples.json'), 'w') as f:
-            json.dump([x[0:2] for x in credentials_tuples], f, indent=4, sort_keys=True)
-    except TypeError as e:
-        print("credentials_tuples", credentials_tuples)
-        print(e)
-        print(traceback.format_exc())
-        raise ("Please run az login")
+    # try:
+    #     with open(os.path.join(scans_dir, 'credentials_tuples.json'), 'w') as f:
+    #         json.dump([x[0:2] for x in credentials_tuples], f, indent=4, sort_keys=True)
+    # except TypeError as e:
+    #     print("credentials_tuples", credentials_tuples)
+    #     print(e)
+    #     print(traceback.format_exc())
+    #     raise ("Please run az login")
 
 
     for tenant_id, subscription_id, subscription_name, credentials in credentials_tuples:
