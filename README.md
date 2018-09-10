@@ -137,14 +137,26 @@ rm ~/.azure/accessTokens.json
 az login
 ```
 
-Occasionally the ~/.azure/azureProfiles.json gets some non-ascii characters causing an error about unicode decoding.  
-The current fix is to open the file and delete the (possiby invisible) characters inserted at the start of the file.
+Occasionally the ~/.azure/azureProfiles.json gets some non-ascii characters causing an error about unicode decoding. The exact error depends on the OS.
+```
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+``` 
+The current fix is to open the file and delete the (possiby invisible) characters inserted at the start of the file.  Or delete the entire file and `az login` again.
 
-No Graphig:
+No Graphing:
 You may see the error "Unable to import matplotlib.  No graphing available" even though matplotlib pip-installed fine.
 Check the install/ directory to see if there are specific aids for your platform.  This may be an issue with virtualenvs
 not finding python correctly if `import matplotlib` works outside of the virtualenv.
 
+On 32-bit windows python the retry for creating a service principal sometimes failed.  Try again.
+```
+az.cmd ad sp create-for-rbac --sdk-auth
+
+  File "c:\users\<username>\appdata\local\programs\python\python37-32\lib\site-packages\adal\oauth2_client.py", line 289, in get_token
+    raise AdalError(return_error_string, error_response)
+msrest.exceptions.AuthenticationError: , AdalError: Get Token request returned http error: 400 and server response: {"error":"unauthorized_client"
+```
 ## Detailed Usage
 
 ```
@@ -317,7 +329,8 @@ azure_cis_scanner> nbstripout --install
   from container in case of `docker save`.
 
 * Github's new static scanner for python was added and [discovered some issues that were fixed](images/azure_cis_scanner_git_vuln_scan.png)! 
-
+* The example_scan contains information leakage - tenantId, subscriptionId, resourceIds.  This is
+  accepted risk on our part for a disposable account.  However, there should be no credential leakage.
 ## Requesting credentials with the correct RBACs to run the scanner
 If you need to run the scanner on someone else's Azure environment, you should ask for the minimum possible
 permissions.

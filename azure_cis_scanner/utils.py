@@ -21,6 +21,7 @@ from azure.mgmt.resource import ResourceManagementClient, SubscriptionClient
 from azure.common.credentials import ServicePrincipalCredentials
 
 from azure_cis_scanner.credentials import get_azure_cli_credentials
+from json.decoder import JSONDecodeError
 
 AZURE_CONFIG_DIR = os.path.expanduser('~/.azure')
 AZURE_PROFILE_PATH = os.path.join(AZURE_CONFIG_DIR, 'azureProfile.json')
@@ -89,9 +90,18 @@ def get_credentials_from_cli(tenant_id=None, subscription_id=None):
     @returns: list of (tenant_id, subscription_id, subscription_name, credentials) where credentials is an ADAL signed session 
               bound to the tenant_id and subscription
     """
+    try:
+        with open(AZURE_PROFILE_PATH, 'r') as f:
+            azure_profiles = yaml.load(f)['subscriptions']
+    except JSONDecodeError as e:
+        with open(AZURE_PROFILE_PATH, 'r', encoding='utf-8-sig') as f:
+            azure_profiles = yaml.load(f)['subscriptions']
+    except Exception as e:
+        print("azureProfile.json", f.read())
+        print(e)
+        print(traceback.format_exc())
+        raise("Likely a special character added to file by az cli.  Try pip install pyyaml==4.2b4")
 
-    with open(AZURE_PROFILE_PATH, 'r') as f:
-        azure_profiles = yaml.load(f)['subscriptions']
     results = []
     for profile in azure_profiles:
         if tenant_id and not (tenant_id == profile['tenantId']):
@@ -226,6 +236,16 @@ filtered_data_dir = ''
 scan_data_dir = ''
 raw_data_dir = ''
 
+def get_accounts(example_scan_path=None):
+    if example_scan_path:
+        example_scan_path = os.path.realpath(example_scan_path)
+        if os.path.exists(example_scan_path):
+            with open(os.path.join(example_scan_path, 'accounts.json'), 'r') as f:
+                return json.load(f)
+    else:
+        accounts = call("az account list")
+        return json.loads(accounts)
+
 def set_scans_dir(scans_dir):
     """
     Set scans_dir to requested value if it exists, otherwise default to ./scans and create
@@ -315,14 +335,9 @@ def get_subscription_id(account) :
     return account["id"]
 
 
-def get_subscription_name(subscription_id, accounts):
-    for account in accounts:
-        if subscription_id == accounts['id']:
-            return accounts['name']
-    raise ValueError("subscription_id {} not found in accounts {}".format(subscription_id, accounts))
-
 def get_subscription_dirname(subscription_id, subscription_name):
     return subscription_name.split(' ')[0] + '-' + subscription_id.split('-')[0]
+
 
 def get_access_token():
     global token_expiry, access_token
@@ -335,6 +350,7 @@ def get_access_token():
         token_expiry = datetime.datetime.strptime(token_expiry, '%Y-%m-%d %H:%M:%S.%f')
     return access_token, token_expiry
 
+
 def set_credentials_tuples(parser):
 
     # While we have a mixture of azcli and az-python-sdk we need to set the subscription_id 
@@ -344,12 +360,12 @@ def set_credentials_tuples(parser):
     if parser.example_scan:
         # We are not going to login or even assume an azure account
         # Just use the data in example_scan to run reporting
-        if not os.path.exists(os.path.realpath("./example_scan/accounts.json")):
+        if not os.path.exists(os.path.realpath("./example_scan/credentials_tuples.json")):
             raise ValueError("""--example-scan passed, but ./example_scan not found.  Are 
                 we are not in the git repo?""")
-        with open(os.path.realpath("./example_scan/accounts.json"), 'r') as f:
-            accounts = json.load(f)
-            return accounts
+        with open(os.path.realpath("./example_scan/credentials_tuples.json"), 'r') as f:
+            credentials_tuples = json.load(f)
+            return credentials_tuples
     if parser.subscription_id:
         if verify_subscription_id_format(parser.subscription_id):
             subscription_id = parser.subscription_id
@@ -366,6 +382,8 @@ def set_credentials_tuples(parser):
                     if parser.tenant_id:
                         if account['tenantId'] != parser.tenant_id:
                             raise(ValueError("subscription {} does not belong to tenant {}".format(subscription_id, parser.tenant_id))) 
+                    subscription_id = account['id']
+                    credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
             except Exception as e:
                 print(e)
                 print(traceback.format_exc())
@@ -380,7 +398,6 @@ def set_credentials_tuples(parser):
                 tenant_id = parser.tenant_id
                 print("No subscription specified, running on all subscriptions for supplied tenant {}".format(tenant_id))
                 credentials_tuples = get_credentials_from_cli(tenant_id=tenant_id)
-                print(credentials_tuples)
             else:
                 print("No tenant or subscription specified, getting active account")
                 account = get_active_account()
@@ -394,15 +411,11 @@ def set_credentials_tuples(parser):
             print("No Azure account associated with this session. Please authenticate to continue.")
             call("az login")
             account = get_active_account()
-
-    if not use_api_for_auth:
-        subscription_id = account['id']
-        subscription_name = account['name']
-        print("Using subscription_id {} {}".format(subscription_id, subscription_name))
-        print("Re-run with --subscription-id if you wish to change")
-        credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
+            subscription_id = account['id']
+            credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
 
     return credentials_tuples
+
 
 def make_request(url, headers=None):
     print('requesting {} with headers {}'.format(url, headers))

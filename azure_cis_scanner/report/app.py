@@ -62,6 +62,7 @@ def index(active_subscription_dir, methods=['POST','GET']):
         print('redirecting', selected_active_subscription_dir)
         return redirect('/'+selected_active_subscription_dir)
     else:
+        accounts = utils.get_accounts()
         subscription_dirs = [(subscription_dir_from_account(account), subscription_dir_from_account(account)) for account in accounts]
         print('subscription_dirs', subscription_dirs)
         return render_template('index.html', 
@@ -263,7 +264,8 @@ def main(parser=None):
     app.config['ACTIVE_SUBSCRIPTION_DIR'] = active_subscription_dir
     app.config['SCANS_DIR'] = scans_dir
     app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
-
+    app.config['ACCOUNTS'] = utils.get_accounts(scans_dir)
+    #app.config['STATS'] = get_stats()
     app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
 
