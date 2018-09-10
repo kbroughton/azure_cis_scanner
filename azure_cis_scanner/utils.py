@@ -93,14 +93,18 @@ def get_credentials_from_cli(tenant_id=None, subscription_id=None):
     try:
         with open(AZURE_PROFILE_PATH, 'r') as f:
             azure_profiles = yaml.load(f)['subscriptions']
-    except JSONDecodeError as e:
-        with open(AZURE_PROFILE_PATH, 'r', encoding='utf-8-sig') as f:
-            azure_profiles = yaml.load(f)['subscriptions']
     except Exception as e:
-        print("azureProfile.json", f.read())
         print(e)
         print(traceback.format_exc())
-        raise("Likely a special character added to file by az cli.  Try pip install pyyaml==4.2b4")
+        try:
+            with open(AZURE_PROFILE_PATH, 'r', encoding='utf-8-sig') as f:
+                azure_profiles = yaml.load(f)['subscriptions']
+        except Exception as e:
+            with open(AZURE_PROFILE_PATH, 'r') as f:
+                print("azureProfile.json", f.read())
+            print(e)
+            print(traceback.format_exc())
+            raise("Likely a special character added to file by az cli.  Try pip install pyyaml==4.2b4")
 
     results = []
     for profile in azure_profiles:
@@ -236,15 +240,16 @@ filtered_data_dir = ''
 scan_data_dir = ''
 raw_data_dir = ''
 
-def get_accounts(example_scan_path=None):
-    if example_scan_path:
-        example_scan_path = os.path.realpath(example_scan_path)
-        if os.path.exists(example_scan_path):
-            with open(os.path.join(example_scan_path, 'accounts.json'), 'r') as f:
+def get_accounts(scan_path=None):
+    if scan_path:
+        scan_path = os.path.realpath(scan_path)
+        accounts_path = os.path.join(scan_path, 'accounts.json')
+        if os.path.exists(accounts_path):
+            with open(accounts_path, 'r') as f:
                 return json.load(f)
-    else:
-        accounts = call("az account list")
-        return json.loads(accounts)
+
+    accounts = call("az account list")
+    return json.loads(accounts)
 
 def set_scans_dir(scans_dir):
     """
