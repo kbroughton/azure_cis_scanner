@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+li{
+  display: inline-block;
+  padding: 10px;
+}
+
+h1 {
+ width: 600px;
+ margin: 0 auto;
+}
+
+h2 {
+  width: 400px;
+  margin: 0 auto; 
+}
+
+h3 {
+  width: 300px;
+  margin: 0 auto;
+}
