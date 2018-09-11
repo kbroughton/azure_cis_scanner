@@ -270,7 +270,7 @@ def main(parser=None):
     app.config['SCANS_DIR'] = scans_dir
     app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
     app.config['ACCOUNTS'] = utils.get_accounts(scans_dir)
-    app.config['STATS'] = get_stats()
+    # app.config['STATS'] = get_stats()
     app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
 
