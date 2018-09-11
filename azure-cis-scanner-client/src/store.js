@@ -1,12 +1,17 @@
-import {createStore, applyMiddleware, combineReducers} from 'redux';
+import {createStore, applyMiddleware, combineReducers, compose} from 'redux';
 import thunk from 'redux-thunk';
-import dirsReducer from './reducers/dirs';
+import subscriptionReducer from './reducers/subscriptions';
+
+const middlewares = [ thunk ];
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
     combineReducers({
-        dirs: dirsReducer
+        subscriptions: subscriptionReducer
     }),
-    applyMiddleware(thunk)
+    composeEnhancers(
+        applyMiddleware(...middlewares)
+    )
 );
 
 export default store;

@@ -43,8 +43,8 @@ app.config['SESSION_TYPE'] = 'filesystem'
 # this route should return the list of directories available to user 
 @app.route('/')
 def index_base(methods=['GET']):
-    dirs = utils.get_accounts()
-    return jsonify({"dirs": dirs})
+    subscriptions = utils.get_accounts()
+    return jsonify({"subscriptions": subscriptions})
 
 @app.route('/_subscription_dir')
 def _subscription_dir():

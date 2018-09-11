@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {getDirs, selectDir} from '../actions/dashboard';
+import {getSubscriptions, selectSubscription} from '../actions/dashboard';
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -13,30 +13,30 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        if (!this.props.selectedDir) {
-            this.props.dispatch(getDirs());
+        if (!this.props.selectedSubscription) {
+            this.props.dispatch(getSubscriptions());
         }
     }
 
     onSubmit(e) {
         e.preventDefault();
         console.log('change dirs to: ', this.select.value);
-        this.props.dispatch(selectDir(this.select.value));
+        this.props.dispatch(selectSubscription(this.select.value));
     }
 
     render() {
-        const {dirs} = this.props;
+        const {subscriptions} = this.props;
         let options;
         let selected;
        
-        if (this.props.dirs) {
-            options = dirs.map((dir, index) => {
+        if (this.props.subscriptions) {
+            options = subscriptions.map((subscription, index) => {
                 let selected;
-                console.log(this.props.selectedDir, dir)
-                if (this.props.selectedDir === dir.id) {
+                console.log(this.props.selectedSubscription, subscription)
+                if (this.props.selectedSubscription === subscription.id) {
                     selected = "selected"
                 }
-                return <option key={index} selected={selected} value={dir.id}>{dir.name}</option>
+                return <option key={index} selected={selected} value={subscription.id}>{subscription.name}</option>
             })
             }
         
@@ -55,10 +55,10 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = state => {
-    
+    console.log(state)
     return {
-      dirs: state.dirs.dirs,
-      selectedDir: state.dirs.selectedDir
+      subscriptions: state.subscriptions.subscriptions,
+      selectedSubscription: state.subscriptions.selectedSubscription
     };
 };
 
