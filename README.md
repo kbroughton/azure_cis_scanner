@@ -57,8 +57,8 @@ Filtered data will be in files named by the finding and have the following forma
 ## Quickstart
 
 ### Requirements
-*  All platforms require installing the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) \
-* Install [python3 for your platform](https://realpython.com/installing-python/). \
+*  All platforms require installing the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) 
+* Install [python3 for your platform](https://realpython.com/installing-python/). 
 * see the install folder for platform specific pre-requisits
 
 ### Commandline + pip install
@@ -77,7 +77,8 @@ subscriptions, pass in `azscan --subscription-id aaaaa-bbbbbb-111111-444444-xxxx
 ```
 git clone https://github.com/praetorian-inc/azure_cis_scanner
 cd azure_cis_scanner
-virtualenv venv && source venv/bin/activate  # optional`
+virtualenv venv && source venv/bin/activate  # optional.  If your default is python2, 
+                                             # virtualenv -p python3 venv
 pip3 install -r requirements.txt
 nbstripout --install    # allows githooks to run, strips out ipynb output from commits
 python3 setup.py install
@@ -86,7 +87,7 @@ azscan
 
 If you do not have an azure account or want to try it on sample data first, run just the report on sample data from the github install
 ```
-azscan --
+azscan --example-scan
 ```
 
 It is possible to only run certain modules and stages
@@ -102,6 +103,7 @@ you can just copy the docker-compose.yml file to a new folder, copy
 necessary to .env for your environment and run
 
 ```
+git clone https://github.com/praetorian-inc/azure_cis_scanner
 docker-compose up
 ```
 Then find the docker conatiner id, exec into the container and run the scanner 
@@ -137,16 +139,21 @@ rm ~/.azure/accessTokens.json
 az login
 ```
 
-Occasionally the ~/.azure/azureProfiles.json gets some non-ascii characters causing an error about unicode decoding. The exact error depends on the OS.
+Occasionally the ~/.azure/azureProfiles.json gets some non-ascii characters causing an error about unicode decoding. The cause is due to temporary 
+[pyyaml instability](https://github.com/yaml/pyyaml/issues/193) due to support for python 3.7.  The latest azure-cli now depends on 
+pyyaml==4.2b4 while other components require 3.13.  3.13 works for most builds, but
+there may be occasions where pyyaml==4.2b4 must be forced in requirements.txt.  The exact error depends on the OS, but looks something like:
 ```
     raise JSONDecodeError("Expecting value", s, err.value) from None
 json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 ``` 
-The current fix is to open the file and delete the (possiby invisible) characters inserted at the start of the file.  Or delete the entire file and `az login` again.
+The current fix is to open the file and delete the (possiby invisible) characters inserted at 
+the start of ~/.azure/azureProfile.json.  You may need an editor that can display invisible
+characters.  Or delete the entire file and `az login` again.
 
 No Graphing:
 You may see the error "Unable to import matplotlib.  No graphing available" even though matplotlib pip-installed fine.
-Check the install/ directory to see if there are specific aids for your platform.  This may be an issue with virtualenvs
+Check the `install` directory to see if there are specific aids for your platform.  This may be an issue with virtualenvs
 not finding python correctly if `import matplotlib` works outside of the virtualenv.
 
 On 32-bit windows python the retry for creating a service principal sometimes failed.  Try again.
@@ -182,7 +189,8 @@ optional arguments:
                         comma separated list of module names to skip
 ```
 
-Best practice is to work inside a docker container to avoid any issues that would arise from a multi-tenant environment.
+Best practice is to work inside a docker container to avoid any issues that would arise from 
+an azure multi-tenant environment and multiple python installation issues.
 If running from the native command-line, take care that multi-subscription calls like permissions.sh only see the right target
 subscriptions in the `~/.azure/ directory`.  
 
@@ -202,8 +210,8 @@ Following the [Azure Documentation](https://docs.microsoft.com/en-us/python/azur
 az ad sp create-for-rbac --name "<service-principal-name>" --password "STRONG-SECRET-PASSWORD" > ~/.azure/<service-principal-name>.json
 
 ```
-where <service-principal-name> can be anything - a good choice might be
-scanner-<first-digits-of-subscription> and STRONG-SECRET-PASSWORD is also
+where `<service-principal-name>` can be anything - a good choice might be
+`scanner-<first-digits-of-subscription>` and STRONG-SECRET-PASSWORD is also
 chosen randomly.
 
 Now run the scanner providing the --auth-location
@@ -211,7 +219,9 @@ Now run the scanner providing the --auth-location
 python3 azure_cis_scanner/controller.py --auth-location ~/.azure/<service-principal-name>.json
 ```
 
-### Configure
+## Docker Container Instructions
+
+### Configure 
 
 Get the repo (until it is public)
 ```

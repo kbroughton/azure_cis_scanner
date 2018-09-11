@@ -99,6 +99,7 @@ def get_credentials_from_cli(tenant_id=None, subscription_id=None):
         try:
             with open(AZURE_PROFILE_PATH, 'r', encoding='utf-8-sig') as f:
                 azure_profiles = yaml.load(f)['subscriptions']
+            print("Successfully opened file with encoding='utf-8-sig'.  You may ignore previous error.")
         except Exception as e:
             with open(AZURE_PROFILE_PATH, 'r') as f:
                 print("azureProfile.json", f.read())

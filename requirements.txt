@@ -1,5 +1,5 @@
 requests
-pyyaml==4.2b4
+pyyaml
 run_jnb
 nbstripout
 numpy

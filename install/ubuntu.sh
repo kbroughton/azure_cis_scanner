@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BRANCH=pip
+BRANCH=master
 
 git config --global user.name kbroughton
 git clone git@github.com:praetorian-inc/azure_cis_scanner.git
@@ -17,6 +17,9 @@ sudo apt update && sudo apt-get install azure-cli
 pip3 install -r requirements.txt --user
 python3 setup.py install --user
 python3 -mpip install -U matplotlib
-python3 azure_cis_scanner/controller.py 
-cd report/
-python3 app.py
+
+azscan --help
+azscan
+#python3 azure_cis_scanner/controller.py 
+#cd report/
+#ython3 app.py
