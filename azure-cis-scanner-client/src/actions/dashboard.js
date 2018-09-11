@@ -57,14 +57,9 @@ export const getSubscriptions = () => (dispatch) => {
 export const selectSubscription = (subscription) => (dispatch) => {
     console.log(subscription)
     dispatch(setSelectedSubscription(subscription));
-    return fetch(`http://localhost:5000/${subscription}`, {
-        method: 'POST',
-        body: JSON.stringify({
-            subscription
-        })
-    })
-    .then(res => normalizeResponseErrors(res))
-    .then(res => res.json())
-    .then(data => dispatch(selectSubscriptionSuccess(data)))
-    .catch(err => dispatch(selectSubscriptionError(err)));
+    return fetch(`http://localhost:5000/${subscription}`)
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then(data => dispatch(selectSubscriptionSuccess(data)))
+        .catch(err => dispatch(selectSubscriptionError(err)));
 }

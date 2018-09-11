@@ -1,27 +1,13 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {getSubscriptions, selectSubscription} from '../actions/dashboard';
 
 class Dashboard extends React.Component {
-    constructor(props) {
-        super(props);
-       
-        this.select;
-        this.selectRef = select => {
-            this.select = select
-        }
-    }
-
     componentDidMount() {
         if (!this.props.selectedSubscription) {
-            this.props.dispatch(getSubscriptions());
+            this.props.getSubscriptions();
         }
-    }
-
-    onSubmit(e) {
-        e.preventDefault();
-        console.log('change dirs to: ', this.select.value);
-        this.props.dispatch(selectSubscription(this.select.value));
     }
 
     render() {
@@ -45,10 +31,11 @@ class Dashboard extends React.Component {
                 <label htmlFor='selected-sub-directory'>Select a Directory</label>
                 <select className='selected-sub-directory' 
                     name='selected-sub-directory' 
-                    ref={this.selectRef}>
+                    onChange={e => this.props.selectSubscription(e.target.value)}
+                    >
+                      <option value="">Please select an option</option>
                       {options}
                 </select> 
-                <button type='submit' onClick={(e) => this.onSubmit(e)}>Submit</button>             
             </form>
         );
     }
@@ -62,5 +49,7 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(Dashboard);
-
+export default connect(
+    mapStateToProps,
+    dispatch => bindActionCreators({ selectSubscription, getSubscriptions }, dispatch),
+)(Dashboard);
