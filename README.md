@@ -61,6 +61,12 @@ Filtered data will be in files named by the finding and have the following forma
 * Install [python3 for your platform](https://realpython.com/installing-python/). 
 * see the install folder for platform specific pre-requisits
 
+If you have installed azure-cis-scanner on your native os and in a virtualenv there may be problems.
+We recommend you `pip uninstall azure-cis-scanner` on the native os if this is the case.
+If you only install natively or always in a virtualenv there should be no problem.
+
+In a virtualenv, on first run `azscan` may take a minute to produce results.  Be patient.
+
 ### Commandline + pip install
 
 ```
