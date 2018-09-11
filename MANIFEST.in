@@ -2,6 +2,6 @@ include LICENSE
 include README.md
 include requirements.txt
 global-exclude *.pyc
-recursive-include azure_cis_scanner/ *.py *.yaml *.yml *.sh *.ipynb *.json *.tf *.tpl *.tfvars
+recursive-include azure_cis_scanner/ *.py *.yaml *.yml *.sh *.ipynb *.json *.html *.css
 prune azure_cis_scanner/.ipynb_checkpoints
 prune azure_cis_scanner/_run_jnb
