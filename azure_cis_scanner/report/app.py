@@ -74,11 +74,11 @@ def index(active_subscription_dir, methods=['POST','GET']):
         return jsonify({"active_subscription_dir": "{}".format(active_subscription_dir), "state": "{}".format(state), "subscription_dirs": "{}".format(subscription_dirs)})
 
 @app.route('/services/<service>')
-def service(service):
+def service(service, methods=['GET']):
     findings_table = [(x['subsection_number'], x['subsection_name'], get_finding_name(x['finding_name'], x['subsection_name'])) for x in cis_structure['TOC'][service]]
     stats = get_latest_stats(app.config['SCANS_DATA_DIR'])
     #pprint.pprint("service:stats: {}".format(stats))
-    return render_template('service.html', service=service, title=title_except(service), findings_table=findings_table, stats=stats)
+    return jsonify({"service": service, "title": title_except(service), "findings_table": findings_table, "stats": stats}) 
 
 @app.route('/services/<service>/<finding>')
 def finding(service, finding):

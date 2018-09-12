@@ -4,8 +4,9 @@ import { bindActionCreators } from 'redux';
 import {getSubscriptions, selectSubscription} from '../actions/subscriptions';
 
 class Dashboard extends React.Component {
+
     componentDidMount() {
-        if (!this.props.selectedSubscription) {
+        if (this.props.selectedSubscription.length === 0) {
             this.props.getSubscriptions();
         }
     }
@@ -16,11 +17,7 @@ class Dashboard extends React.Component {
        
         if (this.props.subscriptions) {
             options = subscriptions.map((subscription, index) => {
-                let selected;
-                console.log(this.props.selectedSubscription, subscription)
-                // if (this.props.selectedSubscription === subscription.id) {
-                //     selected = "selected"
-                // }
+                // console.log(this.props.selectedSubscription, subscription)
                 return <option key={index} value={subscription.id}>{subscription.name}</option>
             })
             }
@@ -41,7 +38,6 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
       subscriptions: state.subscriptions.subscriptions,
       selectedSubscription: state.subscriptions.selectedSubscription

@@ -1,26 +1,21 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Redirect} from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { selectService } from '../actions/subscriptions';
 
 class Networking extends React.Component {
     
 
-    // componentDidMount() {
-        
-    // }
-
-    // onSubmit(e) {
-       
-    // }
+    componentDidMount() {
+        const service = this.props.match.params.services;
+        this.props.selectService(service);
+    }
 
     render() {
-        if (!this.props.selectedDir) {
-            return <Redirect to='/' />
-        }
         
         return (
             <div>
-                <p>The current directory is {this.props.selectedDir}</p>
+                <p>The current directory is {this.props.selectedSubscription}</p>
             </div>
         );
     }
@@ -29,9 +24,13 @@ class Networking extends React.Component {
 const mapStateToProps = state => {
     
     return {
-        subscriptions: state.subscriptions.subscriptions,
-        selectedSubscription: state.subscriptions.selectedSubscription
+      data: state.subscriptions.selectedServiceData,
+      subscriptions: state.subscriptions.subscriptions,
+      selectedSubscription: state.subscriptions.selectedSubscription
     };
 };
 
-export default connect(mapStateToProps)(Networking);
+export default connect(
+    mapStateToProps,
+    dispatch => bindActionCreators({ selectService }, dispatch),
+    )(Networking);

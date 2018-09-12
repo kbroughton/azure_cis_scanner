@@ -35,6 +35,23 @@ export const selectSubscriptionError = error => ({
     error
 });
 
+export const SELECT_SERVICE_REQUEST = 'SELECT_SERVICE_REQUEST';
+export const selectServiceRequest = error => ({
+    type: SELECT_SERVICE_REQUEST,
+    error
+});
+export const SELECT_SERVICE_SUCCESS = 'SELECT_SERVICE_SUCCESS';
+export const selectServiceSuccess = data => ({
+    type: SELECT_SERVICE_SUCCESS,
+    data
+});
+
+export const SELECT_SERVICE_ERROR = 'SELECT_SERVICE_ERROR';
+export const selectServiceError = error => ({
+    type: SELECT_SERVICE_ERROR,
+    error
+});
+
 export const SET_SELECTED_SUBSCRIPTION = 'SET_SELECTED_SUBSCRIPTION';
 export const setSelectedSubscription = dir => ({
     type: SET_SELECTED_SUBSCRIPTION,
@@ -48,7 +65,6 @@ export const getSubscriptions = () => (dispatch) => {
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
         .then(data =>  {
-            console.log(data);
             dispatch(getSubscriptionsSuccess(data))
         })
         .catch(err => dispatch(getSubscriptionsError(err)));
@@ -62,4 +78,15 @@ export const selectSubscription = (subscription) => (dispatch) => {
         .then(res => res.json())
         .then(data => dispatch(selectSubscriptionSuccess(data)))
         .catch(err => dispatch(selectSubscriptionError(err)));
+}
+
+export const selectService = (service) => (dispatch) => {
+    console.log(service)
+    return fetch(`http://localhost:5000/services/${service}`)
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            dispatch(selectServiceSuccess(data))})
+        .catch(err => dispatch(selectServiceError(err)));
 }

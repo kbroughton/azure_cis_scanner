@@ -22,14 +22,13 @@ class App extends Component {
         <Nav />
         <Header />
         <Route exact path='/' component={Dashboard} />
-        <Route exact path='/:subscriptionId/security-center' component={SecurityCenter} />
-        <Route exact path='/:subscriptionId/sql-servers' component={SQLServers} />
-        <Route exact path='/:subscriptionId/logging-and-monitoring' component={LoggingAndMonitoring} />
-        <Route exact path='/:subscriptionId/networking' component={Networking} />
-        <Route exact path='/:subscriptionId/other-security-considerations' component={OtherSecurityConsiderations} />
-        <Route exact path='/:subscriptionId/storage-accounts' component={StorageAccounts} />
-        <Route exact path='/:subscriptionId/virtual-machines' component={VirtualMachines} />
-        <Route exact path='/:subscriptionId/change-directory' component={Dashboard} />
+        <Route exact path='/:subscriptionId/security-center/:services' component={SecurityCenter} />
+        <Route exact path='/:subscriptionId/sql-servers/:services' component={SQLServers} />
+        <Route exact path='/:subscriptionId/logging-and-monitoring/:services' component={LoggingAndMonitoring} />
+        <Route exact path='/:subscriptionId/networking/:services' component={Networking} />
+        <Route exact path='/:subscriptionId/other-security-considerations/:services' component={OtherSecurityConsiderations} />
+        <Route exact path='/:subscriptionId/storage-accounts/:services' component={StorageAccounts} />
+        <Route exact path='/:subscriptionId/virtual-machines/:services' component={VirtualMachines} />
 
 
       </div>  
