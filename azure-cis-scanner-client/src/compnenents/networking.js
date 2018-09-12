@@ -29,8 +29,8 @@ class Networking extends React.Component {
 const mapStateToProps = state => {
     
     return {
-      dirs: state.dirs.dirs,
-      selectedDir: state.dirs.selectedDir
+        subscriptions: state.subscriptions.subscriptions,
+        selectedSubscription: state.subscriptions.selectedSubscription
     };
 };
 
