@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {getSubscriptions, selectSubscription} from '../actions/dashboard';
+import {getSubscriptions, selectSubscription} from '../actions/subscriptions';
 
 class Dashboard extends React.Component {
     componentDidMount() {

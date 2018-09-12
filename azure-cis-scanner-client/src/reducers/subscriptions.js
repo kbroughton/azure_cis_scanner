@@ -6,7 +6,7 @@ import {
     SELECT_SUBSCRIPTION_SUCCESS,
     SELECT_SUBSCRIPTION_ERROR,
     SET_SELECTED_SUBSCRIPTION
-} from '../actions/dashboard';
+} from '../actions/subscriptions';
 
 const initialState = {
     subscriptions: null,
