@@ -41,10 +41,15 @@ app.secret_key = os.urandom(16)
 app.config['SESSION_TYPE'] = 'filesystem'
 
 # this route should return the list of directories available to user 
+
 @app.route('/')
-def index_base(methods=['GET']):
-    subscriptions = utils.get_accounts()
-    return jsonify({"subscriptions": subscriptions})
+def index_base():
+    return redirect("/{}".format(app.config['ACTIVE_SUBSCRIPTION_DIR']), code=302)
+
+# @app.route('/')
+# def index_base(methods=['GET']):
+#     subscriptions = utils.get_accounts()
+#     return jsonify({"subscriptions": subscriptions})
 
 @app.route('/_subscription_dir')
 def _subscription_dir():
@@ -61,17 +66,16 @@ def _subscription_dir():
 def index(active_subscription_dir, methods=['POST','GET']):
     selected_active_subscription_dir = request.args.get('selected', session.get('ACTIVE_SUBSCRIPTION_DIR', active_subscription_dir))
     session['active_subscription_dir'] = selected_active_subscription_dir
-    state = {'selected', selected_active_subscription_dir}
     print('selected_active_subscription_dir', selected_active_subscription_dir)
     if selected_active_subscription_dir != active_subscription_dir:
         print('redirecting', selected_active_subscription_dir)
         return redirect('/'+selected_active_subscription_dir)
     else:
         accounts = utils.get_accounts()
-        subscription_dirs = [(subscription_dir_from_account(account), subscription_dir_from_account(account)) for account in accounts]
+        subscription_dirs = [subscription_dir_from_account(account) for account in accounts]
         print('subscription_dirs', subscription_dirs)
 
-        return jsonify({"active_subscription_dir": "{}".format(active_subscription_dir), "state": "{}".format(state), "subscription_dirs": "{}".format(subscription_dirs)})
+        return jsonify({"active_subscription_dir": "{}".format(active_subscription_dir), "subscription_dirs": "{}".format(subscription_dirs)})
 
 @app.route('/services/<service>')
 def service(service, methods=['GET']):
