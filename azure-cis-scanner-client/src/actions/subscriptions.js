@@ -52,11 +52,6 @@ export const selectServiceError = error => ({
     error
 });
 
-export const SET_SELECTED_SUBSCRIPTION = 'SET_SELECTED_SUBSCRIPTION';
-export const setSelectedSubscription = dir => ({
-    type: SET_SELECTED_SUBSCRIPTION,
-    dir
-})
 
 export const getSubscriptions = () => (dispatch) => {
     return fetch(`http://localhost:5000/`, {
@@ -64,19 +59,16 @@ export const getSubscriptions = () => (dispatch) => {
     })
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
-        .then(data =>  {
-            dispatch(getSubscriptionsSuccess(data))
-        })
+        .then(data => dispatch(getSubscriptionsSuccess(data)))
         .catch(err => dispatch(getSubscriptionsError(err)));
 };
 
 export const selectSubscription = (subscription) => (dispatch) => {
     console.log(subscription)
-    dispatch(setSelectedSubscription(subscription));
-    return fetch(`http://localhost:5000/${subscription}`)
+    return fetch(`http://localhost:5000/subscription_dir/${subscription}`)
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
-        .then(data => dispatch(selectSubscriptionSuccess(data)))
+        .then(data =>  dispatch(selectSubscriptionSuccess(data)))
         .catch(err => dispatch(selectSubscriptionError(err)));
 }
 

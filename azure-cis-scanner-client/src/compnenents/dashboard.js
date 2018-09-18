@@ -12,15 +12,16 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        const {subscriptions} = this.props;
+        
         let options;
-       
         if (this.props.subscriptions) {
+            let {subscriptions} = this.props;
+            subscriptions = subscriptions.replace(/'/g, '"');
+            subscriptions = JSON.parse(subscriptions)
             options = subscriptions.map((subscription, index) => {
-                // console.log(this.props.selectedSubscription, subscription)
-                return <option key={index} value={subscription.id}>{subscription.name}</option>
+                return <option key={index} value={subscription}>{subscription}</option>
             })
-            }
+        }
         
         return (
             <form>
@@ -29,7 +30,6 @@ class Dashboard extends React.Component {
                     name='selected-sub-directory' value={this.props.selectedSubscription}
                     onChange={e => this.props.selectSubscription(e.target.value)}
                     >
-                      <option value="">Please select an option</option>
                       {options}
                 </select> 
             </form>
