@@ -4,26 +4,90 @@ body {
   font-family: sans-serif;
 }
 
+nav {
+  font-size: 18px;
+  background-color: rgba(126, 124, 124, 0.815);
+  color: rgb(245, 230, 230);
+  padding: 10px;
+  border-bottom: 1px black solid;
+}
+
+
 nav li{
   display: inline-block;
   padding: 10px;
 }
 
 li {
+  text-decoration: none;
   list-style: none
 }
 
+a:visited {
+  color: rgb(224, 216, 216);
+}
+
+a:hover {
+  color: rgb(165, 56, 56)
+}
+
+a {
+  text-decoration: none;
+}
+
 h1 {
- width: 600px;
- margin: 0 auto;
+ width: 530px;
 }
 
 h2 {
-  width: 400px;
-  margin: 0 auto; 
+  width: 320px;
 }
 
 h3 {
-  width: 300px;
+  width: 200px;
+}
+
+header {
+  padding: 20px;
+  margin-bottom: 50px;
+}
+
+h1, h2, h3 {
+  padding: 5px;
   margin: 0 auto;
+}
+
+label {
+  font-size: 20px;
+  padding-bottom: 10px;
+  width: 165px;
+  display: block;
+  margin: 0 auto;
+}
+
+select {
+  font-size: 15px;
+  padding: 10px;
+  width: 210px;
+  margin: 0 auto;
+}
+
+form {
+  width: 210px;
+  margin: 0 auto;
+  padding: 50px 35px;;
+  border: 1px solid black;
+  background-color: rgba(126, 124, 124, 0.815);
+  color: rgb(245, 230, 230);  
+}
+
+.data span {
+  color: rgb(165, 56, 56);
+  margin-right: 15px;
+  margin-left: 100px;
+}
+
+.data {
+  font-size: 18px;
+  padding: 10px;
 }

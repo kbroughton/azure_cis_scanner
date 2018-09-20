@@ -16,7 +16,7 @@ class LoggingAndMonitoring extends React.Component {
         if (this.props.data) {
             const {data} = this.props;
              dataList = data.map((data, index) => {
-                return <li key={index.toString()}>{data[0]}: {data[1]}</li>
+                return <li className='data' key={index.toString()}><span className='standard'>{data[0]}: </span>{data[1]}</li>
             })
         }
         return (

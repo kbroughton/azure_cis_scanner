@@ -25,7 +25,7 @@ class Dashboard extends React.Component {
         
         return (
             <form>
-                <label htmlFor='selected-sub-directory'>Select a Directory</label>
+                <label htmlFor='selected-sub-directory'>Select a Directory:</label>
                 <select className='selected-sub-directory' 
                     name='selected-sub-directory' value={this.props.selectedSubscription}
                     onChange={e => this.props.selectSubscription(e.target.value)}
