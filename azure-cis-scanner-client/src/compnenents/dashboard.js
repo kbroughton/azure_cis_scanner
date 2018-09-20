@@ -6,7 +6,7 @@ import {getSubscriptions, selectSubscription} from '../actions/subscriptions';
 class Dashboard extends React.Component {
 
     componentDidMount() {
-        if (this.props.selectedSubscription.length === 0) {
+        if (!this.props.selectedSubscription || this.props.selectedSubscription.length === 0) {
             this.props.getSubscriptions();
         }
     }

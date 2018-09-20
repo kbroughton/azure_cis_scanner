@@ -12,11 +12,17 @@ class StorageAccounts extends React.Component {
     }
 
     render() {
-        
+        let dataList;
+        if (this.props.data) {
+            const {data} = this.props;
+             dataList = data.map((data, index) => {
+                return <li key={index.toString()}>{data[0]}: {data[1]}</li>
+            })
+        }
         return (
-            <div>
-                <p>The current directory is {this.props.selectedSubscription}</p>
-            </div>
+            <ul>
+                {dataList}
+            </ul>
         );
     }
 }
