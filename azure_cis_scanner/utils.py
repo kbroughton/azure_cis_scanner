@@ -108,10 +108,11 @@ def get_credentials_from_cli(tenant_id=None, subscription_id=None):
             raise("Likely a special character added to file by az cli.  Try pip install pyyaml==4.2b4")
 
     results = []
+    print("azure_profiles", azure_profiles)
     for profile in azure_profiles:
         if tenant_id and not (tenant_id == profile['tenantId']):
             continue
-        tenant_id = profile['tenantId']
+        tenantId = profile['tenantId']
         if subscription_id and (subscription_id != profile['id']):
             continue
         subscription_id = profile['id']
@@ -121,8 +122,8 @@ def get_credentials_from_cli(tenant_id=None, subscription_id=None):
         # this is a modification of https://github.com/Azure/azure-sdk-for-python/blob/master/azure-common/azure/common/credentials.py
         # until https://github.com/Azure/azure-sdk-for-python/issues/2898 gets fixed
         credentials = get_azure_cli_credentials(resource=None, with_tenant=False, subscription_id=subscription_id)[0]
-        
-        results.append((tenant_id, subscription_id, subscription_name, credentials))
+        results.append((tenantId, subscription_id, subscription_name, credentials))
+    print("get_credentials_from_cli results", results)
     return results
 
 def get_clients_from_cli(subscription_id):
@@ -390,6 +391,7 @@ def set_credentials_tuples(parser):
                             raise(ValueError("subscription {} does not belong to tenant {}".format(subscription_id, parser.tenant_id))) 
                     subscription_id = account['id']
                     credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
+                    print("credentials_tuples", credentials_tuples)
             except Exception as e:
                 print(e)
                 print(traceback.format_exc())
@@ -409,7 +411,8 @@ def set_credentials_tuples(parser):
                 account = get_active_account()
                 print('account', account)
                 subscription_id = account['id']
-                credentials_tuples = get_credentials_from_cli(subscription_id=subscription_id)
+                print("active subscription_id", subscription_id)
+                credentials_tuples = get_credentials_from_cli(tenant_id=None, subscription_id=subscription_id)
 
         except Exception as e:
             print(e)

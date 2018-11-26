@@ -138,11 +138,15 @@ def main():
         if parser.example_scan:
             stages = ['report']
         else:
-            sp_credentials = utils.get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=parser.refresh_sp_credentials)
-            print("sp_credentials", sp_credentials, type(sp_credentials))
-            logger.debug("DEBUGGER WORKS! running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
-            print("running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
-            
+            try:
+                sp_credentials = utils.get_service_principal_credentials(subscription_id, auth_type='sdk', refresh_sp_credentials=parser.refresh_sp_credentials)
+                print("sp_credentials", sp_credentials, type(sp_credentials))
+                logger.debug("DEBUGGER WORKS! running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
+                print("running stages for {} {} {}".format(tenant_id, subscription_id, subscription_name))
+            except Exception as e:
+                logger.warning("Cannot get service principal credentials.  Python SDK auth will not be available")
+                logger.warning(traceback.format_exc())
+
             access_token, token_expiry = utils.get_access_token()
             # create a part-friendly/part-uniquie-id name
         subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
