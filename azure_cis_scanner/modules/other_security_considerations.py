@@ -42,6 +42,12 @@ def get_keyvaults(keyvaults_path):
         json.dump(keyvaults, f, indent=4, sort_keys=True)
     return keyvaults
 
+def get_sql_servers(sql_servers_path) :
+    sql_servers = json.loads(utils.call("az sql server list"))
+    with open(sql_servers_path, 'w') as f:
+        json.dump(sql_servers, f, indent=4, sort_keys=True)
+    return sql_servers
+
 def load_keyvaults(keyvaults_path):
     with open(keyvaults_path, 'r') as f:
         keyvaults = yaml.load(f)
@@ -62,7 +68,7 @@ def load_locked_resources(locked_resources_path):
 def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_path, keyvaults):
     metadata = {}
     kvm_client = KeyVaultManagementClient(credentials, subscription_id)
-    kv_client = get_keyvault_client()
+    #kv_client = get_keyvault_client()
     for keyvault in keyvaults:        
         subsciption_id, resource_group, vault_name = parse_vault_id(keyvault['id'])
         vault_url = 'https://{vault_name}.vault.azure.net'.format(vault_name=vault_name)
