@@ -195,6 +195,9 @@ def activity_log_retention_is_set_365_days_or_greater_5_2(monitor_log_profiles):
     if monitor_log_profiles:
         for monitor_log_profile in monitor_log_profiles:
             days = monitor_log_profile.get('retentionPolicy', {}).get('days', -1)
+            if monitor_log_profile.get('retentionPolicy') and (monitor_log_profile.get('retentionPolicy').get('days') == 0) and (monitor_log_profile.get('retentionPolicy').get('enabled') == False):
+                # retention is forever
+                continue
             if monitor_log_profile.get('retentionPolicy', {}).get('days') <= MIN_ACTIVITY_LOG_RETENDION_DAYS:
                 items_flagged_list.append((monitor_log_profile['id'], monitor_log_profile['storageAccountId'], days))
     
@@ -304,4 +307,3 @@ def logging_for_azure_keyvault_is_enabled_5_13(resource_diagnostic_settings):
                 "columns": ["Keyvault", "Enabled", "Retention Enabled", "Retention Days"]}            
     return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
               
-    
