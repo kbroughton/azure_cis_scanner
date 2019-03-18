@@ -50,7 +50,7 @@ def get_sql_servers(sql_servers_path) :
 
 def load_keyvaults(keyvaults_path):
     with open(keyvaults_path, 'r') as f:
-        keyvaults = yaml.load(f)
+        keyvaults = yaml.load(f, Loader=yaml.Loader)
     return keyvaults
 
 def get_locked_resources():
@@ -62,7 +62,7 @@ def get_locked_resources():
 
 def load_locked_resources(locked_resources_path):
     with open(locked_resources_path, 'r') as f:
-        locked_list = yaml.load(f)
+        locked_list = yaml.load(f, Loader=yaml.Loader)
     return locked_list
 
 def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_path, keyvaults):
@@ -110,7 +110,7 @@ def get_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_pa
 
 def load_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_path):
     with open(keyvault_keys_and_secrets_metadata_path, 'r') as f:
-        metadata = yaml.load(f)
+        metadata = yaml.load(f, Loader=yaml.Loader)
     return metadata
 
 def get_data():

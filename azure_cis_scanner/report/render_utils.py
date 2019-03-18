@@ -46,7 +46,7 @@ def get_filtered_data(scans_data_dir, date=None):
     for item in cis_structure['section_ordering']:
         item = '_'.join(map(str.lower, item.split(' '))) + '_filtered.json'
         with open(item, 'r') as f:
-            data = yaml.load(f)
+            data = yaml.load(f, Loader=yaml.Loader)
             data['date'] = date
         filtered_data[item] = data
     return filtered_data
@@ -70,7 +70,7 @@ def get_filtered_data_by_name(scans_data_dir, section_name, date=None):
         if os.path.exists(filtered_data_path):
             print('get_filtered_data_by_name:filtered_data_path', filtered_data_path)
             with open(filtered_data_path, 'r') as f:
-                data = yaml.load(f)
+                data = yaml.load(f, Loader=yaml.Loader)
                 # We might have, for example, deleted all the databases.  Keep going till we find data.
                 if data:
                     for key,val in data.items():
@@ -110,7 +110,7 @@ def get_stats(scans_data_dir):
             filtered_data_path = os.path.join(scans_data_dir, dir_date, 'filtered', section_name_file)
             if os.path.exists(filtered_data_path):
                 with open(filtered_data_path, 'r') as f:
-                    data = yaml.load(f)
+                    data = yaml.load(f, Loader=yaml.Loader)
                 for finding_name, finding_data in data.items():
                     if not finding_name in stats[section_name]:
                         stats[section_name][finding_name] = {}
@@ -157,6 +157,27 @@ def get_finding_index(findings_list, finding):
             return finding_entry
     raise ValueError("finding {} not found in {}".format(finding, findings_list))
 
+def yml_tuple_constructor(loader, node): 
+    # specific to the types of typles we encounter                                                                                            
+    def parse_tup_el(el):
+        r_list = []
+        for item in el.lstrip('[').rstrip(']').split(', '):
+            r_list.append(item)
+        return r_list                                                                                                               
+
+    value = loader.construct_scalar(node)                                                                                            
+    # remove the ( ) from the string                                                                                                 
+    tup_elements = value[1:-1].split(',')                                                                                            
+    # remove the last element if the tuple was written as (x,b,)                                                                     
+    if tup_elements[-1] == '':                                                                                                       
+        tup_elements.pop(-1)                                                                                                         
+    tup = tuple(map(parse_tup_el, tup_elements))                                                                                     
+    return tup                                                                                                                       
+
+# !tuple is my own tag name, I think you could choose anything you want                                                                                                                                   
+yaml.add_constructor(u'!!python/tuple', yml_tuple_constructor)
+# this is to spot the strings written as tuple in the yaml                                                                               
+#yaml.add_implicit_resolver(u'!tuple', re.compile(r"\(([^,\W]{,},){,}[^,\W]*\)")) 
 
 # def get_summary_stats(section=None):
 # 	"""

@@ -47,11 +47,12 @@ RUN conda install --quiet --yes \
     conda remove --quiet --yes --force qt pyqt && \
     conda clean -tipsy && \
     # Activate ipywidgets extension in the environment that runs the notebook server
-    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+    jupyter nbextension enable --py widgetsnbextension --sys-prefix
+
     # Also activate ipywidgets extension for JupyterLab
     # Check this URL for most recent compatibilities
     # https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38 && \
     jupyter labextension install jupyterlab_bokeh@0.6.3 && \
     npm cache clean --force && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
@@ -82,17 +83,20 @@ USER root
 
 RUN apt-get update && \
     apt-get install -y gnupg && \
-    apt-get install -y curl && \
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ bionic main" | \
+    apt-get install -y curl
+
+RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ bionic main" | \
      tee /etc/apt/sources.list.d/azure-cli.list && \
-    curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    apt-get install apt-transport-https && \
-    apt-get update && apt-get install azure-cli jq && \
+    curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - 
+
+RUN apt-get install apt-transport-https && \
+    apt-get update && apt-get install -y azure-cli 
+RUN apt-get install -y jq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY frozenrequirements.txt .
-RUN pip install -r frozenrequirements.txt
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 RUN pip install azure_cis_scanner
 
 #USER $NB_UID

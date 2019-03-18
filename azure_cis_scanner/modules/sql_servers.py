@@ -55,12 +55,12 @@ def get_sql_server_policies(sql_server_policies_path, sql_servers):
 
 def load_sql_servers(sql_servers_path):
     with open(sql_servers_path, 'r') as f:
-        sql_servers = yaml.load(f)
+        sql_servers = yaml.load(f, Loader=yaml.Loader)
     return sql_servers
 
 def load_sql_server_policies(sql_server_policies_path):
     with open(sql_server_policies_path, 'r') as f:
-        sql_server_policies = yaml.load(f)
+        sql_server_policies = yaml.load(f, Loader=yaml.Loader)
     return sql_server_policies
     
 # This function will be recentered around Azure Command Line, after such an option becomes available.

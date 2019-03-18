@@ -24,7 +24,7 @@ def get_storage_accounts(storage_accounts_path):
 
 def load_storage_accounts(storage_accounts_path):
     with open(storage_accounts_path, 'r') as f:
-        storage_accounts = yaml.safe_load(f)
+        storage_accounts = yaml.load(f, Loader=yaml.Loader)
     return storage_accounts
 
 # timedelta=90 days can cause BadRequest error depending on timezone
@@ -55,7 +55,7 @@ def get_activity_logs(activity_logs_path, resource_groups):
 
 def load_activity_logs(activity_logs_path):
     with open(activity_logs_path, 'r') as f:
-        activity_logs = yaml.safe_load(f)
+        activity_logs = yaml.load(f, Loader=yaml.Loader)
     return activity_logs
 
 
@@ -199,7 +199,7 @@ def storage_network_default_access_rule_set_to_deny_3_7(storage_accounts):
     for account in storage_accounts:
         account_name = account["name"]
         default_action = account["networkRuleSet"]["defaultAction"]
-        if default_action == "Allow"
+        if default_action == "Allow":
             items_flagged_list.append((account_name, default_action))
     stats = {'items_flagged': len(items_flagged_list), "items_checked": items_checked}
     metadata = {"finding_name": "storage_default_network_access_rule_set_to_deny",
@@ -227,8 +227,8 @@ def test_controls():
     
     storage_results = {}
     storage_results['secure_transfer_required_is_set_to_enabled'] = secure_transfer_required_is_set_to_enabled_3_1(storage_accounts)
-    storage_results['storage_service_encryption_is_set_to_enabled_for_blob_service'] = storage_service_encryption_is_set_to_enabled_for_blob_service_3_2(storage_accounts)
-    storage_results['storage_account_access_keys_are_periodically_regenerated'] = storage_account_access_keys_are_periodically_regenerated_3_3(activity_logs, storage_accounts, resource_groups)
+    #storage_results['storage_service_encryption_is_set_to_enabled_for_blob_service'] = storage_service_encryption_is_set_to_enabled_for_blob_service_3_2(storage_accounts)
+    storage_results['storage_account_access_keys_are_periodically_regenerated'] = storage_account_access_keys_are_periodically_regenerated_3_2(activity_logs, storage_accounts, resource_groups)
     storage_results['public_access_level_is_set_to_private_for_blob_containers'] = public_access_level_is_set_to_private_for_blob_containers_3_6(storage_accounts)
     storage_results['storage_network_default_access_rule_set_to_deny'] = storage_network_default_access_rule_set_to_deny_3_7(storage_accounts)
     #storage_results['public_access_level_is_set_to_private_for_blob_containers'] = public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accounts)

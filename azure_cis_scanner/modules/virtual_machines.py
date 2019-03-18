@@ -9,7 +9,6 @@ from msrestazure.azure_active_directory import MSIAuthentication
 
 from azure_cis_scanner import utils
 
-print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 filtered_virtual_machines_path = os.path.join(config['filtered_data_dir'], 'virtual_machines_filtered.json')
 virtual_machines_path = os.path.join(config['raw_data_dir'], 'virtual_machines.json')
 disks_path = os.path.join(config['raw_data_dir'], 'disks.json')
@@ -88,17 +87,17 @@ def get_virtual_machines(virtual_machines_path):
 
 def load_virtual_machines(virtual_machines_path):
     with open(virtual_machines_path, 'r') as f:
-        virtual_machines = yaml.load(f)
+        virtual_machines = yaml.load(f, Loader=yaml.Loader)
     return virtual_machines
 
 def load_disks(disks_path):
     with open(disks_path, 'r') as f:
-        disks = yaml.load(f)
+        disks = yaml.load(f, Loader=yaml.Loader)
     return disks
 
 def load_snapshots(snapshots_path):
     with open(snapshots_path, 'r') as f:
-        snaps = yaml.load(f)
+        snaps = yaml.load(f, Loader=yaml.Loader)
     return snaps
 
 def get_data():
