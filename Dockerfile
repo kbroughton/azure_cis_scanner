@@ -60,6 +60,7 @@ RUN conda install --quiet --yes \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
+
 # Install facets which does not have a pip or conda package at the moment
 RUN cd /tmp && \
     git clone https://github.com/PAIR-code/facets.git && \
@@ -73,7 +74,7 @@ RUN cd /tmp && \
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
-    fix-permissions /home/$NB_USER
+fix-permissions /home/$NB_USER
 
 LABEL scanner_maintainer="Praetorian <it@praetorian.com>"
 
