@@ -2,6 +2,8 @@ import datetime
 import os
 import yaml
 import json
+import traceback
+
 
 from azure_cis_scanner import utils
 from azure_cis_scanner.utils import load_resource_groups
@@ -176,15 +178,19 @@ def public_access_level_is_set_to_private_for_blob_containers_3_6(storage_accoun
             account_name=account_name, resource_group=resource_group)
         keys = json.loads(utils.call(keys_cmd))
         account_key = keys[0]['value']
-        container_list_cmd = "az storage container list --account-name {account_name} --account-key {account_key}".format(
-            account_name=account_name, account_key=account_key)
-        container_list = json.loads(utils.call(container_list_cmd))
-        for container in container_list:
-            print(container)
-            items_checked += 1
-            public_access = container["properties"]["publicAccess"]
-            if public_access == True:
-                items_flagged_list.append((account_name, container))
+        try:
+            container_list_cmd = "az storage container list --account-name {account_name} --account-key {account_key}".format(
+                account_name=account_name, account_key=account_key)
+            container_list = json.loads(utils.call(container_list_cmd))
+            for container in container_list:
+                print(container)
+                items_checked += 1
+                public_access = container["properties"]["publicAccess"]
+                if public_access == True:
+                    items_flagged_list.append((account_name, container))
+        except Exception as e:
+            print("ERROR: insufficient permissions to list containers")
+            logger.warning(traceback.format_exc())
     stats = {'items_flagged': len(items_flagged_list), "items_checked": items_checked}
     metadata = {"finding_name": "public_access_level_is_set_to_private_for_blob_containers",
                 "negative_name": "public_access_level_not_private_for_blob_containers",

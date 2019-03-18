@@ -33,4 +33,4 @@ PYPI_VERSION=$(grep "__version__ =" setup.py | cut -d ' ' -f3)
 GIT_COMMIT_SHORT=$(git rev-parse --short HEAD)
 DOCKER_TAG=${PYPI_VERSION}-${GIT_COMMIT_SHORT}
 AZURE_CIS_SCANNER_IMAGE=kbroughton/azure-cis-scanner-scipy
-docker build -t ${AZURE_CIS_SCANNER_IMAGE}:{DOCKER_TAG} .
+docker build -t ${AZURE_CIS_SCANNER_IMAGE}:${DOCKER_TAG} .
