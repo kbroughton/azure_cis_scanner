@@ -184,14 +184,14 @@ def threat_detection_types_is_set_to_all_4_1_3(sql_server_threat_detection_polic
 
 @wrap(trace_in, trace_out)
 def send_alerts_to_is_set_4_1_4(sql_server_threat_detection_policies, resource_group=None, server_name=None):
-    if sql_server_threat_detection_policies["properties"]["state"] == "Disabled" or sql_server_threat_detection_policies["properties"]["emailAddresses"] != "":
+    if sql_server_threat_detection_policies["properties"]["state"] == "Disabled" or sql_server_threat_detection_policies["properties"]["emailAddresses"] == "":
         return False
     else:
         return True
 
 @wrap(trace_in, trace_out)
 def email_service_and_co_administrators_is_enabled_4_1_5(sql_server_threat_detection_policies, resource_group=None, server_name=None):
-    if sql_server_threat_detection_policies["properties"]["state"] == "Disabled" or sql_server_threat_detection_policies["properties"]["emailAccountAdmins"] != "":
+    if sql_server_threat_detection_policies["properties"]["emailAccountAdmins"] == "Disabled":
         return False
     else:
         return True
@@ -201,7 +201,7 @@ def auditing_retention_is_greater_than_90_days_4_1_6(sql_server_audit_policies, 
     if (sql_server_audit_policies["properties"]["state"] == "Disabled"):
         return False
     retention_days = int(sql_server_audit_policies["properties"]["retentionDays"])
-    if (retention_days) ==0 or (retention_days > 90):
+    if (retention_days == 0 ) or (retention_days > 90):
         return True
     else:    
         return False

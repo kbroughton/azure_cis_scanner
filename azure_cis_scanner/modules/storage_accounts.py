@@ -80,24 +80,23 @@ def secure_transfer_required_is_set_to_enabled_3_1(storage_accounts):
             "stats": stats, 
             "metadata": metadata }
             
+# default behavior now
+# def storage_service_encryption_is_set_to_enabled_for_blob_service_3_2(storage_accounts):
+#     items_flagged_list = []
+#     for account in storage_accounts:
+#         if account['encryption']['services']['blob'] and (account['encryption']['services']['blob']['enabled'] != True):
+#             items_flagged_list.append((account['resourceGroup'], account['name']))
 
-def storage_service_encryption_is_set_to_enabled_for_blob_service_3_2(storage_accounts):
-    items_flagged_list = []
-    for account in storage_accounts:
-        if account['encryption']['services']['blob'] and (account['encryption']['services']['blob']['enabled'] != True):
-            items_flagged_list.append((account['resourceGroup'], account['name']))
-
-    stats = {'items_flagged': len(items_flagged_list),
-             'items_checked': len(storage_accounts)}
-    metadata = {"finding_name": "storage_service_encryption_is_set_to_enabled_for_blob_service",
-                "negative_name": "storage_service_encryption_not_enabled_for_blob_service",
-                "columns": ["Resource Group","Storage Account Name"]}
+#     stats = {'items_flagged': len(items_flagged_list),
+#              'items_checked': len(storage_accounts)}
+#     metadata = {"finding_name": "storage_service_encryption_is_set_to_enabled_for_blob_service",
+#                 "negative_name": "storage_service_encryption_not_enabled_for_blob_service",
+#                 "columns": ["Resource Group","Storage Account Name"]}
     
-    return {"items": items_flagged_list, "stats": stats, "metadata": metadata }
-           
+#     return {"items": items_flagged_list, "stats": stats, "metadata": metadata }
 
 # may need to run section 6 Networking first to get activity_log
-def storage_account_access_keys_are_periodically_regenerated_3_3(activity_logs, storage_accounts, resource_groups):
+def storage_account_access_keys_are_periodically_regenerated_3_2(activity_logs, storage_accounts, resource_groups):
     items_flagged_list = []
     
     max_rotation_days = 90
@@ -130,6 +129,11 @@ def storage_account_access_keys_are_periodically_regenerated_3_3(activity_logs, 
     
     return {"items": items_flagged_list, "stats": stats, "metadata": metadata}
 
+           
+def storage_account_queues_log_crud_operations_3_3(storage_accoutns):
+    #az storage logging show --services q --account-name <storageAccountName>az storage logging show --services q --account-name <storageAccountName>
+    pass
+
 def shared_access_signature_tokens_expire_within_an_hour_3_4(storage_accounts):
     """
     There is no automation possible for this currently
@@ -143,23 +147,25 @@ def shared_access_signature_tokens_are_allowed_only_over_https_3_5(storage_accou
     Manual
     """
     pass
-                                      
-def storage_service_encryption_is_set_to_enabled_for_file_service_3_6(storage_accounts):
-    items_flagged_list = []
-    stats = {}
-    for account in storage_accounts:
-        if account['encryption']['services']['file'] and (account['encryption']['services']['file']['enabled'] != True):
-            items_flagged_list.append((account['name']))
+   
+# Deprecated - default behavior                                   
+# def storage_service_encryption_is_set_to_enabled_for_file_service_3_6(storage_accounts):
+#     items_flagged_list = []
+#     stats = {}
+#     for account in storage_accounts:
+#         if account['encryption']['services']['file'] and (account['encryption']['services']['file']['enabled'] != True):
+#             items_flagged_list.append((account['name']))
 
-    stats = {'items_flagged': len(items_flagged_list),
-             'items_checked': len(storage_accounts)}
-    metadata = {"finding_name": "storage_service_encryption_is_set_to_enabled_for_file_service",
-                "negative_name": "storage_service_encryption_not_enabled_for_file_service",
-                "columns": ["Storage Account Name"]}
+#     stats = {'items_flagged': len(items_flagged_list),
+#              'items_checked': len(storage_accounts)}
+#     metadata = {"finding_name": "storage_service_encryption_is_set_to_enabled_for_file_service",
+#                 "negative_name": "storage_service_encryption_not_enabled_for_file_service",
+#                 "columns": ["Storage Account Name"]}
 
-    return {"items": items_flagged_list, "stats": stats, "metadata": metadata}
+#     return {"items": items_flagged_list, "stats": stats, "metadata": metadata}
 
-def public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accounts):
+
+def public_access_level_is_set_to_private_for_blob_containers_3_6(storage_accounts):
     items_flagged_list = []
     items_checked = 0
     for account in storage_accounts:
@@ -186,7 +192,22 @@ def public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accoun
     
     return {"items": items_flagged_list, "stats": stats, "metadata": metadata }
 
+def storage_network_default_access_rule_set_to_deny_3_7(storage_accounts):
+    #az storage account list --query '[*].networkRuleSet'
+    items_flagged_list = []
+    items_checked = 0
+    for account in storage_accounts:
+        account_name = account["name"]
+        default_action = account["networkRuleSet"]["defaultAction"]
+        if default_action == "Allow"
+            items_flagged_list.append((account_name, default_action))
+    stats = {'items_flagged': len(items_flagged_list), "items_checked": items_checked}
+    metadata = {"finding_name": "storage_default_network_access_rule_set_to_deny",
+                "negative_name": "storage_default_network_access_rule_not_set_to_deny",
+                "columns": ["Storage Account Name", "Default Action"]}
     
+    return {"items": items_flagged_list, "stats": stats, "metadata": metadata }
+
 def get_data():
     """
     Generate json for the storage_accounts findings
@@ -208,7 +229,8 @@ def test_controls():
     storage_results['secure_transfer_required_is_set_to_enabled'] = secure_transfer_required_is_set_to_enabled_3_1(storage_accounts)
     storage_results['storage_service_encryption_is_set_to_enabled_for_blob_service'] = storage_service_encryption_is_set_to_enabled_for_blob_service_3_2(storage_accounts)
     storage_results['storage_account_access_keys_are_periodically_regenerated'] = storage_account_access_keys_are_periodically_regenerated_3_3(activity_logs, storage_accounts, resource_groups)
-    storage_results['storage_service_encryption_is_set_to_enabled_for_file_service'] = storage_service_encryption_is_set_to_enabled_for_file_service_3_6(storage_accounts)
+    storage_results['public_access_level_is_set_to_private_for_blob_containers'] = public_access_level_is_set_to_private_for_blob_containers_3_6(storage_accounts)
+    storage_results['storage_network_default_access_rule_set_to_deny'] = storage_network_default_access_rule_set_to_deny_3_7(storage_accounts)
     #storage_results['public_access_level_is_set_to_private_for_blob_containers'] = public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accounts)
         
     with open(storage_accounts_filtered_path, 'w') as f:
