@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 # Package info
 NAME = 'azure_cis_scanner'
 ROOT = os.path.dirname(__file__)
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 VERSION = __version__
 
 # Requirements
