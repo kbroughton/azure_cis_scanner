@@ -227,13 +227,14 @@ def only_approved_extensions_are_installed_7_4(virtual_machines):
         resource_group = vm['resourceGroup']
         extensions = json.loads(utils.call("az vm extension list --vm-name {name} --resource-group {resource_group}".format(name=name,
             resource_group=resource_group)))
-        for resource in vm["resources"]:
-            extension_name = resource["id"].split('/')[-1]
-            extension_names = []
-            if extension_name not in approved_extensions:
-                extension_names.append(extension_name)
-            if extension_names:
-                items_flagged_list.append((resource_group, name, extension['virtualMachineExtensionType']))
+        if vm.get("resources", []):
+            for resource in vm.get("resources", []):
+                extension_name = resource["id"].split('/')[-1]
+                extension_names = []
+                if extension_name not in approved_extensions:
+                    extension_names.append(extension_name)
+                if extension_names:
+                    items_flagged_list.append((resource_group, name, extension['virtualMachineExtensionType']))
     
     stats = {'items_flagged': len(items_flagged_list),
              'items_checked': len(virtual_machines)}

@@ -175,14 +175,14 @@ def public_access_level_is_set_to_private_for_blob_containers_3_6(storage_accoun
         keys_cmd = "az storage account keys list --account-name {account_name} --resource-group {resource_group}".format(
             account_name=account_name, resource_group=resource_group)
         keys = json.loads(utils.call(keys_cmd))
-        key = keys[0]
+        account_key = keys[0]['value']
         container_list_cmd = "az storage container list --account-name {account_name} --account-key {account_key}".format(
             account_name=account_name, account_key=account_key)
         container_list = json.loads(utils.call(container_list_cmd))
         for container in container_list:
             print(container)
             items_checked += 1
-            public_access = container["properties"]["public_access"]
+            public_access = container["properties"]["publicAccess"]
             if public_access == True:
                 items_flagged_list.append((account_name, container))
     stats = {'items_flagged': len(items_flagged_list), "items_checked": items_checked}
@@ -195,13 +195,12 @@ def public_access_level_is_set_to_private_for_blob_containers_3_6(storage_accoun
 def storage_network_default_access_rule_set_to_deny_3_7(storage_accounts):
     #az storage account list --query '[*].networkRuleSet'
     items_flagged_list = []
-    items_checked = 0
     for account in storage_accounts:
         account_name = account["name"]
         default_action = account["networkRuleSet"]["defaultAction"]
         if default_action == "Allow":
             items_flagged_list.append((account_name, default_action))
-    stats = {'items_flagged': len(items_flagged_list), "items_checked": items_checked}
+    stats = {'items_flagged': len(items_flagged_list), "items_checked": len(storage_accounts)}
     metadata = {"finding_name": "storage_default_network_access_rule_set_to_deny",
                 "negative_name": "storage_default_network_access_rule_not_set_to_deny",
                 "columns": ["Storage Account Name", "Default Action"]}

@@ -77,7 +77,6 @@ def standard_pricing_tier_is_selected_2_1(security_center):
     items_flagged_list = []
     for item in security_center:
         resource_group = item['name']
-        print(item['properties']['pricingConfiguration'])
         pricing_configuration = item['properties']['pricingConfiguration']
         pricing_tier = pricing_configuration['selectedPricingTier']
         active = pricing_configuration['active']
