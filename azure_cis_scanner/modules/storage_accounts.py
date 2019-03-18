@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import yaml
 import json
@@ -7,6 +8,14 @@ import traceback
 
 from azure_cis_scanner import utils
 from azure_cis_scanner.utils import load_resource_groups
+
+
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+formatter = logging.Formatter(
+        '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 activity_logs_path = os.path.join(config['raw_data_dir'], 'activity_logs.json')
 storage_accounts_path = os.path.join(config['raw_data_dir'], 'storage_accounts.json')
@@ -132,7 +141,7 @@ def storage_account_access_keys_are_periodically_regenerated_3_2(activity_logs, 
     return {"items": items_flagged_list, "stats": stats, "metadata": metadata}
 
            
-def storage_account_queues_log_crud_operations_3_3(storage_accoutns):
+def logging_is_enabled_for_all_queue_service_requests_3_3(storage_accounts):
     #az storage logging show --services q --account-name <storageAccountName>az storage logging show --services q --account-name <storageAccountName>
     pass
 
@@ -234,6 +243,7 @@ def test_controls():
     storage_results['secure_transfer_required_is_set_to_enabled'] = secure_transfer_required_is_set_to_enabled_3_1(storage_accounts)
     #storage_results['storage_service_encryption_is_set_to_enabled_for_blob_service'] = storage_service_encryption_is_set_to_enabled_for_blob_service_3_2(storage_accounts)
     storage_results['storage_account_access_keys_are_periodically_regenerated'] = storage_account_access_keys_are_periodically_regenerated_3_2(activity_logs, storage_accounts, resource_groups)
+    #storage_results['logging_is_enabled_for_all_queue_service_requests'] = logging_is_enabled_for_all_queue_service_requests_3_3(storage_accounts)
     storage_results['public_access_level_is_set_to_private_for_blob_containers'] = public_access_level_is_set_to_private_for_blob_containers_3_6(storage_accounts)
     storage_results['storage_network_default_access_rule_set_to_deny'] = storage_network_default_access_rule_set_to_deny_3_7(storage_accounts)
     #storage_results['public_access_level_is_set_to_private_for_blob_containers'] = public_access_level_is_set_to_private_for_blob_containers_3_7(storage_accounts)
