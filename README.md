@@ -2,13 +2,15 @@
 
 [![PypI](http://img.shields.io/pypi/v/azure_cis_scanner.svg)](http://img.shields.io/pypi/v/azure_cis_scanner.svg)
 
-Security Compliance Scanning tool using CIS Azure Benchmark 1.0
+Security Compliance Scanning tool using CIS Azure Benchmark 1.2
 
-The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2018.  This repo was inspired by a similar scanner for AWS called Scout2. 
+The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2019.  This repo was inspired by a similar scanner for AWS called Scout2. CIS released version 1.1 of 
+the Azure Benchmark on Feb 6th. Version 1.2 is in draft form
+and azscan targets V 1.2.
 
 Capabilities:
 * scan multiple subscription_ids for a tenant
-* test for most of the controls in the CIS Azure Foundation Benchmark 1.0
+* test for most of the controls in the CIS Azure Foundation Benchmark 1.2
 * save raw and filtered (non-passing) data
 * render a report for viewing
 
@@ -25,7 +27,7 @@ This project is not yet production ready and should only be run from a local mac
 ![Azure Storage: Secure Transfer not Enabled](images/cis_test_secure_transfer_graph.png?raw=true "Finding Detail for `Secure Transfer not Enabled`")
 
 
-Raw data will have the format as returned by the Azure Api in json format.
+Raw data will have the format as returned by the Azure API in json format.
 Raw data will be per major CIS section in files based on the name.
 
 ```
@@ -33,7 +35,7 @@ Identity and Access Management       Logging and Monitoring
 Security Center                      Networking
 Storage                              Virtual Machines
 SQL Services                         Other Miscellaneous Items
-
+Azure Apps (WIP)
 ```
 
 Filtered data will be in files named by the finding and have the following format
@@ -63,7 +65,7 @@ Filtered data will be in files named by the finding and have the following forma
 
 If you have installed azure-cis-scanner on your native os and in a virtualenv there may be problems.
 We recommend you `pip uninstall azure-cis-scanner` on the native os if this is the case.
-If you only install natively or always in a virtualenv there should be no problem.
+If you only install natively or always in a virtualenv there should be no problem. 
 
 In a virtualenv, on first run `azscan` may take a minute to produce results.  Be patient.
 
@@ -81,11 +83,11 @@ subscriptions, pass in `azscan --subscription-id aaaaa-bbbbbb-111111-444444-xxxx
 
 ### Install from Github
 ```
-git clone https://github.com/praetorian-inc/azure_cis_scanner
+git clone https://github.com/kbroughton/azure_cis_scanner
 cd azure_cis_scanner
 virtualenv venv && source venv/bin/activate  # optional.  If your default is python2, 
                                              # virtualenv -p python3 venv
-pip3 install -r requirements.txt
+pip3 install -r frozenrequirements.txt
 nbstripout --install    # allows githooks to run, strips out ipynb output from commits
 python3 setup.py install
 azscan 
@@ -101,7 +103,12 @@ It is possible to only run certain modules and stages
 azscan --modules "security_center.py,storage_accounts.py" --stages "data,tests"
 ```
 
-### Install with Docker
+### Run with Docker
+
+Requirements:
+* docker
+* docker-compose
+* git
 
 If you already have an account and the default subscription is correct,
 you can just copy the docker-compose.yml file to a new folder, copy 
@@ -109,17 +116,20 @@ you can just copy the docker-compose.yml file to a new folder, copy
 necessary to .env for your environment and run
 
 ```
-git clone https://github.com/praetorian-inc/azure_cis_scanner
+git clone https://github.com/kbroughton/azure_cis_scanner
 docker-compose up
 ```
-Then find the docker conatiner id, exec into the container and run the scanner 
+
+Open a new shell, find the docker container id, exec into the container and run the scanner 
 ```
-docker ps | grep azure 
-docker exec -it <id from above> bash
+export docker_id=`docker ps | grep azure` 
+docker exec -it $docker_id bash
 bash# azscan
 ```
 
 This will mount ~/.azure into the container and use the default subscription.
+If you have multiple environments, it is best to remove this mount from the 
+docker-compose.yml file and login each session.
 
 ### Known Issues
 Depending on previous pip installs, you may see
@@ -127,6 +137,10 @@ Depending on previous pip installs, you may see
 error: PyYAML 3.12 is installed but pyyaml~=4.2b4 is required by {'azure-cli-core'}
 ```
 This can be ignored as long as the rest of the pip install succeeds.  You may need to comment out requests from requirements.txt.
+The conda scipy notebook is dependent on PyYaml 3.13 and cannot
+yet be upgraded. The latest Azure CLI requires 4.24b. The compromise
+for now is to pin to an older version of Azure CLI using the
+frozenrequirements.txt.
 
 Expired tokens:
 Message: The access token expiry UTC time '8/21/2018 3:22:00 PM' is earlier than current UTC time '8/21/2018 3:48:45 PM'.
@@ -153,7 +167,7 @@ there may be occasions where pyyaml==4.2b4 must be forced in requirements.txt.  
     raise JSONDecodeError("Expecting value", s, err.value) from None
 json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 ``` 
-The current fix is to open the file and delete the (possiby invisible) characters inserted at 
+The current fix is to open the file and delete the (possibly invisible) characters inserted at 
 the start of ~/.azure/azureProfile.json.  You may need an editor that can display invisible
 characters.  Or delete the entire file and `az login` again.
 
@@ -229,22 +243,36 @@ python3 azure_cis_scanner/controller.py --auth-location ~/.azure/<service-princi
 
 ### Configure 
 
-Get the repo (until it is public)
+Get the repo
 ```
-$ git clone git@github.com:praetorian-inc/azure_cis_scanner.git && cd azure_cis_scanner
-```
-
-Get the repo (public)
-```
-$ git clone https://github.com/praetorian-inc/azure_cis_scanner.git && cd azure_cis_scanner
+$ git clone https://github.com/kbroughton/azure_cis_scanner.git 
+$ cd azure_cis_scanner
 ``` 
 
 Copy azure_cis_scanner/.env-sample to .env.  This is a special filename that controls docker-compose and is in .gitignore.
 ```
-azure_cis_scanner$ cp .env-sample .env
+$ cp .env-sample .env
 ```
+
+#### Production Container
+If you don't need to tinker and just want to run things, you will use
+the docker-compose.yml and pre-built container.
+```
+docker-compose up -d
+```
+
+This uses the production docker-compose.yml and the code is assumed
+to be baked into the contain from some release.
+
+#### Development Container
 Edit the azure_cis_scanner/.env file as needed.
-If you are going to be developing, open docker-compose.yml and uncomment the lines marked with # DEVELOPMENT MODE
+If you are going to be developing, use docker-compose-dev.yml.
+```
+docker-compose -f docker-compose-dev.yml up -d
+```
+
+This docker-compose-dev.yml file assumes you will be mounting in
+source code and running the scanner from that directory.
 
 ### Run the container and exec into it
 ```
@@ -257,7 +285,7 @@ azure_cis_scanner$ docker exec -it <container-id> /bin/bash
 ```
 
 ### Login inside the container
-The docker-compose creates (on first run) a .azure folder to hold the creds and maps it to /root/.azure.
+The docker-compose creates (on first run) a `.azure` folder to hold the creds and maps it to /root/.azure.
 This allows you to stop and start the container without having to re login for the lifetime of your tokens.
 ```
 bash-4.4$ az login
@@ -357,7 +385,7 @@ The following steps should be performed by someone with Owner permissions to gen
 Get the minimal_tester_role.json and permissions.sh scripts used to generate a custom role definition and temporary storage access keys.
 
 ```
-$ git clone https://github.com/praetorian-inc/azure_cis_scanner.git
+$ git clone https://github.com/kbroughton/azure_cis_scanner.git
 
 ```
 
@@ -401,6 +429,12 @@ An attempt was made to convert to json everywhere, but the current raw/filtered 
 which are only supported in yaml.  An attempt to use safe_yaml was made, but the tuples caused errors.  The intention is to have `raw` data pulled
 as infrequently as possible from the cloud API, and stored as close as possible to the delivered format.  
 We may switch from tuple to nested dict in the future.
+
+An attempt was made to use the python SDK everywhere and eliminate subprocess
+calls. However, the `az` commands have a cleaner authentication model and
+using the SDK would require creating new forms of credentials for certain
+Azure Services and this is not typically possible for a pen-tester with
+Read credentials.
 
 ## Roadmap
 

@@ -174,11 +174,11 @@ TOC:
       subsection_name: 'shared access signature tokens are allowed only over https'
       finding_name: 'shared_access_signature_tokens_are_allowed_only_over_https'
     - subsection_number: 3.6
-      subsection_name: 'Storage service encryption is set to Enabled for File Service'
-      finding_name: 'storage_service_encryption_is_set_to_enabled_for_file_service'
-    - subsection_number: 3.7
-      subsection_name: 'Public access level is set to Private for blob containers'
+      subsection_name: 'Public access level is set to private for blob containers'
       finding_name: 'public_access_level_is_set_to_private_for_blob_containers'
+    - subsection_number: 3.7
+      subsection_name: 'Storage network default access rule set to deny'
+      finding_name: 'storage_network_default_access_rule_set_to_deny'
   "SQL Servers":
     - subsection_number: 4.1.1
       subsection_name: 'Auditing is set to On'

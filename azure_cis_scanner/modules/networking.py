@@ -17,6 +17,7 @@ networking_filtered_path = os.path.join(config['filtered_data_dir'], 'networking
 network_security_groups_path = os.path.join(config['raw_data_dir'], "network_security_groups.json")
 credentials = config['cli_credentials']
 subscription_id = config['subscription_id']
+NETWORK_FLOWS = True
 
 ##########################
 # Get Raw Data
@@ -25,8 +26,14 @@ subscription_id = config['subscription_id']
 def get_data():
     network_security_groups = get_network_security_groups(network_security_groups_path)
     get_network_watcher(network_watcher_path)
-    get_network_flows(network_flows_path, network_security_groups)
-    
+    try:
+        get_network_flows(network_flows_path, network_security_groups)
+    except Exception as e:
+            print("Exception was thrown! Unable to get network watcher flows.  Check permissions.")
+            print(e)
+            print(traceback.format_exc())
+            NETWORK_FLOWS = False
+
 def get_network_security_groups(network_security_groups_path):
     """
     @network_path: string - path to output json file
@@ -66,10 +73,17 @@ def get_network_flows(network_flows_path, network_security_groups):
     for nsg in network_security_groups:
         resource_group = nsg['resourceGroup']
         nsg_id = nsg['id']
-        network_flow = json.loads(utils.call("az network watcher flow-log show --resource-group {resource_group} --nsg {nsg_id}".format(
-            resource_group=resource_group, nsg_id=nsg_id)))
-        nsg_name = nsg["name"]
-        network_flows.append({"resource_group": resource_group, "nsg_name": nsg_name, "network_flow": network_flow})
+        try:
+            network_flow = json.loads(utils.call("az network watcher flow-log show --resource-group {resource_group} --nsg {nsg_id}".format(
+                resource_group=resource_group, nsg_id=nsg_id)))
+            nsg_name = nsg["name"]
+            network_flows.append({"resource_group": resource_group, "nsg_name": nsg_name, "network_flow": network_flow})
+        except Exception as e:
+                print("Exception was thrown! Unable to get network watcher flows.  Check permissions.")
+                print(e)
+                print(traceback.format_exc())
+                print("Continuing without network flows Data")
+        break
         
     with open(network_flows_path, 'w') as f:
         json.dump(network_flows, f, indent=4, sort_keys=True)
@@ -92,6 +106,7 @@ def test_controls():
     network_security_groups = load_network_security_groups(network_security_groups_path)
     resource_groups = utils.load_resource_groups(resource_groups_path)
     network_flows = load_network_flows(network_flows_path)
+
     networking_results = {}
 
     networking_results['access_is_restricted_from_the_internet'] = access_is_restricted_from_the_internet_6_1(network_security_groups)

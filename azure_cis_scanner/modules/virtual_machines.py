@@ -9,6 +9,7 @@ from msrestazure.azure_active_directory import MSIAuthentication
 
 from azure_cis_scanner import utils
 
+print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 filtered_virtual_machines_path = os.path.join(config['filtered_data_dir'], 'virtual_machines_filtered.json')
 virtual_machines_path = os.path.join(config['raw_data_dir'], 'virtual_machines.json')
 disks_path = os.path.join(config['raw_data_dir'], 'disks.json')
@@ -53,6 +54,34 @@ def get_virtual_machines(virtual_machines_path):
     @returns: list of virtual_machines dict
     """
     virtual_machines = json.loads(utils.call("az vm list"))
+    for vm in virtual_machines:
+        name = vm['name']
+        resource_group = vm['resourceGroup']
+        encrypted = utils.call("""az vm encryption show --name {name} 
+            --resource-group {resource_group} 
+            --query dataDisk""".format(name=name, resource_group=resource_group))
+        if encrypted in ["", "Azure Disk Encryption is not enabled"]:
+            vm['storageProfile']['dataDisksEncrypted'] = False
+        else:
+            vm['storageProfile']['dataDisksEncrypted'] = True
+    
+        if vm["networkProfile"]:
+            ifaces = vm["networkProfile"]["networkInterfaces"]
+            if ifaces:
+                for iface in ifaces:
+                    nic_name = iface['id'].split('/')[-1]
+                    ifconfig = json.loads(utils.call("""az vm nic show -g {resource_group} 
+                                --vm-name {vm_name} 
+                                --nic {nic_name}""".format(resource_group=resource_group,                                               vm_name=name,
+                                                          nic_name=nic_name)))
+                    iface.update(ifconfig)
+        # extensions = json.loads(utils.call("""az vm extension list 
+        #         --vm-name {name} 
+        #         --resource-group {resource_group}""".format(
+        #             name=name,
+        #             resource_group=resource_group))) 
+        # vm['extensions'] = extensions
+
     with open(virtual_machines_path, 'w') as f:
         json.dump(virtual_machines, f, indent=4, sort_keys=True)
     return virtual_machines
@@ -101,31 +130,67 @@ def os_disk_is_encrypted_7_2(virtual_machines):
     items_flagged_list = []
     items_checked = 0
     for vm in virtual_machines:
+        # lack of encryption is more severe if disks are not managed
+        if vm['storageProfile']['osDisk']['managedDisk']:
+            managed = "True"
+        else:
+            managed = "False"
         if vm['storageProfile']['osDisk']['encryptionSettings']:
             if not (vm['storageProfile']['osDisk']['encryptionSettings']['enabled'] == True):
-                items_flagged_list.append((vm['resourceGroup'], vm['name'], vm['storageProfile']['osDisk']['name']))
+                items_flagged_list.append((vm['resourceGroup'], 
+                                           vm['name'], 
+                                           vm['storageProfile']['osDisk']['name'],
+                                           managed))
                 items_checked += 1
         else:
-            items_flagged_list.append((vm['resourceGroup'], vm['name'], vm['storageProfile']['osDisk']['name']))
+            items_flagged_list.append((vm['resourceGroup'], 
+                                       vm['name'], 
+                                       vm['storageProfile']['osDisk']['name'],
+                                       managed))
             items_checked += 1
 
     stats = {'items_flagged': len(items_flagged_list),
              'items_checked': len(virtual_machines)}
     metadata = {"finding_name": "os_disk_is_encrypted",
                 "negative_name": "",
-                "columns": ["Resource Group", "Name", "Disk Name"]}            
+                "columns": ["Resource Group", "Name", "Disk Name", "Managed"]}            
     return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
 
+
 def data_disks_are_encrypted_7_3(virtual_machines):
+    """
+    TODO rather than making a second call here, enrich
+    the data during the get_data phase if required.
+
+    Then add the managed disk section commented out section.
+    TODO: test this works for encrypted data disks.
+    """
     items_flagged_list = []
     items_checked = 0
+
+    # for vm in virtual_machines:
+    #     name = vm['name']
+    #     resource_group = vm['resourceGroup']
+    #     encrypted = utils.call("az vm encryption show --name {name} --resource-group {resource_group} --query dataDisk".format(
+    #         name=name, resource_group=resource_group))
+    #     if encrypted in ["", "Azure Disk Encryption is not enabled"]:
+    #         items_flagged_list.append((vm['resourceGroup'], vm['name'], "unknown"))
     for vm in virtual_machines:
-        name = vm['name']
-        resource_group = vm['resourceGroup']
-        encrypted = utils.call("az vm encryption show --name {name} --resource-group {resource_group} --query dataDisk".format(
-            name=name, resource_group=resource_group))
-        if encrypted in ["", "Azure Disk Encryption is not enabled"]:
-            items_flagged_list.append((vm['resourceGroup'], vm['name'], "unknown"))
+        if not vm['storageProfile']['dataDisksEncrypted']:
+            for disk in vm['storageProfile']['dataDisks']:
+                if disk['managedDisk']:
+                    managed = "True"
+                else:
+                    managed = "False"
+                items_flagged_list.append((vm['resourceGroup'], vm['name'], disk['name'], managed))
+
+    stats = {'items_flagged': len(items_flagged_list),
+             'items_checked': len(virtual_machines)}
+    metadata = {"finding_name": "data_disks_are_encrypted",
+                "negative_name": "",
+                "columns": ["Resource Group", "Name", "Disk Name", "Managed"]}            
+    return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
+
     # for disk in disks:
     #     if ('encryptionSettings' not in disk) or \
     #     (disk['encryptionSettings'] == None) or \
@@ -163,8 +228,12 @@ def only_approved_extensions_are_installed_7_4(virtual_machines):
         resource_group = vm['resourceGroup']
         extensions = json.loads(utils.call("az vm extension list --vm-name {name} --resource-group {resource_group}".format(name=name,
             resource_group=resource_group)))
-        for extension in extensions:
-            if extension['virtualMachineExtensionType'] not in approved_extensions:
+        for resource in vm["resources"]:
+            extension_name = resource["id"].split('/')[-1]
+            extension_names = []
+            if extension_name not in approved_extensions:
+                extension_names.append(extension_name)
+            if extension_names:
                 items_flagged_list.append((resource_group, name, extension['virtualMachineExtensionType']))
     
     stats = {'items_flagged': len(items_flagged_list),

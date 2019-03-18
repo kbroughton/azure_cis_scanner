@@ -49,6 +49,7 @@ def test_controls():
     security_center = load_security_center(security_center_path)
     security_center_results = {}
 
+    security_center_results['standard_pricing_tier_is_selected'] = standard_pricing_tier_is_selected_2_1(security_center)
     security_center_results['automatic_provisioning_of_monitoring_agent_is_set_to_on'] = automatic_provisioning_of_monitoring_agent_is_set_to_on_2_2(security_center)
     security_center_results['system_updates_is_set_to_on'] = system_updates_is_set_to_on_2_3(security_center)
     security_center_results['security_configurations_is_set_to_on'] = security_configurations_is_set_to_on_2_4(security_center)
@@ -72,6 +73,22 @@ def test_controls():
         json.dump(security_center_results, f, indent=4, sort_keys=True)
     return security_center_results
 
+def standard_pricing_tier_is_selected_2_1(security_center):
+    items_flagged_list = []
+    for item in security_center:
+        resource_group = item['name']
+        automatic_provisioning_of_monitoring_agent = item['properties']['pricingTier']
+        if automatic_provisioning_of_monitoring_agent == "Free":
+            items_flagged_list.append((resource_group))
+
+    stats = {'items_flagged': len(items_flagged_list),
+             'items_checked': len(security_center)}
+    metadata = {"finding_name": "standard_pricing_tier_is_selected",
+                "negative_name": "standard_pricing_tier_not_selected",
+                "columns": ["Resource Group"]}
+    
+    return {"items": items_flagged_list, "stats": stats, "metadata": metadata}  
+
 def automatic_provisioning_of_monitoring_agent_is_set_to_on_2_2(security_center):
     items_flagged_list = []
     for item in security_center:
@@ -89,6 +106,10 @@ def automatic_provisioning_of_monitoring_agent_is_set_to_on_2_2(security_center)
     return {"items": items_flagged_list, "stats": stats, "metadata": metadata}
     
 def system_updates_is_set_to_on_2_3(security_center):
+    """
+    New query param in 1.1 is properties.parameters.systemUpdatesMonitoringEffect
+    but it is not in the output of the general api call.  Nor in az policy definition list.
+    """
     items_flagged_list = []
     for item in security_center:
         resource_group = item['name']
@@ -103,6 +124,23 @@ def system_updates_is_set_to_on_2_3(security_center):
                 "columns": ["Resource Group"]}
     
     return {"items": items_flagged_list, "stats": stats, "metadata": metadata}    
+
+
+def monitor_os_vulnerabilities_is_set_to_on_2_4b(security_center):
+    items_flagged_list = []
+    for item in security_center:
+        resource_group = item['name']
+        security_configurations = item['properties']['parameters']['systemConfigurationsMonitoringEffect']
+        if security_configurations not in ["Disabled", None]:
+            items_flagged_list.append((resource_group))
+            
+    stats = {'items_flagged': len(items_flagged_list),
+             'items_checked': len(security_center)}
+    metadata = {"finding_name": "monitor_os_vulnerabilities_is_set_to_on",
+                "negative_name": "monitor_os_vulnerabilities_disabled",
+                "columns": ["Resource Group"]}
+    
+    return {"items": items_flagged_list, "stats": stats, "metadata": metadata} 
 
 def security_configurations_is_set_to_on_2_4(security_center):
     items_flagged_list = []
