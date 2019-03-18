@@ -54,7 +54,7 @@ export const selectServiceError = error => ({
 
 
 export const getSubscriptions = () => (dispatch) => {
-    return fetch(`http://localhost:5001/`, {
+    return fetch(`http://localhost:5000/`, {
         method: 'GET'
     })
         .then(res => normalizeResponseErrors(res))
@@ -65,7 +65,7 @@ export const getSubscriptions = () => (dispatch) => {
 
 export const selectSubscription = (subscription) => (dispatch) => {
     console.log(subscription)
-    return fetch(`http://localhost:5001/subscription_dir/${subscription}`)
+    return fetch(`http://localhost:5000/subscription_dir/${subscription}`)
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
         .then(data =>  dispatch(selectSubscriptionSuccess(data)))
@@ -74,7 +74,7 @@ export const selectSubscription = (subscription) => (dispatch) => {
 
 export const selectService = (service) => (dispatch) => {
     console.log(service)
-    return fetch(`http://localhost:5001/services/${service}`)
+    return fetch(`http://localhost:5000/services/${service}`)
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
         .then(data => {
