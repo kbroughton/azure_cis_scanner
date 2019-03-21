@@ -91,8 +91,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY frozenrequirements.txt .
-RUN pip install -r frozenrequirements.txt
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 RUN pip install azure_cis_scanner
 
 #USER $NB_UID
