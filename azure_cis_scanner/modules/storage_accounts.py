@@ -143,21 +143,21 @@ def storage_account_access_keys_are_periodically_regenerated_3_2(activity_logs, 
            
 def logging_is_enabled_for_all_queue_service_requests_3_3(storage_accounts):
     #az storage logging show --services q --account-name <storageAccountName>az storage logging show --services q --account-name <storageAccountName>
-    pass
+    return []
 
 def shared_access_signature_tokens_expire_within_an_hour_3_4(storage_accounts):
     """
     There is no automation possible for this currently
     Manual
     """
-    pass
+    return []
 
 def shared_access_signature_tokens_are_allowed_only_over_https_3_5(storage_accounts):
     """
     There is no automation possible for this currently
     Manual
     """
-    pass
+    return []
    
 # Deprecated - default behavior                                   
 # def storage_service_encryption_is_set_to_enabled_for_file_service_3_6(storage_accounts):
