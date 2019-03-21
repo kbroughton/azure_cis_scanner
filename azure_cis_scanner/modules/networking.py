@@ -45,7 +45,7 @@ def get_network_security_groups(network_security_groups_path):
 
 def load_network_security_groups(network_security_groups_path):
     with open(network_security_groups_path, 'r') as f:
-        network_security_groups = yaml.load(f)
+        network_security_groups = yaml.load(f, Loader=yaml.Loader)
     return network_security_groups
 
 approved_regions = []
@@ -60,7 +60,7 @@ def get_network_watcher(network_watcher_path):
 
 def load_network_watcher(network_watcher_path):
     with open(network_watcher_path, 'r') as f:
-        network_watcher = yaml.load(f)
+        network_watcher = yaml.load(f, Loader=yaml.Loader)
     return network_watcher
 
 def get_network_flows(network_flows_path, network_security_groups):
@@ -91,7 +91,7 @@ def get_network_flows(network_flows_path, network_security_groups):
 
 def load_network_flows(network_flows_path):
     with open(network_flows_path, 'r') as f:
-        network_flows = yaml.load(f)
+        network_flows = yaml.load(f, Loader=yaml.Loader)
     return network_flows
 
 ##########################

@@ -33,7 +33,7 @@ def get_security_center(security_center_path):
 
 def load_security_center(security_center_filtered_path):
     with open(security_center_path, 'r') as f:
-        security_center = yaml.load(f)
+        security_center = yaml.load(f, Loader=yaml.Loader)
     return security_center
 
 def get_data():
@@ -77,8 +77,10 @@ def standard_pricing_tier_is_selected_2_1(security_center):
     items_flagged_list = []
     for item in security_center:
         resource_group = item['name']
-        automatic_provisioning_of_monitoring_agent = item['properties']['pricingTier']
-        if automatic_provisioning_of_monitoring_agent == "Free":
+        pricing_configuration = item['properties']['pricingConfiguration']
+        pricing_tier = pricing_configuration['selectedPricingTier']
+        active = pricing_configuration['active']
+        if (pricing_tier == "Free") or (active != "On"):
             items_flagged_list.append((resource_group))
 
     stats = {'items_flagged': len(items_flagged_list),

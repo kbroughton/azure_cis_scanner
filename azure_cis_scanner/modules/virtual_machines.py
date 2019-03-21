@@ -1,5 +1,7 @@
 import json
+import logging
 import os
+import traceback
 import yaml
 
 from azure.common.client_factory import get_client_from_cli_profile, get_client_from_auth_file
@@ -9,7 +11,13 @@ from msrestazure.azure_active_directory import MSIAuthentication
 
 from azure_cis_scanner import utils
 
-print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+formatter = logging.Formatter(
+        '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 filtered_virtual_machines_path = os.path.join(config['filtered_data_dir'], 'virtual_machines_filtered.json')
 virtual_machines_path = os.path.join(config['raw_data_dir'], 'virtual_machines.json')
 disks_path = os.path.join(config['raw_data_dir'], 'disks.json')
@@ -70,11 +78,17 @@ def get_virtual_machines(virtual_machines_path):
             if ifaces:
                 for iface in ifaces:
                     nic_name = iface['id'].split('/')[-1]
-                    ifconfig = json.loads(utils.call("""az vm nic show -g {resource_group} 
-                                --vm-name {vm_name} 
-                                --nic {nic_name}""".format(resource_group=resource_group,                                               vm_name=name,
-                                                          nic_name=nic_name)))
-                    iface.update(ifconfig)
+                    try:
+                        ifconfig = json.loads(utils.call("""az vm nic show -g {resource_group} 
+                                    --vm-name {vm_name} 
+                                    --nic {nic_name}""".format(resource_group=resource_group,                                               vm_name=name,
+                                                              nic_name=nic_name)))
+                        iface.update(ifconfig)
+                    except Exception as e:
+                        print("az vm nic show failed")
+                        print(traceback.format_exc())
+                        logger.warning(traceback.format_exc())
+
         # extensions = json.loads(utils.call("""az vm extension list 
         #         --vm-name {name} 
         #         --resource-group {resource_group}""".format(
@@ -88,17 +102,17 @@ def get_virtual_machines(virtual_machines_path):
 
 def load_virtual_machines(virtual_machines_path):
     with open(virtual_machines_path, 'r') as f:
-        virtual_machines = yaml.load(f)
+        virtual_machines = yaml.load(f, Loader=yaml.Loader)
     return virtual_machines
 
 def load_disks(disks_path):
     with open(disks_path, 'r') as f:
-        disks = yaml.load(f)
+        disks = yaml.load(f, Loader=yaml.Loader)
     return disks
 
 def load_snapshots(snapshots_path):
     with open(snapshots_path, 'r') as f:
-        snaps = yaml.load(f)
+        snaps = yaml.load(f, Loader=yaml.Loader)
     return snaps
 
 def get_data():
@@ -228,13 +242,14 @@ def only_approved_extensions_are_installed_7_4(virtual_machines):
         resource_group = vm['resourceGroup']
         extensions = json.loads(utils.call("az vm extension list --vm-name {name} --resource-group {resource_group}".format(name=name,
             resource_group=resource_group)))
-        for resource in vm["resources"]:
-            extension_name = resource["id"].split('/')[-1]
-            extension_names = []
-            if extension_name not in approved_extensions:
-                extension_names.append(extension_name)
-            if extension_names:
-                items_flagged_list.append((resource_group, name, extension['virtualMachineExtensionType']))
+        if vm.get("resources", []):
+            for resource in vm.get("resources", []):
+                extension_name = resource["id"].split('/')[-1]
+                extension_names = []
+                if extension_name not in approved_extensions:
+                    extension_names.append(extension_name)
+                if extension_names:
+                    items_flagged_list.append((resource_group, name, extension_names))
     
     stats = {'items_flagged': len(items_flagged_list),
              'items_checked': len(virtual_machines)}

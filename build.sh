@@ -24,3 +24,13 @@ git push origin master --tags
 
 python setup.py sdist upload  # -url prod
 python setup.py bdist_wheel upload  # -url prod
+
+
+echo "build new containers..."
+BASE_CONTAINER=jupyter/minimal-notebook
+docker pull $BASE_CONTAINER
+PYPI_VERSION=$(grep "__version__ =" setup.py | cut -d ' ' -f3 | sed "s/\'//g")
+GIT_COMMIT_SHORT=$(git rev-parse --short HEAD)
+DOCKER_TAG=${PYPI_VERSION}-${GIT_COMMIT_SHORT}
+AZURE_CIS_SCANNER_IMAGE=kbroughton/azure-cis-scanner-scipy
+docker build -t ${AZURE_CIS_SCANNER_IMAGE}:${DOCKER_TAG} .

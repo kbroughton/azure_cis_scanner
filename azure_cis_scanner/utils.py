@@ -92,13 +92,13 @@ def get_credentials_from_cli(tenant_id=None, subscription_id=None):
     """
     try:
         with open(AZURE_PROFILE_PATH, 'r') as f:
-            azure_profiles = yaml.load(f)['subscriptions']
+            azure_profiles = yaml.load(f, Loader=yaml.Loader)['subscriptions']
     except Exception as e:
         print(e)
         print(traceback.format_exc())
         try:
             with open(AZURE_PROFILE_PATH, 'r', encoding='utf-8-sig') as f:
-                azure_profiles = yaml.load(f)['subscriptions']
+                azure_profiles = yaml.load(f, Loader=yaml.Loader)['subscriptions']
             print("Successfully opened file with encoding='utf-8-sig'.  You may ignore previous error.")
         except Exception as e:
             with open(AZURE_PROFILE_PATH, 'r') as f:
@@ -154,7 +154,7 @@ def get_clients_from_service_principals(tenant_id=None, generate_credentials_ini
     credentials_ini = ""
 
     with open(AZURE_PROFILE_PATH, 'r') as f:
-        azure_profiles = yaml.load(f)['subscriptions']
+        azure_profiles = yaml.load(f, Loader=yaml.Loader)['subscriptions']
     for profile in azure_profiles:
         if tenant_id and not (tenant_id == profile['tenantId']):
             continue

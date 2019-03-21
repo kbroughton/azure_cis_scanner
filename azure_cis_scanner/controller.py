@@ -101,7 +101,7 @@ def main():
     mainparser.add_argument('--stages', default='data,test,report', help='comma separated list of steps to run in [data,test,report]')
     mainparser.add_argument('--modules', default=None, help='comma separated list of module names e.g. security_center.py')
     mainparser.add_argument('--skip-modules', default=[], help='comma separated list of module names to skip')
-    mainparser.add_argument('--use-api-for-auth', default=True, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
+    mainparser.add_argument('--use-api-for-auth', default=False, help='if false, use azure cli calling subprocess, else use python-azure-sdk')
     mainparser.add_argument('--refresh-sp-credentials', action='store_true', help='refresh service principal creds needed for keyvault')
     mainparser.add_argument('--loglevel', default='info', help='loglevel in ["debug", "info", "warning", "error"]')
     mainparser.add_argument('--example-scan', action='store_true', help='allow running without credentials on example_scan data')

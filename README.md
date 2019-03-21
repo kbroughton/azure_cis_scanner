@@ -4,7 +4,7 @@
 
 Security Compliance Scanning tool using CIS Azure Benchmark 1.2
 
-The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2019.  This repo was inspired by a similar scanner for AWS called Scout2. CIS released version 1.1 of 
+The purpose of this scanner is to assist organizations in locking down their Azure environments following best practices in the Center for Internet Security Benchmark release Feb 20, 2019. CIS released version 1.1 of 
 the Azure Benchmark on Feb 6th. Version 1.2 is in draft form
 and azscan targets V 1.2.
 
@@ -15,8 +15,6 @@ Capabilities:
 * render a report for viewing
 
 ## BETA NOTICE
-
-This private beta is intended to expose the Azure CIS Scanner to a small handful of Azure security users for focused, high-quality testing and feedback to help perfect and expand on the tool's capabilities before its official release. While this will be an open source project when it's released, we ask everyone in the beta to please not share internal tool details (such as source code) until after the public release. Please do not join the beta if you can't agree to that.
 
 This project is not yet production ready and should only be run from a local machine not exposed to untrusted networks.
 
@@ -62,12 +60,6 @@ Filtered data will be in files named by the finding and have the following forma
 *  All platforms require installing the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) 
 * Install [python3 for your platform](https://realpython.com/installing-python/). 
 * see the install folder for platform specific pre-requisits
-
-If you have installed azure-cis-scanner on your native os and in a virtualenv there may be problems.
-We recommend you `pip uninstall azure-cis-scanner` on the native os if this is the case.
-If you only install natively or always in a virtualenv there should be no problem. 
-
-In a virtualenv, on first run `azscan` may take a minute to produce results.  Be patient.
 
 ### Commandline + pip install
 
@@ -136,11 +128,20 @@ Depending on previous pip installs, you may see
 ```
 error: PyYAML 3.12 is installed but pyyaml~=4.2b4 is required by {'azure-cli-core'}
 ```
-This can be ignored as long as the rest of the pip install succeeds.  You may need to comment out requests from requirements.txt.
-The conda scipy notebook is dependent on PyYaml 3.13 and cannot
-yet be upgraded. The latest Azure CLI requires 4.24b. The compromise
-for now is to pin to an older version of Azure CLI using the
-frozenrequirements.txt.
+This can be ignored as long as the rest of the pip install succeeds.  
+The jupyter team has just updated conda and docker images to use PyYaml 5.1.
+Conflicts due to PyYaml may occur if you have PyYaml 3.13 or older.  Use a virtual machine,
+docker or upgrade your system PyYaml (many projects may rely on the old version for now).
+If you have installed azure-cis-scanner on your native os and in a virtualenv 
+there may be problems. We recommend you `pip uninstall azure-cis-scanner` on the 
+native os if this is the case. If you only install natively or always in a 
+virtualenv there should be no problem. 
+
+In a virtualenv, on first run `azscan` may take a minute to produce results.  Be patient.
+
+Currently using yaml.Loader:
+This is because we used tuples as dict keys. Should be replaced
+by a better dumper/loader or refactor for simple keys.
 
 Expired tokens:
 Message: The access token expiry UTC time '8/21/2018 3:22:00 PM' is earlier than current UTC time '8/21/2018 3:48:45 PM'.

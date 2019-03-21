@@ -101,8 +101,8 @@ TOC:
         finding_name: ''
   "Security Center":
     - subsection_number: 2.1 
-      subsection_name: 'standard pricing tier is selected'
-      finding_name: ''
+      subsection_name: 'Standard pricing tier is selected'
+      finding_name: 'standard_pricing_tier_is_selected'
     - subsection_number: 2.2 
       subsection_name: 'Automatic provisioning of monitoring agent is set to On'
       finding_name: 'automatic_provisioning_of_monitoring_agent_is_set_to_on'
@@ -162,11 +162,11 @@ TOC:
       subsection_name: 'Secure transfer required is set to Enabled'
       finding_name: 'secure_transfer_required_is_set_to_enabled'
     - subsection_number: 3.2
-      subsection_name: 'Storage service encryption is set to Enabled for Blob Service'
-      finding_name: 'storage_service_encryption_is_set_to_enabled_for_blob_service'
-    - subsection_number: 3.3
       subsection_name: 'storage account access keys are periodically regenerated'
       finding_name: 'storage_account_access_keys_are_periodically_regenerated'
+    - subsection_number: 3.3
+      subsection_name: 'Logging is enabled for Queue service for read write and delete requests'
+      finding_name: 'logging_is_enabled_for_all_queue_service_requests'
     - subsection_number: 3.4
       subsection_name: 'shared access signature tokens expire within an hour'
       finding_name: 'shared_access_signature_tokens_expire_within_an_hour'

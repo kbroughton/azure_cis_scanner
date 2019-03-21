@@ -13,6 +13,7 @@ services:
     ports:
       - ${JUPYTER_PORT}:8888
       - ${FLASK_PORT}:5000
+      - 3000:3000
     # To run in production, remove the "--allow-root" and 
     # ensure the last line of the Dockerfile is 
     # USER $NB_UID

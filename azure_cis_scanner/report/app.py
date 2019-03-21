@@ -207,7 +207,7 @@ def multi_index_tuples_from_stats(stats):
 def multi_index_df_from_stats(stats):
     tuples, index_tuples = multi_index_tuples_from_stats(stats)
     multi_index = pd.MultiIndex.from_tuples(index_tuples, names=["section", "finding", "date"])
-    print(multi_index)
+    #print(multi_index)
     return pd.DataFrame(tuples, index=multi_index, columns=["section_drop", "finding_drop", "date", "Flagged", "Checked"])
 
 def dir_date_to_datetime(string):

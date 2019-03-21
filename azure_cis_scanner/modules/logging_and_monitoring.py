@@ -36,7 +36,7 @@ def get_resource_ids_for_diagnostic_settings():
 
 def load_resource_ids_for_diagnostic_settings(resource_ids_for_diagnostic_settings_path):
     with open(resource_ids_for_diagnostic_settings_path, 'r') as f:
-        resource_ids_for_diagnostic_settings = yaml.load(f)
+        resource_ids_for_diagnostic_settings = yaml.load(f, Loader=yaml.Loader)
     return resource_ids_for_diagnostic_settings
 
 def get_resource_diagnostic_settings(resource_ids_for_diagnostic_settings):
@@ -58,7 +58,7 @@ def get_resource_diagnostic_settings(resource_ids_for_diagnostic_settings):
 
 def load_resource_diagnostic_settings(resource_diagnostic_settings_path):
     with open(resource_diagnostic_settings_path, 'r') as f:
-        resource_diagnostic_settings = yaml.load(f)
+        resource_diagnostic_settings = yaml.load(f, Loader=yaml.Loader)
     return resource_diagnostic_settings        
         
 def get_monitor_diagnostic_settings(monitor_diagnostic_settings_path, resource_ids):
@@ -76,7 +76,7 @@ def get_monitor_diagnostic_settings(monitor_diagnostic_settings_path, resource_i
 
 def load_monitor_diagnostic_settings(monitor_diagnostic_settings_path):
     with open(monitor_diagnostic_settings_path, 'r') as f:
-        monitor_diagnostic_settings = yaml.load(f)
+        monitor_diagnostic_settings = yaml.load(f, Loader=yaml.Loader)
     return monitor_diagnostic_settings
 
 
@@ -88,7 +88,7 @@ def get_monitor_log_profiles(monitor_log_profiles_path):
 
 def load_monitor_log_profiles(monitor_log_profiles_path):
     with open(monitor_log_profiles_path, 'r') as f:
-        monitor_log_profiles = yaml.load(f)
+        monitor_log_profiles = yaml.load(f, Loader=yaml.Loader)
     return monitor_log_profiles
 
 # duplicated in storage_accounts.log
@@ -119,7 +119,7 @@ def get_activity_logs(activity_logs_path, resource_groups):
 
 def load_activity_logs(activity_logs_path):
     with open(activity_logs_path, 'r') as f:
-        activity_log = yaml.load(f)
+        activity_log = yaml.load(f, Loader=yaml.Loader)
     return activity_log
 
 def get_activity_log_alerts(activity_log_alerts_path):
@@ -130,7 +130,7 @@ def get_activity_log_alerts(activity_log_alerts_path):
 
 def load_activity_log_alerts(activity_log_alerts_path):
     with open(activity_log_alerts_path, 'r') as f:
-        activity_log_alerts = yaml.load(f)
+        activity_log_alerts = yaml.load(f, Loader=yaml.Loader)
     return activity_log_alerts
 
 def get_data():
@@ -241,7 +241,7 @@ log_alert_policies_str = '''
   operation_name: 'Microsoft.Security/policies/write'
   present: False
 '''
-log_alert_policies = yaml.load(log_alert_policies_str)
+log_alert_policies = yaml.load(log_alert_policies_str, Loader=yaml.Loader)
 
 def activity_log_alert_is_configured(activity_log_alerts, log_alert_policies):
     """
@@ -272,7 +272,7 @@ def activity_log_alert_is_configured(activity_log_alerts, log_alert_policies):
              'items_checked': len(log_alert_policies)}
     metadata = {"finding_name": "activity_log_alert_is_configured",
                 "negative_name": "",
-                "columns": ["Missing Policy"]}            
+                "columns": ["Name", "Missing Policy"]}            
     return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
                                                                     
 #@gen_results(results)
