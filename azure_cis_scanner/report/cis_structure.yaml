@@ -101,8 +101,8 @@ TOC:
         finding_name: ''
   "Security Center":
     - subsection_number: 2.1 
-      subsection_name: 'standard pricing tier is selected'
-      finding_name: ''
+      subsection_name: 'Standard pricing tier is selected'
+      finding_name: 'standard_pricing_tier_is_selected'
     - subsection_number: 2.2 
       subsection_name: 'Automatic provisioning of monitoring agent is set to On'
       finding_name: 'automatic_provisioning_of_monitoring_agent_is_set_to_on'

@@ -272,7 +272,7 @@ def activity_log_alert_is_configured(activity_log_alerts, log_alert_policies):
              'items_checked': len(log_alert_policies)}
     metadata = {"finding_name": "activity_log_alert_is_configured",
                 "negative_name": "",
-                "columns": ["Missing Policy"]}            
+                "columns": ["Name", "Missing Policy"]}            
     return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
                                                                     
 #@gen_results(results)
