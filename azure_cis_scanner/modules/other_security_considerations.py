@@ -211,16 +211,53 @@ def resource_locks_are_set_for_mission_critical_azure_resources_8_3(critical_res
                 "columns": ["Lock Name", "Lock ID", "Notes"]}            
     return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
 
-def keyvault_is_recoverable(resource_groups):
+def keyvault_is_recoverable_8_4(keyvault_keys_and_secrets_metadata):
     """
+    Currently the output is not as described in the CIS control.  There are no enableSoftDelete
+    or enablePurgeProtection fields.
 
+    in the metadata for keyvault <keyname>.keys.attributes.recoveryLevel Purgeable is a value.
+    using az keyvault key list --vault-name    
     version_added = 1.1
     """
-    for resource in resource_groups:
-        cmd = "az resource show --id {}".format(resource['id'])
+    items_flagged_list = []
+    items_checked = 0
+
+    for item in []: # keyvault_keys_and_secrets_metadata:
+        id = "/subscriptions/{}/resourceGroups/{}/providers/Microsoft.KeyVault/vaults/{}".format(subscription_name,
+            region_name, key_name)
+        cmd = "az resource show --id {}".format(item['id'])
         # TODO extract enableSoftDelete
         if not ('enableSoftDelete' == "enabled" and 'enablePurgeProtection' == "enabled"):
             print("fail")
+
+
+    stats = {'items_flagged': len(items_flagged_list),
+             'items_checked': items_checked }
+
+    metadata = {"finding_name": "keyvault_is_recoverable",
+                "negative_name": "",
+                "columns": ["Region Name", "Key Name", "Status"]} 
+    return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
+
+
+def rbac_enabled_for_eks_8_5(resource_groups):
+
+    items_flagged_list = []
+    items_checked = 0
+    for resource_group in resource_groups:
+        aks = "az aks list"
+        for aks_name in aks:
+            items_checked += 1
+            aks_rbac = "az aks show --name {} --query enableRbac --resource-group {}".format(aks_name, resource_group)
+
+    stats = {'items_flagged': len(items_flagged),
+             'items_checked': items_checked }
+
+    metadata = {"finding_name": "rbac_enabled_for_eks",
+                "negative_name": "",
+                "columns": ["Resource Group", "AKS Name", "Enabled"]} 
+    return  {"items": items_flagged_list, "stats": stats, "metadata": metadata}
 
 def test_controls():
     keyvault_keys_and_secrets_metadata = load_keyvault_keys_and_secrets_metadata(keyvault_keys_and_secrets_metadata_path)

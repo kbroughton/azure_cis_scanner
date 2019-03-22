@@ -323,3 +323,9 @@ TOC:
     - subsection_number: 8.3
       subsection_name: 'Resource Locks are set for mission critical Azure resources'
       finding_name: ''
+    - subsection_number: 8.4
+      subsection_name: 'Keyvault is recoverable'
+      finding_name: 'keyvault_is_recoverable'
+    - subsection_number: 8.5
+      subsection_name: 'Role-based access control (RBAC) within Azure Kubernetes Services is Enabled'
+      finding_name: 'rbac_enabled_for_eks'
