@@ -280,6 +280,7 @@ The default directory is /praetorian-tools/azure_cis_scanner. Data should be cre
 Run the scanner.
 ```
 <azure_cis_scanner>bash$ python setup.py develop
+<azure_cis_scanner>bash$ azscan
 ```
 You will be prompted for login creds the first time. Follow the flow.
 A flask server will run in the foreground.
