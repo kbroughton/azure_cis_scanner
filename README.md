@@ -108,7 +108,6 @@ you can just copy the docker-compose.yml file to a new folder, copy
 necessary to .env for your environment and run
 
 ```
-git clone https://github.com/kbroughton/azure_cis_scanner
 docker-compose up
 ```
 
@@ -119,9 +118,11 @@ docker exec -it $docker_id bash
 bash# azscan
 ```
 
-This will mount ~/.azure into the container and use the default subscription.
+This will mount ./.azure into the container depending on the settings
+in the docker-compose.yml file and use the default subscription.
 If you have multiple environments, it is best to remove this mount from the 
-docker-compose.yml file and login each session.
+docker-compose.yml file and login each session or use separate folders for each
+Azure tenant.
 
 ### Known Issues
 Depending on previous pip installs, you may see
@@ -255,25 +256,59 @@ Copy azure_cis_scanner/.env-sample to .env.  This is a special filename that con
 $ cp .env-sample .env
 ```
 
-#### Production Container
-If you don't need to tinker and just want to run things, you will use
-the docker-compose.yml and pre-built container.
-```
-docker-compose up -d
-```
-
-This uses the production docker-compose.yml and the code is assumed
-to be baked into the contain from some release.
-
 #### Development Container
+
+Build the container locally.
+```
+$ docker build -t praetorian/azscan-scipy .
+```
+
+This is the container the docker-compose-dev.yml file will use by default.
+
 Edit the azure_cis_scanner/.env file as needed.
 If you are going to be developing, use docker-compose-dev.yml.
+
 ```
 docker-compose -f docker-compose-dev.yml up -d
 ```
 
 This docker-compose-dev.yml file assumes you will be mounting in
 source code and running the scanner from that directory.
+
+The default directory is /praetorian-tools/azure_cis_scanner. Data should be created in /engagements.
+
+Run the scanner.
+```
+<azure_cis_scanner>bash$ python setup.py develop
+```
+You will be prompted for login creds the first time. Follow the flow.
+A flask server will run in the foreground.
+
+Run the react server (WIP not ready for prime time or even the 2am-4am slot!)
+```
+<azure_cis_scanner>bash$ cd azure-cis-scanner-client
+<azure-cis-scanner-client>bash$ azure-cis-scanner-client
+<azure-cis-scanner-client>bash$ npm install
+<azure-cis-scanner-client>bash$ npm start
+```
+
+Now you should have the flask server on localhost 5000, react on 3000 and jupyter notebook
+on 8888. You will need to get the jupyter token from `docker-compose` logs ouptut.
+
+#### Production Container
+If you don't need to tinker and just want to run things, you will use
+the docker-compose.yml and pre-built container.
+
+Get the repo (or the docker-compose-dev.yml, .env-sample and Dockerfile files)
+
+```
+docker-compose up -d
+```
+
+This uses the production docker-compose.yml and the code is assumed
+to be baked into the contain from some release. The working directory is /engagements
+
+
 
 ### Run the container and exec into it
 ```

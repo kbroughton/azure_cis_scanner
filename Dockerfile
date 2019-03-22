@@ -99,5 +99,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 RUN pip install azure_cis_scanner
 
+WORKDIR /praetorian-tools/azure_cils_scanner
 #USER $NB_UID
 
