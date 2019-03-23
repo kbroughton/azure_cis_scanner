@@ -35,7 +35,7 @@ except RuntimeError as e:
     print("Unable to import matplotlib.  No graphing available.")
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 nav = Nav(app)
 app.secret_key = os.urandom(16)
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -43,6 +43,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 # this route should return the list of directories available to user 
 
 @app.route('/')
+@cross_origin()
 def index_base():
     return redirect("/{}".format(app.config['ACTIVE_SUBSCRIPTION_DIR']), code=302)
 
@@ -52,6 +53,7 @@ def index_base():
 #     return jsonify({"subscriptions": subscriptions})
 
 @app.route('/_subscription_dir')
+@cross_origin()
 def _subscription_dir():
     print("route /_subscription_dir fired")
     selected_active_subscription_dir = request.args.get('state', session.get('active_subscription_dir', None))
@@ -63,6 +65,7 @@ def _subscription_dir():
     return jsonify({'selected': subscription_dir})
 
 @app.route('/<active_subscription_dir>')
+@cross_origin()
 def index(active_subscription_dir, methods=['POST','GET']):
     selected_active_subscription_dir = request.args.get('selected', session.get('ACTIVE_SUBSCRIPTION_DIR', active_subscription_dir))
     session['active_subscription_dir'] = selected_active_subscription_dir
@@ -78,6 +81,7 @@ def index(active_subscription_dir, methods=['POST','GET']):
         return jsonify({"active_subscription_dir": "{}".format(active_subscription_dir), "subscription_dirs": "{}".format(subscription_dirs)})
 
 @app.route('/services/<service>')
+@cross_origin()
 def service(service, methods=['GET']):
     findings_table = [(x['subsection_number'], x['subsection_name'], get_finding_name(x['finding_name'], x['subsection_name'])) for x in cis_structure['TOC'][service]]
     stats = get_latest_stats(app.config['SCANS_DATA_DIR'])
@@ -85,6 +89,7 @@ def service(service, methods=['GET']):
     return jsonify({"service": service, "title": title_except(service), "findings_table": findings_table, "stats": stats}) 
 
 @app.route('/services/<service>/<finding>')
+@cross_origin()
 def finding(service, finding):
     """
     Render the non-graph portion of the finding as a table of the latest date recording this finding
@@ -122,6 +127,7 @@ def finding(service, finding):
             finding_entry=finding_entry, table=data.to_html(), title=title_except(finding), items_checked=items_checked)
 
 @app.route("/subscription_dir/<subscription_dir>")
+@cross_origin()
 def set_subscription_dir(subscription_dir):
     active_subscription_dir = subscription_dir
     return redirect("/{}".format(active_subscription_dir), code=302)
@@ -140,6 +146,7 @@ def subscription_dir_from_account(account):
 #     return navbar
 
 @app.route("/graphs/<service>/<finding>.png")
+@cross_origin()
 def plot_finding(service, finding):
     if not HAS_MATPLOTLIB:
         return make_response("Install matplotlib for graphing support")
