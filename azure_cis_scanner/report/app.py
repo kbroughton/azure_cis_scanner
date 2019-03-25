@@ -35,7 +35,7 @@ except RuntimeError as e:
     print("Unable to import matplotlib.  No graphing available.")
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost"}})
 nav = Nav(app)
 app.secret_key = os.urandom(16)
 app.config['SESSION_TYPE'] = 'filesystem'
