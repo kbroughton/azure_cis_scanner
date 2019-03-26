@@ -47,7 +47,7 @@ export default function reducer(state = initialState, action) {
         return {
             ...state,
             loading: false,
-            selectedSubscription: action.data.selected_subscription_dir
+            selectedSubscription: action.data.active_subscription_dir
         }
     } else if (action.type === SELECT_SUBSCRIPTION_ERROR) {
         return {

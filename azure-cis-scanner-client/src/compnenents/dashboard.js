@@ -17,7 +17,6 @@ class Dashboard extends React.Component {
         let options;
         if (this.props.subscriptions) {
             let {subscriptions} = this.props;
-            console.log(subscriptions)
             options = subscriptions.map((subscription, index) => {
                 return <option key={index} value={subscription}>{subscription}</option>
             })
@@ -28,8 +27,10 @@ class Dashboard extends React.Component {
                 <label htmlFor='selected-sub-directory'>Select a Directory:</label>
                 <select className='selected-sub-directory' 
                     name='selected-sub-directory' value={this.props.selectedSubscription}
-                    onChange={e => this.props.selectSubscription(e.target.value)}
-                    >
+                    onChange={e => {
+                        console.log("selecting directory")
+                        this.props.selectSubscription(e.target.value)}
+                    }>
                       {options}
                 </select> 
             </form>

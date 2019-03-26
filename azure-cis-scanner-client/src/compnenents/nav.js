@@ -23,6 +23,13 @@ class Nav extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    subscriptions: state.subscriptions.subscriptions,
+    selectedSubscription: state.subscriptions.selectedSubscription
+  };
+};
+
 export default connect(
-  state => ({ selectedSubscription: state.subscriptions.selectedSubscription })
-)(Nav);
+  mapStateToProps
+  )(Nav);
