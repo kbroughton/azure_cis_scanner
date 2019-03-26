@@ -54,20 +54,25 @@ export const selectServiceError = error => ({
 
 
 export const getSubscriptions = () => (dispatch) => {
-    return fetch(`http://localhost:5000/`, {
+    return fetch(`http://localhost:5000/subscriptions`, {
         method: 'GET',
-        // mode: 'no-cors'
+        mode: 'cors'
     })
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
-        .then(data => dispatch(getSubscriptionsSuccess(data)))
+        .then(data => {
+            let dataArray = [];
+            for (let i = 0; i < data.length; i++) {
+                dataArray.push(data[i].id)
+            };
+            dispatch(getSubscriptionsSuccess(dataArray))})
         .catch(err => dispatch(getSubscriptionsError(err)));
 };
 
 export const selectSubscription = (subscription) => (dispatch) => {
     console.log(subscription)
     return fetch(`http://localhost:5000/subscription_dir/${subscription}`, {
-        // mode: 'no-cors'
+        mode: 'cors',
         headers: {'Access-Control-Allow-Origin': '*'}
     })
         .then(res => normalizeResponseErrors(res))
@@ -79,7 +84,7 @@ export const selectSubscription = (subscription) => (dispatch) => {
 export const selectService = (service) => (dispatch) => {
     console.log(service)
     return fetch(`http://localhost:5000/services/${service}`, {
-        // mode: 'no-cors'
+        mode: 'cors',
         headers: {'Access-Control-Allow-Origin': '*'}
     })
         .then(res => normalizeResponseErrors(res))

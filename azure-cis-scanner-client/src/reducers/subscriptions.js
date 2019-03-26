@@ -28,7 +28,7 @@ export default function reducer(state = initialState, action) {
         return {
             ...state,
             loading: false,
-            subscriptions: action.data.subscription_dirs,
+            subscriptions: action.data,
             selectedSubscription: action.data.active_subscription_dirs,
             error: null
         }
