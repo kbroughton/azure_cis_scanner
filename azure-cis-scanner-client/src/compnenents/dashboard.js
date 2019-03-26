@@ -7,6 +7,7 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
         if (!this.props.selectedSubscription || this.props.selectedSubscription.length === 0) {
+            console.log('fetching subscriptions')
             this.props.getSubscriptions();
         }
     }
@@ -16,8 +17,7 @@ class Dashboard extends React.Component {
         let options;
         if (this.props.subscriptions) {
             let {subscriptions} = this.props;
-            subscriptions = subscriptions.replace(/'/g, '"');
-            subscriptions = JSON.parse(subscriptions)
+            console.log(subscriptions)
             options = subscriptions.map((subscription, index) => {
                 return <option key={index} value={subscription}>{subscription}</option>
             })
