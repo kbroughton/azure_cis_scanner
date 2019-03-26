@@ -61,23 +61,26 @@ export const getSubscriptions = () => (dispatch) => {
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
         .then(data => {
-            let dataArray = [];
+            let dataArray = [""];
             for (let i = 0; i < data.length; i++) {
                 dataArray.push(data[i].id)
             };
+            console.log("subscriptions = ", dataArray)
             dispatch(getSubscriptionsSuccess(dataArray))})
         .catch(err => dispatch(getSubscriptionsError(err)));
 };
 
 export const selectSubscription = (subscription) => (dispatch) => {
-    console.log(subscription)
     return fetch(`http://localhost:5000/subscriptions/${subscription}`, {
         mode: 'cors',
         headers: {'Access-Control-Allow-Origin': '*'}
     })
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
-        .then(data =>  dispatch(selectSubscriptionSuccess(data)))
+        .then(data =>  {
+            console.log("data", data);
+            dispatch(selectSubscriptionSuccess(data))
+        })
         .catch(err => dispatch(selectSubscriptionError(err)));
 }
 
