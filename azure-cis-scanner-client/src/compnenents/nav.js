@@ -10,7 +10,7 @@ class Nav extends Component {
 
     return (
       <nav>
-          <li><Link to='/'>Change Directory</Link></li>
+          <li><Link to='/subscriptions'>Change Directory</Link></li>
           <li><Link to={`/${selectedSubscription}/security-center/Security%20Center`}>Security Center</Link></li>
           <li><Link to={`/${selectedSubscription}/storage-accounts/Storage%20Accounts`}>Storage Accounts</Link></li>
           <li><Link to={`/${selectedSubscription}/sql-servers/SQL%20Servers`}>SQL Servers</Link></li>
