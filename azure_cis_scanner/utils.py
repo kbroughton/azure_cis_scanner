@@ -308,14 +308,13 @@ def call(command, retrieving_access_token=False, stderr=None):
             command[0] = command[0] + '.cmd'    # https://github.com/kennethreitz/legit/issues/148
     try :
         print('running: ', command)
-        result = subprocess.check_output(command, shell=False, stderr=stderr).decode('utf-8')
+        result = subprocess.check_output(command, shell=False, stderr=subprocess.STDOUT).decode('utf-8')
         #print("result", result)
         return result
     # allow calling code to raise AzScannerException and continue
-    except AzScannerException as e:
+    except Exception as e:
         print("An exception occurred while processing command " + str(command) )
-        print(e)
-        print(traceback.format_exc())
+        print("call e.output", e.output)
         raise(e)
 
 
