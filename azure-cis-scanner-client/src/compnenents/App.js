@@ -14,6 +14,7 @@ class App extends Component {
       <div>
         <Nav />
         <Header />
+        <Route exact path='/' component={Dashboard} />
         <Route exact path='/subscriptions' component={Dashboard} />
         <Route exact path='/:subscriptionId/security-center/:services' component={DisplayData}/>
         <Route exact path='/:subscriptionId/sql-servers/:services' component={DisplayData}/>
