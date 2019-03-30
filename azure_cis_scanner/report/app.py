@@ -81,6 +81,7 @@ def index(active_subscription_dir, methods=['POST','GET']):
         return redirect('/'+selected_active_subscription_dir)
     else:
         accounts = utils.get_accounts()
+        print("accounts", accounts)
         subscription_dirs = [subscription_dir_from_account(account) for account in accounts]
         print('subscription_dirs', subscription_dirs)
 
