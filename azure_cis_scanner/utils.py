@@ -244,6 +244,7 @@ raw_data_dir = ''
 
 def get_accounts(scan_path=None):
     if scan_path:
+        print('scan_path exists')
         scan_path = os.path.realpath(scan_path)
         accounts_path = os.path.join(scan_path, 'accounts.json')
         if os.path.exists(accounts_path):
@@ -253,6 +254,7 @@ def get_accounts(scan_path=None):
             accounts = call("az account list")
             with open(accounts_path, 'w') as f:
                 json.dump(jsonify(accounts), f)
+    print('scan_path does not exist')
     return json.loads(accounts)
 
 def set_scans_dir(scans_dir):

@@ -71,6 +71,7 @@ export const getSubscriptions = () => (dispatch) => {
 };
 
 export const selectSubscription = (subscription) => (dispatch) => {
+    console.log(subscription)
     return fetch(`http://localhost:5000/subscriptions/${subscription}`, {
         mode: 'cors',
         headers: {'Access-Control-Allow-Origin': '*'}
