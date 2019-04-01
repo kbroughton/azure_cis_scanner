@@ -4,6 +4,9 @@
 version: "3"
 services:
   azure-cis-scanner:
+    build:
+      context: .
+      target: dev
     image: ${AZURE_CIS_SCANNER_IMAGE}
     volumes:
       - ./:/notebooks/azure_cis_scanner          # Development

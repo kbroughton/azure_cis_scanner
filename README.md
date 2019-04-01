@@ -492,6 +492,12 @@ Some good resources are:
 
 Please see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+To add new findings or sections you need to 
+* modify azure_cis_scanner/report/cis_structure.yml to add the findings
+* drop a new python file into azure_cis_scanner/modules/ or modify an existing one
+
+The controller.py is the main file run by azscan while app.py is the flask app for display.
+
 ## Digging Deeper
 
 A Scanner is a good first tool for securing a cloud environment to ensure best practices and secure configuration settings are employed.
