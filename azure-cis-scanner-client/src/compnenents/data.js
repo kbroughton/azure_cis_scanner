@@ -6,12 +6,12 @@ import { selectService } from '../actions/subscriptions';
 class DisplayData extends React.Component {
     constructor(props) {
         super(props);
-            state = {
+            this.state = {
                 dataList: true,
                 findingList: false,
             }
         }
-    }
+    
     
 
     componentDidMount() {

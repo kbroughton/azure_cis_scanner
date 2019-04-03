@@ -23,10 +23,6 @@ li {
   list-style: none
 }
 
-a:visited {
-  color: rgb(224, 216, 216);
-}
-
 a:hover {
   color: rgb(165, 56, 56)
 }

@@ -3,7 +3,7 @@ import {Route} from 'react-router-dom';
 import Nav from './nav';
 import Header from './header';
 import Dashboard from './dashboard';
-import DisplayData from './data-template';
+import DisplayData from './data';
 
 class App extends Component {
   
