@@ -1,5 +1,11 @@
 import {normalizeResponseErrors} from './utils';
 
+export const SET_SERVICE = 'SET_SERVICE';
+export const setService = data => ({
+    type: SET_SERVICE,
+    data
+})
+
 export const GET_SUBSCRIPTIONS_REQUEST = 'GET_SUBSCRIPTIONS_REQUEST';
 export const getSubscriptionsRequest = data => ({
     type: GET_SUBSCRIPTIONS_REQUEST,

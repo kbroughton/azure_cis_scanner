@@ -1,4 +1,5 @@
 import {
+    SET_SERVICE,
     GET_SUBSCRIPTIONS_REQUEST,
     GET_SUBSCRIPTIONS_SUCCESS,
     GET_SUBSCRIPTIONS_ERROR,
@@ -21,12 +22,17 @@ const initialState = {
 };
 
 export default function reducer(state = initialState, action) {
-    if (action.type === GET_SUBSCRIPTIONS_REQUEST) {
+    if (action.type === SET_SERVICE) {
+        return {
+            ...state,
+            service: action.data
+        }
+    } else if (action.type === GET_SUBSCRIPTIONS_REQUEST) {
         return {
             ...state,
             loading: true
         } 
-    }else if (action.type === GET_SUBSCRIPTIONS_SUCCESS) {
+    } else if (action.type === GET_SUBSCRIPTIONS_SUCCESS) {
         return {
             ...state,
             loading: false,
