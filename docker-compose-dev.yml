@@ -17,4 +17,5 @@ services:
     # To run in production, remove the "--allow-root" and 
     # ensure the last line of the Dockerfile is 
     # USER $NB_UID
+      
     entrypoint: ["jupyter", "notebook", "--port=8888", "--ip=0.0.0.0", "--allow-root"]

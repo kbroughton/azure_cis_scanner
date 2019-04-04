@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, session, make_response, render_template_string
+from flask import Flask, Response, render_template, redirect, url_for, session, make_response, render_template_string, jsonify
 from flask_nav import Nav
+from flask_cors import CORS
 from flask_nav.elements import *
 import argparse
 import os
@@ -34,16 +35,28 @@ except RuntimeError as e:
     print("Unable to import matplotlib.  No graphing available.")
 
 app = Flask(__name__)
+origins = ["http://localhost:3000", "http://localhost:3001"]
+CORS(app, resources={r"/*": {"origins": origins}})
 nav = Nav(app)
 app.secret_key = os.urandom(16)
 app.config['SESSION_TYPE'] = 'filesystem'
 
+# this route should return the list of directories available to user 
+
+# @app.route('/')
+#  
+# def index_base():
+#     return redirect("/{}".format(app.config['ACTIVE_SUBSCRIPTION_DIR']), code=302)
+
 @app.route('/')
-def index_base():
-    return redirect("/{}".format(app.config['ACTIVE_SUBSCRIPTION_DIR']), code=302)
+def index_base(methods=['GET']):
+    subscriptions = utils.get_accounts()
+    return jsonify({"subscriptions": subscriptions})
 
 @app.route('/_subscription_dir')
+ 
 def _subscription_dir():
+    print("route /_subscription_dir fired")
     selected_active_subscription_dir = request.args.get('state', session.get('active_subscription_dir', None))
     print('selected_active_subscription_dir2', selected_active_subscription_dir)
 
@@ -52,30 +65,34 @@ def _subscription_dir():
     session['ACTIVE_SUBSCRIPTION_DIR'] = subscription_dir
     return jsonify({'selected': subscription_dir})
 
-@app.route('/<active_subscription_dir>')
+@app.route('/subscriptions')
+def _subscriptions():
+    print("route subscriptions" ,app.config["ACCOUNTS"])
+    return jsonify(app.config["ACCOUNTS"])
+
+@app.route('/subscriptions/<active_subscription_dir>')
 def index(active_subscription_dir, methods=['POST','GET']):
     selected_active_subscription_dir = request.args.get('selected', session.get('ACTIVE_SUBSCRIPTION_DIR', active_subscription_dir))
     session['active_subscription_dir'] = selected_active_subscription_dir
-    state = {'selected', selected_active_subscription_dir}
     print('selected_active_subscription_dir', selected_active_subscription_dir)
     if selected_active_subscription_dir != active_subscription_dir:
         print('redirecting', selected_active_subscription_dir)
+        ac
         return redirect('/'+selected_active_subscription_dir)
     else:
         accounts = utils.get_accounts()
-        subscription_dirs = [(subscription_dir_from_account(account), subscription_dir_from_account(account)) for account in accounts]
+        print("accounts", accounts)
+        subscription_dirs = [subscription_dir_from_account(account) for account in accounts]
         print('subscription_dirs', subscription_dirs)
-        return render_template('index.html', 
-            active_subscription_dir=active_subscription_dir, 
-            state=state,
-            subscription_dirs=subscription_dirs)
+
+        return jsonify({"active_subscription_dir": "{}".format(active_subscription_dir), "subscription_dirs": "{}".format(subscription_dirs)})
 
 @app.route('/services/<service>')
-def service(service):
+def service(service, methods=['GET']):
     findings_table = [(x['subsection_number'], x['subsection_name'], get_finding_name(x['finding_name'], x['subsection_name'])) for x in cis_structure['TOC'][service]]
     stats = get_latest_stats(app.config['SCANS_DATA_DIR'])
     #pprint.pprint("service:stats: {}".format(stats))
-    return render_template('service.html', service=service, title=title_except(service), findings_table=findings_table, stats=stats)
+    return jsonify({"service": service, "title": title_except(service), "findings_table": findings_table, "stats": stats}) 
 
 @app.route('/services/<service>/<finding>')
 def finding(service, finding):
@@ -115,6 +132,7 @@ def finding(service, finding):
             finding_entry=finding_entry, table=data.to_html(), title=title_except(finding), items_checked=items_checked)
 
 @app.route("/subscription_dir/<subscription_dir>")
+ 
 def set_subscription_dir(subscription_dir):
     active_subscription_dir = subscription_dir
     return redirect("/{}".format(active_subscription_dir), code=302)
@@ -133,6 +151,7 @@ def subscription_dir_from_account(account):
 #     return navbar
 
 @app.route("/graphs/<service>/<finding>.png")
+ 
 def plot_finding(service, finding):
     if not HAS_MATPLOTLIB:
         return make_response("Install matplotlib for graphing support")
@@ -265,7 +284,7 @@ def main(parser=None):
     app.config['SCANS_DIR'] = scans_dir
     app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
     app.config['ACCOUNTS'] = utils.get_accounts(scans_dir)
-    #app.config['STATS'] = get_stats()
+    # app.config['STATS'] = get_stats()
     app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
 
