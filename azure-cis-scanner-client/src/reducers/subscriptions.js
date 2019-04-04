@@ -14,6 +14,8 @@ const initialState = {
     subscriptions: "",
     selectedSubscription: "",
     selectedServiceData: null,
+    service: null,
+    finding: null,
     error: null,
     loading: false
 };
