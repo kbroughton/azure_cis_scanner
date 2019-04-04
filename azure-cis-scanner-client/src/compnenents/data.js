@@ -15,7 +15,8 @@ class DisplayData extends React.Component {
     
 
     componentDidMount() {
-        const service = this.props.match.params.services;
+        const { service } = this.props;
+        console.log(service)
         this.props.selectService(service);
     }
 
@@ -40,6 +41,7 @@ const mapStateToProps = state => {
     return {
       data: state.subscriptions.selectedServiceData,
       subscriptions: state.subscriptions.subscriptions,
+      service: state.subscriptions.service,
       selectedSubscription: state.subscriptions.selectedSubscription
     };
 };
