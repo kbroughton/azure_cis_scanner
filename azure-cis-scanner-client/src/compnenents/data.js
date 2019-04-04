@@ -16,16 +16,20 @@ class DisplayData extends React.Component {
 
     componentDidMount() {
         const { service } = this.props;
-        console.log(service)
         this.props.selectService(service);
     }
 
     render() {
         let dataList;
-        if (this.props.data) {
-            const {data} = this.props;
-             dataList = data.map((data, index) => {
-                return <li className='data' key={index.toString()}><span className='standard'>{data[0]}: </span>{data[1]}</li>
+        const { finding, data } = this.props;
+
+        if (finding) {
+            console.log('render findings ', finding)
+        } else if (!data) {
+            dataList = "";
+        } else {
+            dataList = data.map((data, index) => {
+            return <li className='data' key={index.toString()}><span className='standard'>{data[0]}: </span>{data[1]}</li>
             })
         }
         return (
@@ -42,6 +46,7 @@ const mapStateToProps = state => {
       data: state.subscriptions.selectedServiceData,
       subscriptions: state.subscriptions.subscriptions,
       service: state.subscriptions.service,
+      finding: state.subscriptions.finding,
       selectedSubscription: state.subscriptions.selectedSubscription
     };
 };
