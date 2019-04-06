@@ -33,7 +33,9 @@ class Nav extends Component {
 
     return (
       <nav>
+        <li><Link to='/subscriptions'>Change Directory</Link></li>
         {navLinks}
+         
       </nav>
     );
   }
