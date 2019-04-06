@@ -60,7 +60,7 @@ export const selectServiceError = error => ({
 
 
 export const getSubscriptions = () => (dispatch) => {
-    return fetch(`http://localhost:5000/subscriptions`, {
+    return fetch(`http://localhost:5000/subscription_tuples`, {
         method: 'GET',
         mode: 'cors'
     })
@@ -68,8 +68,13 @@ export const getSubscriptions = () => (dispatch) => {
         .then(res => res.json())
         .then(data => {
             let dataArray = [""];
+            // create subscription dir from tuple
             for (let i = 0; i < data.length; i++) {
-                dataArray.push(data[i].id)
+                let subscription_dir = data[i][2]
+                    .split(" ")
+                    .join("-") + "-" + data[i][0]
+                    .split("-")[0] 
+                dataArray.push(subscription_dir)
             };
             console.log("subscriptions = ", dataArray)
             dispatch(getSubscriptionsSuccess(dataArray))})

@@ -54,7 +54,6 @@ def index_base(methods=['GET']):
     return jsonify({"subscriptions": subscriptions})
 
 @app.route('/_subscription_dir')
- 
 def _subscription_dir():
     print("route /_subscription_dir fired")
     selected_active_subscription_dir = request.args.get('state', session.get('active_subscription_dir', None))
@@ -65,10 +64,21 @@ def _subscription_dir():
     session['ACTIVE_SUBSCRIPTION_DIR'] = subscription_dir
     return jsonify({'selected': subscription_dir})
 
-@app.route('/subscriptions')
+# @app.route('/subscriptions')
+# def _subscriptions():
+#     print("route subscriptions" ,app.config["ACCOUNTS"])
+#     return jsonify(app.config["ACCOUNTS"])
+
+@app.route('/subscription_tuples')
 def _subscriptions():
-    print("route subscriptions" ,app.config["ACCOUNTS"])
-    return jsonify(app.config["ACCOUNTS"])
+    print("route subscription tuples" ,app.config["SUBSCRIPTION_TUPLES"])
+    return jsonify(app.config["SUBSCRIPTION_TUPLES"])
+
+@app.route('/cis_structure')
+def cis_structure():
+    return jsonify(app.config["CIS_STRUCTURE"])
+
+
 
 @app.route('/subscriptions/<active_subscription_dir>')
 def index(active_subscription_dir, methods=['POST','GET']):
@@ -123,14 +133,30 @@ def finding(service, finding):
     elif not finding_data.get("stats", None):
         error_str += 'No stats section in finding_data {}'.format(finding)
     if error_str:
-        return render_template('finding.html', service=service, finding=finding, date=date,
-            finding_entry=finding_entry, table='', title=title_except(finding), error_str=error_str, items_checked=0)
+        finding = {
+            "service": service,
+            "finding": finding,
+            "data": date,
+            "finding_entry": finding_entry,
+            "table": data.to_html(),
+            "title": title_except(finding),
+            "items_checked": items_checked
+        }
+        return jsonify(finding)
     else:
         items_checked=finding_data['stats']['items_checked']
         data = pd.DataFrame(finding_data['items'], columns=finding_data['metadata']['columns'])
-        return render_template('finding.html', service=service, finding=finding, date=date,
-            finding_entry=finding_entry, table=data.to_html(), title=title_except(finding), items_checked=items_checked)
-
+        # jsonify this information
+        finding = {
+            "service": service,
+            "finding": finding,
+            "data": date,
+            "finding_entry": finding_entry,
+            "table": data.to_html(),
+            "title": title_except(finding),
+            "items_checked": items_checked
+        }
+        return jsonify(finding)
 @app.route("/subscription_dir/<subscription_dir>")
  
 def set_subscription_dir(subscription_dir):
@@ -274,8 +300,8 @@ def main(parser=None):
 
     # TODO figure out better way to get base dir or let user select in UI
     credentials_tuples = utils.set_credentials_tuples(parser)
-
-    tenant_id, subscription_id, subscription_name, credentials = credentials_tuples[0]
+    credentials_tuples = list(map(lambda x: x[0:-1], credentials_tuples))
+    tenant_id, subscription_id, subscription_name = credentials_tuples[0]
     subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
     active_subscription_dir = subscription_dirname
     scans_dir = utils.set_scans_dir(parser.scans_dir)
@@ -284,6 +310,8 @@ def main(parser=None):
     app.config['SCANS_DIR'] = scans_dir
     app.config['SCANS_DATA_DIR'] = os.path.join(scans_dir, active_subscription_dir)
     app.config['ACCOUNTS'] = utils.get_accounts(scans_dir)
+    app.config['SUBSCRIPTION_TUPLES'] = credentials_tuples
+    app.config['CIS_STRUCTURE'] = cis_structure
     # app.config['STATS'] = get_stats()
     app.run(debug=True, host='0.0.0.0', use_reloader=False)
 

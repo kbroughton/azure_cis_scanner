@@ -1,6 +1,8 @@
 import React from 'react';
+import { Route } from 'react-router-dom';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Dashboard from './dashboard';
 import { selectService } from '../actions/subscriptions';
 
 class DisplayData extends React.Component {
@@ -15,13 +17,18 @@ class DisplayData extends React.Component {
     
 
     componentDidMount() {
-        const { service } = this.props;
-        this.props.selectService(service);
+        const { service, selectedSubscription } = this.props;
+        if (!service || !selectedSubscription) {
+            console.log('return to dashboard')
+            return <Route exact path='/subscriptions' component={Dashboard} />
+        } else {
+            this.props.selectService(service);
+        }
     }
 
     render() {
         let dataList;
-        const { finding, data } = this.props;
+        const { finding, data, selectedSubscription } = this.props;
 
         if (finding) {
             console.log('render findings ', finding)
@@ -33,9 +40,12 @@ class DisplayData extends React.Component {
             })
         }
         return (
-            <ul>
-                {dataList}
-            </ul>
+            <React.Fragment>
+                <h3>Current Directory is {selectedSubscription}</h3>
+                <ul>
+                    {dataList}
+                </ul>
+            </React.Fragment>
         );
     }
 }
