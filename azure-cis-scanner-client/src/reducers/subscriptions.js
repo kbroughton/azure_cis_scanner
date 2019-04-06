@@ -3,9 +3,7 @@ import {
     GET_SUBSCRIPTIONS_REQUEST,
     GET_SUBSCRIPTIONS_SUCCESS,
     GET_SUBSCRIPTIONS_ERROR,
-    SELECT_SUBSCRIPTION_REQUEST,
-    SELECT_SUBSCRIPTION_SUCCESS,
-    SELECT_SUBSCRIPTION_ERROR,
+    SELECT_SUBSCRIPTION,
     SELECT_SERVICE_ERROR,
     SELECT_SERVICE_REQUEST,
     SELECT_SERVICE_SUCCESS
@@ -46,22 +44,10 @@ export default function reducer(state = initialState, action) {
             loading: false,
             error: action.error
         }
-    } else if (action.type === SELECT_SUBSCRIPTION_REQUEST) {
+    } else if (action.type === SELECT_SUBSCRIPTION) {
         return {
             ...state,
-            loading: true
-        }
-     } else if (action.type === SELECT_SUBSCRIPTION_SUCCESS) {
-        return {
-            ...state,
-            loading: false,
-            selectedSubscription: action.data.active_subscription_dir
-        }
-    } else if (action.type === SELECT_SUBSCRIPTION_ERROR) {
-        return {
-            ...state,
-            loading: false,
-            error: action.error
+            selectedSubscription: action.data
         }
     } else if (action.type === SELECT_SERVICE_REQUEST) {
         return {

@@ -24,22 +24,22 @@ export const getSubscriptionsError = error => ({
     error
 });
 
-export const SELECT_SUBSCRIPTION_REQUEST = 'SELECT_SUBSCRIPTION_REQUEST';
-export const selectSubscriptionRequest = error => ({
-    type: SELECT_SUBSCRIPTION_REQUEST,
-    error
-});
-export const SELECT_SUBSCRIPTION_SUCCESS = 'SELECT_SUBSCRIPTION_SUCCESS';
-export const selectSubscriptionSuccess = data => ({
-    type: SELECT_SUBSCRIPTION_SUCCESS,
+// export const SELECT_SUBSCRIPTION_REQUEST = 'SELECT_SUBSCRIPTION_REQUEST';
+// export const selectSubscriptionRequest = error => ({
+//     type: SELECT_SUBSCRIPTION_REQUEST,
+//     error
+// });
+export const SELECT_SUBSCRIPTION = 'SELECT_SUBSCRIPTION';
+export const selectSubscription = data => ({
+    type: SELECT_SUBSCRIPTION,
     data
 });
 
-export const SELECT_SUBSCRIPTION_ERROR = 'SELECT_SUBSCRIPTION_ERROR';
-export const selectSubscriptionError = error => ({
-    type: SELECT_SUBSCRIPTION_ERROR,
-    error
-});
+// export const SELECT_SUBSCRIPTION_ERROR = 'SELECT_SUBSCRIPTION_ERROR';
+// export const selectSubscriptionError = error => ({
+//     type: SELECT_SUBSCRIPTION_ERROR,
+//     error
+// });
 
 export const SELECT_SERVICE_REQUEST = 'SELECT_SERVICE_REQUEST';
 export const selectServiceRequest = error => ({
@@ -58,6 +58,22 @@ export const selectServiceError = error => ({
     error
 });
 
+export const GET_NAV_REQUEST = 'GET_NAV_REQUEST';
+export const getRequest = error => ({
+    type: GET_NAV_REQUEST,
+    error
+});
+export const GET_NAV_SUCCESS = 'GET_NAV_SUCCESS';
+export const getNavSuccess = data => ({
+    type: GET_NAV_SUCCESS,
+    data
+});
+
+export const GET_NAV_ERROR = 'GET_NAV_ERROR';
+export const getNavError = error => ({
+    type: GET_NAV_ERROR,
+    error
+});
 
 export const getSubscriptions = () => (dispatch) => {
     return fetch(`http://localhost:5000/subscription_tuples`, {
@@ -81,20 +97,33 @@ export const getSubscriptions = () => (dispatch) => {
         .catch(err => dispatch(getSubscriptionsError(err)));
 };
 
-export const selectSubscription = (subscription) => (dispatch) => {
-    console.log(subscription)
-    return fetch(`http://localhost:5000/subscriptions/${subscription}`, {
-        mode: 'cors',
-        headers: {'Access-Control-Allow-Origin': '*'}
+// export const selectSubscription = (subscription) => (dispatch) => {
+//     console.log(subscription)
+//     return fetch(`http://localhost:5000/subscriptions/${subscription}`, {
+//         mode: 'cors',
+//         headers: {'Access-Control-Allow-Origin': '*'}
+//     })
+//         .then(res => normalizeResponseErrors(res))
+//         .then(res => res.json())
+//         .then(data =>  {
+//             console.log("data", data);
+//             dispatch(selectSubscriptionSuccess(data))
+//         })
+//         .catch(err => dispatch(selectSubscriptionError(err)));
+// }
+// get cis structure for nav
+export const getNav = () => (dispatch) => {
+    return fetch(`http://localhost:5000/cis_structure`, {
+        method: 'GET',
+        mode: 'cors'
     })
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
-        .then(data =>  {
-            console.log("data", data);
-            dispatch(selectSubscriptionSuccess(data))
-        })
-        .catch(err => dispatch(selectSubscriptionError(err)));
-}
+        .then(data => {
+            console.log("cis structure = ", data)
+            dispatch(getNavSuccess(data))})
+        .catch(err => dispatch(getNavError(err)));
+};
 
 export const selectService = (service) => (dispatch) => {
     console.log(service)

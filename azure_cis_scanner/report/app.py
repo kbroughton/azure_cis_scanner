@@ -48,10 +48,10 @@ app.config['SESSION_TYPE'] = 'filesystem'
 # def index_base():
 #     return redirect("/{}".format(app.config['ACTIVE_SUBSCRIPTION_DIR']), code=302)
 
-@app.route('/')
-def index_base(methods=['GET']):
-    subscriptions = utils.get_accounts()
-    return jsonify({"subscriptions": subscriptions})
+# @app.route('/')
+# def index_base(methods=['GET']):
+#     subscriptions = utils.get_accounts()
+#     return jsonify({"subscriptions": subscriptions})
 
 @app.route('/_subscription_dir')
 def _subscription_dir():
@@ -76,6 +76,7 @@ def _subscriptions():
 
 @app.route('/cis_structure')
 def cis_structure():
+    print(app.config["CIS_STRUCTURE"])
     return jsonify(app.config["CIS_STRUCTURE"])
 
 
@@ -99,6 +100,7 @@ def index(active_subscription_dir, methods=['POST','GET']):
 
 @app.route('/services/<service>')
 def service(service, methods=['GET']):
+    print(cis_structure['TOC'])
     findings_table = [(x['subsection_number'], x['subsection_name'], get_finding_name(x['finding_name'], x['subsection_name'])) for x in cis_structure['TOC'][service]]
     stats = get_latest_stats(app.config['SCANS_DATA_DIR'])
     #pprint.pprint("service:stats: {}".format(stats))
@@ -110,6 +112,7 @@ def finding(service, finding):
     Render the non-graph portion of the finding as a table of the latest date recording this finding
     The graph portion is rendered in plot_finding
     """
+    
     finding_entry = get_finding_index(cis_structure['TOC'][service], finding)
     service_data = get_filtered_data_by_name(app.config['SCANS_DATA_DIR'], service)
     pprint.pprint("finding:service_data: {}".format(service_data))
@@ -142,6 +145,7 @@ def finding(service, finding):
             "title": title_except(finding),
             "items_checked": items_checked
         }
+        print("this is the finding", finding)
         return jsonify(finding)
     else:
         items_checked=finding_data['stats']['items_checked']
@@ -156,6 +160,7 @@ def finding(service, finding):
             "title": title_except(finding),
             "items_checked": items_checked
         }
+        print("this is the finding", finding)
         return jsonify(finding)
 @app.route("/subscription_dir/<subscription_dir>")
  
