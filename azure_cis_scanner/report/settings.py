@@ -20,5 +20,6 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC = os.path.join(APP_ROOT, 'static')
 
 with open(os.path.expanduser(APP_ROOT + '/cis_structure.yaml'), 'r') as f:
+    print("reading yaml file")
     cis_structure = yaml.load(f, Loader=yaml.Loader)
 

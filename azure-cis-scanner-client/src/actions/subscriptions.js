@@ -111,6 +111,7 @@ export const getSubscriptions = () => (dispatch) => {
 //         })
 //         .catch(err => dispatch(selectSubscriptionError(err)));
 // }
+
 // get cis structure for nav
 export const getNav = () => (dispatch) => {
     return fetch(`http://localhost:5000/cis_structure`, {

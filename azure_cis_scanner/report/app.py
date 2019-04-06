@@ -53,16 +53,16 @@ app.config['SESSION_TYPE'] = 'filesystem'
 #     subscriptions = utils.get_accounts()
 #     return jsonify({"subscriptions": subscriptions})
 
-@app.route('/_subscription_dir')
-def _subscription_dir():
-    print("route /_subscription_dir fired")
-    selected_active_subscription_dir = request.args.get('state', session.get('active_subscription_dir', None))
-    print('selected_active_subscription_dir2', selected_active_subscription_dir)
+# @app.route('/_subscription_dir')
+# def _subscription_dir():
+#     print("route /_subscription_dir fired")
+#     selected_active_subscription_dir = request.args.get('state', session.get('active_subscription_dir', None))
+#     print('selected_active_subscription_dir2', selected_active_subscription_dir)
 
-    print('subscription_dir route', subscription_dir)
+#     print('subscription_dir route', subscription_dir)
 
-    session['ACTIVE_SUBSCRIPTION_DIR'] = subscription_dir
-    return jsonify({'selected': subscription_dir})
+#     session['ACTIVE_SUBSCRIPTION_DIR'] = subscription_dir
+#     return jsonify({'selected': subscription_dir})
 
 # @app.route('/subscriptions')
 # def _subscriptions():
@@ -76,7 +76,7 @@ def _subscriptions():
 
 @app.route('/cis_structure')
 def cis_structure():
-    print(app.config["CIS_STRUCTURE"])
+    print(type(app.config["CIS_STRUCTURE"]))
     return jsonify(app.config["CIS_STRUCTURE"])
 
 
@@ -310,6 +310,10 @@ def main(parser=None):
     subscription_dirname = utils.get_subscription_dirname(subscription_id, subscription_name)
     active_subscription_dir = subscription_dirname
     scans_dir = utils.set_scans_dir(parser.scans_dir)
+    
+    with open(os.path.expanduser(APP_ROOT + '/cis_structure.yaml'), 'r') as f:
+        print("reading yaml file")
+        cis_structure = yaml.load(f, Loader=yaml.Loader)
     
     app.config['ACTIVE_SUBSCRIPTION_DIR'] = active_subscription_dir
     app.config['SCANS_DIR'] = scans_dir
