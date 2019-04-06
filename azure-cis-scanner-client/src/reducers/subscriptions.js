@@ -6,7 +6,10 @@ import {
     SELECT_SUBSCRIPTION,
     SELECT_SERVICE_ERROR,
     SELECT_SERVICE_REQUEST,
-    SELECT_SERVICE_SUCCESS
+    SELECT_SERVICE_SUCCESS,
+    GET_CIS_ERROR,
+    GET_CIS_REQUEST,
+    GET_CIS_SUCCESS
 } from '../actions/subscriptions';
 
 const initialState = {
@@ -16,7 +19,8 @@ const initialState = {
     service: null,
     finding: null,
     error: null,
-    loading: false
+    loading: false,
+    nav: null
 };
 
 export default function reducer(state = initialState, action) {
@@ -61,6 +65,23 @@ export default function reducer(state = initialState, action) {
             selectedServiceData: action.data.findings_table
         }
     } else if (action.type === SELECT_SERVICE_ERROR) {
+        return {
+            ...state,
+            loading: false,
+            error: action.error
+        }
+    } else if (action.type === GET_CIS_REQUEST) {
+        return {
+            ...state,
+            loading: true
+        }
+     } else if (action.type === GET_CIS_SUCCESS) {
+        return {
+            ...state,
+            loading: false,
+            nav: action.data.section_ordering
+        }
+    } else if (action.type === GET_CIS_ERROR) {
         return {
             ...state,
             loading: false,

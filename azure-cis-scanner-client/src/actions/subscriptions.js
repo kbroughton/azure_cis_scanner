@@ -58,20 +58,20 @@ export const selectServiceError = error => ({
     error
 });
 
-export const GET_NAV_REQUEST = 'GET_NAV_REQUEST';
-export const getRequest = error => ({
-    type: GET_NAV_REQUEST,
+export const GET_CIS_REQUEST = 'GET_CIS_REQUEST';
+export const getCisRequest = error => ({
+    type: GET_CIS_REQUEST,
     error
 });
-export const GET_NAV_SUCCESS = 'GET_NAV_SUCCESS';
-export const getNavSuccess = data => ({
-    type: GET_NAV_SUCCESS,
+export const GET_CIS_SUCCESS = 'GET_CIS_SUCCESS';
+export const getCisSuccess = data => ({
+    type: GET_CIS_SUCCESS,
     data
 });
 
-export const GET_NAV_ERROR = 'GET_NAV_ERROR';
-export const getNavError = error => ({
-    type: GET_NAV_ERROR,
+export const GET_CIS_ERROR = 'GET_CIS_ERROR';
+export const getCisError = error => ({
+    type: GET_CIS_ERROR,
     error
 });
 
@@ -113,7 +113,7 @@ export const getSubscriptions = () => (dispatch) => {
 // }
 
 // get cis structure for nav
-export const getNav = () => (dispatch) => {
+export const getCis = () => (dispatch) => {
     return fetch(`http://localhost:5000/cis_structure`, {
         method: 'GET',
         mode: 'cors'
@@ -121,9 +121,8 @@ export const getNav = () => (dispatch) => {
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
         .then(data => {
-            console.log("cis structure = ", data)
-            dispatch(getNavSuccess(data))})
-        .catch(err => dispatch(getNavError(err)));
+            dispatch(getCisSuccess(data))})
+        .catch(err => dispatch(getCisError(err)));
 };
 
 export const selectService = (service) => (dispatch) => {
