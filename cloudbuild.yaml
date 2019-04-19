@@ -8,5 +8,6 @@ steps:
   # Deploy container image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['beta', 'run', 'deploy', 'azure_cis_scanner', '--image', 'gcr.io/shared-vpc-services/azure_cis_scanner', '--region', 'us-central1']
+timeout: 1660s
 images:
 - gcr.io/shared-vpc-services/azure_cis_scanner
