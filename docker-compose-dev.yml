@@ -1,7 +1,7 @@
 # Use docker-compose-dev.yml if you want your edits outside the container (pycharm or sublime) to affect
 # the working container jupyter notebook and docker runtime
 
-version: "3"
+version: "3.4"
 services:
   azure-cis-scanner:
     build:

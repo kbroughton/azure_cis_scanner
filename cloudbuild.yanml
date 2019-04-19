@@ -1,0 +1,12 @@
+steps:
+  # build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/shared-vpc-services/azure_cis_scanner', '.']
+  # push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/shared-vpc-services/azure_cis_scanner']
+  # Deploy container image to Cloud Run
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'azure_cis_scanner', '--image', 'gcr.io/shared-vpc-services/azure_cis_scanner', '--region', 'us-central1']
+images:
+- gcr.io/shared-vpc-services/azure_cis_scanner
