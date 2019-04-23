@@ -65,10 +65,7 @@ export const getCisError = error => ({
 });
 
 export const getSubscriptions = () => dispatch => {
-  return fetch(`http://localhost:5000/subscription_tuples`, {
-    method: "GET",
-    mode: "cors"
-  })
+  return fetch(`http://localhost:5000/subscription_tuples`)
     .then(res => normalizeResponseErrors(res))
     .then(res => res.json())
     .then(data => {
