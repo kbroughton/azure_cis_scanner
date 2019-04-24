@@ -80,7 +80,7 @@ class DisplayData extends React.Component {
       return <Redirect to="/subscriptions" />;
     }
     // render stat
-    if (statVis) {
+    if (statVis && stats[service].hasOwnProperty(stat)) {
       const statData = stats[service][stat];
       data = Object.entries(statData).map((entry, index) => {
         let key = entry[0];
