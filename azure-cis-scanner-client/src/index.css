@@ -10,29 +10,34 @@ nav {
   color: rgb(245, 230, 230);
   padding: 10px;
   border-bottom: 1px black solid;
+  text-align: center;
 }
 
-
-nav li{
-  display: inline-block;
+nav li {
+  display: inline;
   padding: 10px;
+}
+
+nav a {
+  display: inline-block;
 }
 
 li {
   text-decoration: none;
-  list-style: none
+  list-style: none;
 }
 
 a:hover {
-  color: rgb(165, 56, 56)
+  color: rgb(106, 47, 201);
 }
 
 a {
+  color: rgb(36, 74, 36);
   text-decoration: none;
 }
 
 h1 {
- width: 530px;
+  width: 530px;
 }
 
 h2 {
@@ -43,12 +48,18 @@ h3 {
   width: 200px;
 }
 
+h4 {
+  margin-left: 25px;
+}
+
 header {
   padding: 20px;
   margin-bottom: 50px;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   padding: 5px;
   margin: 0 auto;
 }
@@ -71,10 +82,10 @@ select {
 form {
   width: 210px;
   margin: 0 auto;
-  padding: 50px 35px;;
+  padding: 50px 35px;
   border: 1px solid black;
   background-color: rgba(126, 124, 124, 0.815);
-  color: rgb(245, 230, 230);  
+  color: rgb(245, 230, 230);
 }
 
 .data span {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { selectService, setService } from "../actions/subscriptions";
@@ -11,18 +11,25 @@ class DisplayData extends React.Component {
       dataList: true,
       findingList: false,
       stat: false,
+      prettyStat: "",
       redirect: false
     };
+    this.hideStat = this.hideStat.bind(this);
   }
 
-  seeStat(e) {
+  showStat(e) {
     const stat = e
       .toLowerCase()
       .split(" ")
       .join("_");
     this.setState({
+      prettyStat: e,
       stat
     });
+  }
+
+  hideStat() {
+    this.setState({ stat: false });
   }
 
   componentDidMount() {
@@ -48,9 +55,9 @@ class DisplayData extends React.Component {
   }
 
   render() {
-    let data, header;
+    let data;
     const { finding, selectedSubscription, stats, service } = this.props;
-    const { stat } = this.state;
+    const { stat, prettyStat } = this.state;
     // if no subscription has been selected redirect to dashboard
     if (this.state.redirect) {
       console.log("no subscription selected");
@@ -59,7 +66,6 @@ class DisplayData extends React.Component {
     // render stat
     if (stat && stats[service].hasOwnProperty(stat)) {
       const statData = stats[service][stat];
-      header = stat;
       data = Object.entries(statData).map((entry, index) => {
         let key = entry[0];
         let value = entry[1];
@@ -72,9 +78,8 @@ class DisplayData extends React.Component {
       });
       // render findings
     } else if (finding) {
-      header = service;
       data = finding.map((finding, index) => {
-        let boundClick = this.seeStat.bind(this, finding[1]);
+        let boundClick = this.showStat.bind(this, finding[1]);
         return (
           <li className="data" key={index.toString()}>
             <button className="standard" onClick={boundClick}>
@@ -91,8 +96,11 @@ class DisplayData extends React.Component {
 
     return (
       <React.Fragment>
-        <h3>Current Directory is {selectedSubscription}</h3>
-        <h3>{header}</h3>
+        <h4>Current Directory is {selectedSubscription}</h4>
+        <a onClick={this.hideStat}>
+          <h4>{service}</h4>
+        </a>
+        <h4>{prettyStat}</h4>
         <ul>{data}</ul>
       </React.Fragment>
     );
