@@ -97,6 +97,7 @@ export const selectService = service => dispatch => {
     .then(res => normalizeResponseErrors(res))
     .then(res => res.json())
     .then(data => {
+      console.log(data);
       dispatch(selectServiceSuccess(data));
     })
     .catch(err => dispatch(selectServiceError(err)));

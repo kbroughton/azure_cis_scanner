@@ -60,6 +60,7 @@ export default function reducer(state = initialState, action) {
       loading: true
     };
   } else if (action.type === SELECT_SERVICE_SUCCESS) {
+    console.log(action.data.stats);
     return {
       ...state,
       loading: false,

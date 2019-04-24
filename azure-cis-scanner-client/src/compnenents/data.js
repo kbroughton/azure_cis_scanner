@@ -10,8 +10,19 @@ class DisplayData extends React.Component {
     this.state = {
       dataList: true,
       findingList: false,
+      stat: false,
       redirect: false
     };
+  }
+
+  seeStat(e) {
+    const stat = e
+      .toLowerCase()
+      .split(" ")
+      .join("_");
+    this.setState({
+      stat
+    });
   }
 
   componentDidMount() {
@@ -30,40 +41,59 @@ class DisplayData extends React.Component {
   componentDidUpdate(prevProps) {
     const currentService = prevProps.service;
     const selectedService = this.props.match.params.services;
-    if (!currentService) {
-      return;
-    } else if (currentService !== selectedService) {
+    if (currentService !== selectedService) {
       console.log("fetching data for ", selectedService);
       this.props.selectService(this.props.match.params.services);
     }
   }
 
   render() {
-    let dataList;
-    const { finding, selectedSubscription } = this.props;
-
+    let data, header;
+    const { finding, selectedSubscription, stats, service } = this.props;
+    const { stat } = this.state;
+    // if no subscription has been selected redirect to dashboard
     if (this.state.redirect) {
       console.log("no subscription selected");
       return <Redirect to="/subscriptions" />;
     }
-    // render findings as a list if data exists
-    if (finding) {
-      dataList = finding.map((finding, index) => {
+    // render stat
+    if (stat && stats[service].hasOwnProperty(stat)) {
+      const statData = stats[service][stat];
+      header = stat;
+      data = Object.entries(statData).map((entry, index) => {
+        let key = entry[0];
+        let value = entry[1];
+        console.log(key, value);
+        return (
+          <li key={index.toString()}>
+            {key}: {value}
+          </li>
+        );
+      });
+      // render findings
+    } else if (finding) {
+      header = service;
+      data = finding.map((finding, index) => {
+        let boundClick = this.seeStat.bind(this, finding[1]);
         return (
           <li className="data" key={index.toString()}>
-            <span className="standard">{finding[0]}: </span>
+            <button className="standard" onClick={boundClick}>
+              {finding[0]}:{" "}
+            </button>
             {finding[1]}
           </li>
         );
       });
+      // render empty list
     } else if (!finding) {
-      dataList = "";
+      data = "";
     }
 
     return (
       <React.Fragment>
         <h3>Current Directory is {selectedSubscription}</h3>
-        <ul>{dataList}</ul>
+        <h3>{header}</h3>
+        <ul>{data}</ul>
       </React.Fragment>
     );
   }
@@ -74,7 +104,8 @@ const mapStateToProps = state => {
     subscriptions: state.subscriptions.subscriptions,
     service: state.subscriptions.service,
     finding: state.subscriptions.finding,
-    selectedSubscription: state.subscriptions.selectedSubscription
+    selectedSubscription: state.subscriptions.selectedSubscription,
+    stats: state.subscriptions.stats
   };
 };
 
