@@ -1,5 +1,6 @@
 import {
   SET_SERVICE,
+  SET_STAT_VIS,
   GET_SUBSCRIPTIONS_REQUEST,
   GET_SUBSCRIPTIONS_SUCCESS,
   GET_SUBSCRIPTIONS_ERROR,
@@ -19,6 +20,7 @@ const initialState = {
   service: null,
   finding: null,
   stats: null,
+  statVis: false,
   error: null,
   loading: false,
   nav: null
@@ -29,6 +31,11 @@ export default function reducer(state = initialState, action) {
     return {
       ...state,
       service: action.data
+    };
+  } else if (action.type === SET_STAT_VIS) {
+    return {
+      ...state,
+      statVis: action.data
     };
   } else if (action.type === GET_SUBSCRIPTIONS_REQUEST) {
     return {

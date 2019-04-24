@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
-import { setService, getCis } from "../actions/subscriptions.js";
+import { setService, getCis, setStatVis } from "../actions/subscriptions.js";
 
 class Nav extends Component {
   handleClick = service => {
     console.log("selecting service");
     this.props.setService(service);
+    this.props.setStatVis(false);
   };
 
   componentDidMount() {
@@ -56,5 +57,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  dispatch => bindActionCreators({ setService, getCis }, dispatch)
+  dispatch => bindActionCreators({ setService, getCis, setStatVis }, dispatch)
 )(Nav);

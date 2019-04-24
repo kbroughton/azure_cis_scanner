@@ -1,8 +1,12 @@
 import React from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { selectService, setService } from "../actions/subscriptions";
+import {
+  selectService,
+  setService,
+  setStatVis
+} from "../actions/subscriptions";
 
 class DisplayData extends React.Component {
   constructor(props) {
@@ -10,8 +14,8 @@ class DisplayData extends React.Component {
     this.state = {
       dataList: true,
       findingList: false,
-      stat: false,
-      prettyStat: "",
+      stat: "",
+      statHeader: "",
       redirect: false
     };
     this.hideStat = this.hideStat.bind(this);
@@ -23,13 +27,14 @@ class DisplayData extends React.Component {
       .split(" ")
       .join("_");
     this.setState({
-      prettyStat: e,
+      statHeader: e,
       stat
     });
+    this.props.setStatVis(true);
   }
 
   hideStat() {
-    this.setState({ stat: false });
+    this.props.setStatVis(false);
   }
 
   componentDidMount() {
@@ -55,21 +60,31 @@ class DisplayData extends React.Component {
   }
 
   render() {
-    let data;
-    const { finding, selectedSubscription, stats, service } = this.props;
-    const { stat, prettyStat } = this.state;
+    let data, statHeader;
+    const {
+      finding,
+      selectedSubscription,
+      stats,
+      service,
+      statVis
+    } = this.props;
+    const { stat } = this.state;
+    if (statVis) {
+      statHeader = this.state.statHeader;
+    } else {
+      statHeader = "";
+    }
     // if no subscription has been selected redirect to dashboard
     if (this.state.redirect) {
       console.log("no subscription selected");
       return <Redirect to="/subscriptions" />;
     }
     // render stat
-    if (stat && stats[service].hasOwnProperty(stat)) {
+    if (statVis) {
       const statData = stats[service][stat];
       data = Object.entries(statData).map((entry, index) => {
         let key = entry[0];
         let value = entry[1];
-        console.log(key, value);
         return (
           <li key={index.toString()}>
             {key}: {value}
@@ -90,7 +105,7 @@ class DisplayData extends React.Component {
         );
       });
       // render empty list
-    } else if (!finding) {
+    } else {
       data = "";
     }
 
@@ -100,7 +115,7 @@ class DisplayData extends React.Component {
         <a onClick={this.hideStat}>
           <h4>{service}</h4>
         </a>
-        <h4>{prettyStat}</h4>
+        <h4>{statHeader}</h4>
         <ul>{data}</ul>
       </React.Fragment>
     );
@@ -113,11 +128,13 @@ const mapStateToProps = state => {
     service: state.subscriptions.service,
     finding: state.subscriptions.finding,
     selectedSubscription: state.subscriptions.selectedSubscription,
-    stats: state.subscriptions.stats
+    stats: state.subscriptions.stats,
+    statVis: state.subscriptions.statVis
   };
 };
 
 export default connect(
   mapStateToProps,
-  dispatch => bindActionCreators({ selectService, setService }, dispatch)
+  dispatch =>
+    bindActionCreators({ selectService, setService, setStatVis }, dispatch)
 )(DisplayData);

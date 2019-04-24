@@ -6,6 +6,12 @@ export const setService = data => ({
   data
 });
 
+export const SET_STAT_VIS = "SET_STAT_VIS";
+export const setStatVis = data => ({
+  type: SET_STAT_VIS,
+  data
+});
+
 export const GET_SUBSCRIPTIONS_REQUEST = "GET_SUBSCRIPTIONS_REQUEST";
 export const getSubscriptionsRequest = data => ({
   type: GET_SUBSCRIPTIONS_REQUEST,
