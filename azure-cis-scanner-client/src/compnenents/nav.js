@@ -1,27 +1,27 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { Link } from 'react-router-dom'
-import { setService, getCis } from '../actions/subscriptions.js'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Link } from "react-router-dom";
+import { setService, getCis } from "../actions/subscriptions.js";
 
 class Nav extends Component {
   handleClick = service => {
-    console.log('selecting service')
-    this.props.setService(service)
-  }
+    console.log("selecting service");
+    this.props.setService(service);
+  };
 
   componentDidMount() {
-    this.props.getCis()
+    this.props.getCis();
   }
 
   render() {
-    const { selectedSubscription, nav } = this.props
-    let navLinks
+    const { nav } = this.props;
+    let navLinks;
     if (nav) {
       navLinks = nav.map((n, key) => {
         return (
           <li key={key}>
-            {' '}
+            {" "}
             <Link
               to={`/services/${n}`}
               onClick={() => this.handleClick(`${n}`)}
@@ -29,18 +29,18 @@ class Nav extends Component {
               {n}
             </Link>
           </li>
-        )
-      })
+        );
+      });
     }
 
     return (
       <nav>
         <li>
-          <Link to='/subscriptions'>Change Directory</Link>
+          <Link to="/subscriptions">Change Directory</Link>
         </li>
         {navLinks}
       </nav>
-    )
+    );
   }
 }
 
@@ -51,10 +51,10 @@ const mapStateToProps = state => {
     selectedSubscription: state.subscriptions.selectedSubscription,
     service: state.subscriptions.service,
     finding: state.subscriptions.finding
-  }
-}
+  };
+};
 
 export default connect(
   mapStateToProps,
   dispatch => bindActionCreators({ setService, getCis }, dispatch)
-)(Nav)
+)(Nav);

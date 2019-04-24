@@ -93,12 +93,10 @@ export const getCis = () => dispatch => {
 };
 
 export const selectService = service => dispatch => {
-  console.log(service);
   return fetch(`http://localhost:5000/services/${service}`)
     .then(res => normalizeResponseErrors(res))
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       dispatch(selectServiceSuccess(data));
     })
     .catch(err => dispatch(selectServiceError(err)));

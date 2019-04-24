@@ -22,23 +22,18 @@ class DisplayData extends React.Component {
         redirect: true
       });
     } else if (service) {
-      console.log("dispatching selectService for ", service);
+      console.log("fetching data for", service);
       this.props.selectService(service);
     }
   }
 
   componentDidUpdate(prevProps) {
-    const service = prevProps.service;
-    console.log(service, ":that's the prevService");
-    if (!service) {
-      console.log("service is null");
-    } else if (this.props.match.params.services !== service) {
-      console.log(
-        "swithcing from ",
-        service,
-        " to ",
-        this.props.match.params.services
-      );
+    const currentService = prevProps.service;
+    const selectedService = this.props.match.params.services;
+    if (!currentService) {
+      return;
+    } else if (currentService !== selectedService) {
+      console.log("fetching data for ", selectedService);
       this.props.selectService(this.props.match.params.services);
     }
   }
@@ -48,10 +43,11 @@ class DisplayData extends React.Component {
     const { finding, selectedSubscription } = this.props;
 
     if (this.state.redirect) {
+      console.log("no subscription selected");
       return <Redirect to="/subscriptions" />;
     }
+    // render findings as a list if data exists
     if (finding) {
-      console.log("render findings");
       dataList = finding.map((finding, index) => {
         return (
           <li className="data" key={index.toString()}>
