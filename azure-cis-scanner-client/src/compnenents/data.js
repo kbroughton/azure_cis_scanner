@@ -75,13 +75,13 @@ class DisplayData extends React.Component {
       return <Redirect to="/subscriptions" />;
     }
     // render stat
-    if (showStat && stats[service].hasOwnProperty(stat)) {
+    if (stat && showStat && stats[service].hasOwnProperty(stat)) {
       const statData = stats[service][stat];
       data = Object.entries(statData).map((entry, index) => {
         let key = entry[0];
         let value = entry[1];
         return (
-          <li key={index.toString()}>
+          <li className="stat" key={index.toString()}>
             {key}: {value}
           </li>
         );
