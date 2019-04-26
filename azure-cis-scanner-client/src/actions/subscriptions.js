@@ -7,7 +7,7 @@ export const setService = data => ({
 });
 
 export const SET_STAT_VIS = "SET_STAT_VIS";
-export const setStatVis = data => ({
+export const showStat = data => ({
   type: SET_STAT_VIS,
   data
 });

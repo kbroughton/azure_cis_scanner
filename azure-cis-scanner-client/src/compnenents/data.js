@@ -2,18 +2,12 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import {
-  selectService,
-  setService,
-  setStatVis
-} from "../actions/subscriptions";
+import { selectService, setService, showStat } from "../actions/subscriptions";
 
 class DisplayData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataList: true,
-      findingList: false,
       stat: "",
       statHeader: "",
       redirect: false
@@ -30,11 +24,11 @@ class DisplayData extends React.Component {
       statHeader: e,
       stat
     });
-    this.props.setStatVis(true);
+    this.props.showStat(true);
   }
 
   hideStat() {
-    this.props.setStatVis(false);
+    this.props.showStat(false);
   }
 
   componentDidMount() {
@@ -55,7 +49,7 @@ class DisplayData extends React.Component {
     const selectedService = this.props.match.params.services;
     if (currentService !== selectedService) {
       console.log("fetching data for ", selectedService);
-      this.props.selectService(this.props.match.params.services);
+      this.props.selectService(selectedService);
     }
   }
 
@@ -66,10 +60,11 @@ class DisplayData extends React.Component {
       selectedSubscription,
       stats,
       service,
-      statVis
+      showStat
     } = this.props;
     const { stat } = this.state;
-    if (statVis) {
+    // display header for which stat has been selected
+    if (showStat) {
       statHeader = this.state.statHeader;
     } else {
       statHeader = "";
@@ -80,7 +75,7 @@ class DisplayData extends React.Component {
       return <Redirect to="/subscriptions" />;
     }
     // render stat
-    if (statVis && stats[service].hasOwnProperty(stat)) {
+    if (showStat && stats[service].hasOwnProperty(stat)) {
       const statData = stats[service][stat];
       data = Object.entries(statData).map((entry, index) => {
         let key = entry[0];
@@ -104,7 +99,7 @@ class DisplayData extends React.Component {
           </li>
         );
       });
-      // render empty list
+      // render empty list if no findings exist
     } else {
       data = "";
     }
@@ -129,12 +124,12 @@ const mapStateToProps = state => {
     finding: state.subscriptions.finding,
     selectedSubscription: state.subscriptions.selectedSubscription,
     stats: state.subscriptions.stats,
-    statVis: state.subscriptions.statVis
+    showStat: state.subscriptions.showStat
   };
 };
 
 export default connect(
   mapStateToProps,
   dispatch =>
-    bindActionCreators({ selectService, setService, setStatVis }, dispatch)
+    bindActionCreators({ selectService, setService, showStat }, dispatch)
 )(DisplayData);

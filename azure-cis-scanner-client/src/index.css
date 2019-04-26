@@ -49,7 +49,18 @@ h3 {
 }
 
 h4 {
-  margin-left: 25px;
+  margin-left: 50px;
+}
+
+button {
+  padding: 5px 10px;
+  border-radius: 20%;
+  margin: 10px;
+}
+
+button:hover {
+  background-color: rgb(106, 47, 201);
+  color: white;
 }
 
 header {

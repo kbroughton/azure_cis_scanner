@@ -20,7 +20,7 @@ const initialState = {
   service: null,
   finding: null,
   stats: null,
-  statVis: false,
+  showStat: false,
   error: null,
   loading: false,
   nav: null
@@ -35,7 +35,7 @@ export default function reducer(state = initialState, action) {
   } else if (action.type === SET_STAT_VIS) {
     return {
       ...state,
-      statVis: action.data
+      showStat: action.data
     };
   } else if (action.type === GET_SUBSCRIPTIONS_REQUEST) {
     return {
