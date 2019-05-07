@@ -6,9 +6,9 @@ export const setService = data => ({
   data
 });
 
-export const SET_STAT_VIS = "SET_STAT_VIS";
-export const showStat = data => ({
-  type: SET_STAT_VIS,
+export const SHOW_STAT_TOGGLE = "SHOW_STAT_TOGGLE";
+export const showStatToggle = data => ({
+  type: SHOW_STAT_TOGGLE,
   data
 });
 

@@ -2,7 +2,11 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { selectService, setService, showStat } from "../actions/subscriptions";
+import {
+  selectService,
+  setService,
+  showStatToggle
+} from "../actions/subscriptions";
 
 class DisplayData extends React.Component {
   constructor(props) {
@@ -15,7 +19,7 @@ class DisplayData extends React.Component {
     this.hideStat = this.hideStat.bind(this);
   }
 
-  showStat(e) {
+  showStatHeader(e) {
     const stat = e
       .toLowerCase()
       .split(" ")
@@ -24,11 +28,11 @@ class DisplayData extends React.Component {
       statHeader: e,
       stat
     });
-    this.props.showStat(true);
+    this.props.showStatToggle(true);
   }
 
   hideStat() {
-    this.props.showStat(false);
+    this.props.showStatToggle(false);
   }
 
   componentDidMount() {
@@ -76,6 +80,12 @@ class DisplayData extends React.Component {
     }
     // render stat
     if (stat && showStat && stats[service].hasOwnProperty(stat)) {
+      console.log(
+        "rendering stats",
+        // stat,
+        showStat
+        // stats[service].hasOwnProperty(stat)
+      );
       const statData = stats[service][stat];
       data = Object.entries(statData).map((entry, index) => {
         let key = entry[0];
@@ -89,7 +99,7 @@ class DisplayData extends React.Component {
       // render findings
     } else if (finding) {
       data = finding.map((finding, index) => {
-        let boundClick = this.showStat.bind(this, finding[1]);
+        let boundClick = this.showStatHeader.bind(this, finding[1]);
         return (
           <li className="data" key={index.toString()}>
             <button className="standard" onClick={boundClick}>
@@ -131,5 +141,5 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   dispatch =>
-    bindActionCreators({ selectService, setService, showStat }, dispatch)
+    bindActionCreators({ selectService, setService, showStatToggle }, dispatch)
 )(DisplayData);

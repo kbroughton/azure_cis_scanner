@@ -1,6 +1,6 @@
 import {
   SET_SERVICE,
-  SET_STAT_VIS,
+  SHOW_STAT_TOGGLE,
   GET_SUBSCRIPTIONS_REQUEST,
   GET_SUBSCRIPTIONS_SUCCESS,
   GET_SUBSCRIPTIONS_ERROR,
@@ -32,7 +32,7 @@ export default function reducer(state = initialState, action) {
       ...state,
       service: action.data
     };
-  } else if (action.type === SET_STAT_VIS) {
+  } else if (action.type === SHOW_STAT_TOGGLE) {
     return {
       ...state,
       showStat: action.data
