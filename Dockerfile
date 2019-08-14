@@ -112,7 +112,7 @@ RUN pip install -r requirements.txt
 # build prod container:
 # docker build -t azscan-prod --target prod .
 
-WORKDIR /praetorian-tools/azure_cils_scanner
+WORKDIR /praetorian-tools/azure_cis_scanner
 
 From dev as prod
 RUN pip install azure_cis_scanner
