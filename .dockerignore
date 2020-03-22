@@ -20,4 +20,5 @@ crash.log
 .secrets.baseline
 blacklist.txt
 Azure_Security_Stages.xml
-CIS_Microsoft*
+*.pdf
+node_modules/
