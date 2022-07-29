@@ -93,7 +93,7 @@ locket==0.2.0
 Mako==1.0.7
 MarkupSafe==1.1.1
 matplotlib==3.0.3
-mistune==0.8.4
+mistune==2.0.3
 mpmath==1.1.0
 msgpack==0.6.1
 msrest==0.6.4
