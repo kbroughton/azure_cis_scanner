@@ -98,7 +98,7 @@ mpmath==1.1.0
 msgpack==0.6.1
 msrest==0.6.4
 msrestazure==0.6.0
-nbconvert==5.4.1
+nbconvert==6.5.1
 nbformat==4.4.0
 nbstripout==0.3.3
 networkx==2.2
