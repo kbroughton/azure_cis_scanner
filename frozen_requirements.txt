@@ -90,7 +90,7 @@ kiwisolver==1.0.1
 knack==0.5.3
 llvmlite==0.27.1
 locket==0.2.0
-Mako==1.0.7
+Mako==1.2.2
 MarkupSafe==1.1.1
 matplotlib==3.0.3
 mistune==0.8.4
